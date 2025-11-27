@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { DifficultyLevel, ConjugationTask } from '../types';
-import { generateConjugationTask, playPronunciation } from '../services/geminiService';
+import { getStaticConjugationTask } from '../services/contentService';
+import { playPronunciation } from '../services/geminiService';
 import { VirtualKeyboard } from './VirtualKeyboard';
 
 export const ConjugationGame: React.FC = () => {
@@ -20,7 +20,7 @@ export const ConjugationGame: React.FC = () => {
     setInputs({ en: '', te: '', o: '', mi: '', ti: '', ok: '' });
     setFeedback({});
     try {
-      const newTask = await generateConjugationTask(lvl);
+      const newTask = await getStaticConjugationTask(lvl);
       setTask(newTask);
     } catch (e) {
       console.error(e);
@@ -32,8 +32,6 @@ export const ConjugationGame: React.FC = () => {
   const checkAnswers = () => {
     if (!task) return;
     const newFeedback: Record<string, boolean> = {};
-    
-    // Explicitly define keys as const to ensure strict string literal types
     const keys = ['en', 'te', 'o', 'mi', 'ti', 'ok'] as const;
 
     keys.forEach(key => {
@@ -73,15 +71,7 @@ export const ConjugationGame: React.FC = () => {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh]">
-        <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mb-4"></div>
-        <p className="text-slate-600">Generisanje glagola...</p>
-      </div>
-    );
-  }
-
+  if (loading) return <div>Učitavanje...</div>;
   if (!task) return <div>Greška.</div>;
 
   const singularPronouns = [

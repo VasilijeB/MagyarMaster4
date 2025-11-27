@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { DifficultyLevel, StoryTask } from '../types';
-import { generateStoryTask, evaluateStoryTranslation, playPronunciation } from '../services/geminiService';
+import { getStaticStoryTask, evaluateTranslationLocally } from '../services/contentService';
+import { playPronunciation } from '../services/geminiService';
 
 export const StoryGame: React.FC = () => {
   const [level, setLevel] = useState<DifficultyLevel | null>(null);
@@ -17,7 +17,7 @@ export const StoryGame: React.FC = () => {
     setUserTranslation('');
     setFeedback(null);
     try {
-      const newTask = await generateStoryTask(lvl);
+      const newTask = await getStaticStoryTask(lvl);
       setTask(newTask);
     } catch (e) {
       console.error(e);
@@ -31,7 +31,8 @@ export const StoryGame: React.FC = () => {
     if (!task || !userTranslation.trim()) return;
     setLoading(true);
     try {
-      const result = await evaluateStoryTranslation(task.hungarianText, userTranslation);
+      // Local check instead of AI
+      const result = evaluateTranslationLocally(task.serbianTranslation, userTranslation);
       setFeedback(result);
     } catch (e) {
       setFeedback("Greška pri evaluaciji.");
@@ -46,7 +47,7 @@ export const StoryGame: React.FC = () => {
     await playPronunciation(task.hungarianText);
     setIsPlaying(false);
   };
-
+  
   if (!level) {
     return (
       <div className="max-w-2xl mx-auto px-6 py-12 text-center animate-fade-in">
@@ -128,7 +129,7 @@ export const StoryGame: React.FC = () => {
 
            {feedback && (
              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 md:p-8 animate-fade-in-up">
-               <h3 className="font-bold text-blue-900 mb-4 text-lg">Evaluacija AI Instruktora:</h3>
+               <h3 className="font-bold text-blue-900 mb-4 text-lg">Rezultat:</h3>
                <div className="prose text-blue-800 whitespace-pre-wrap mb-6">
                  {feedback}
                </div>

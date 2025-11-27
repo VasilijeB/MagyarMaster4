@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { generateFlashcards, playPronunciation, evaluatePronunciation } from '../services/geminiService';
+import { playPronunciation, evaluatePronunciation } from '../services/geminiService';
+import { getStaticFlashcards } from '../services/contentService';
 import { WordCategory } from '../types';
 
 export const PronunciationGame: React.FC = () => {
@@ -17,7 +18,7 @@ export const PronunciationGame: React.FC = () => {
     setWord(null);
     try {
       // Re-use flashcard generator to get a single word (we just take the first one)
-      const cards = await generateFlashcards(WordCategory.NOUNS, 2); // Level 2 for basic words
+      const cards = await getStaticFlashcards(WordCategory.NOUNS, 2); // Level 2 for basic words
       const randomCard = cards[Math.floor(Math.random() * cards.length)];
       setWord({ serbian: randomCard.serbian, hungarian: randomCard.hungarian });
     } catch (e) {

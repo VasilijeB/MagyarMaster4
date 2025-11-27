@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { AppState, FlashCard, GameResult, WordCategory, DifficultyLevel, GameMode, FlashCardDirection, User } from './types';
-import { generateFlashcards } from './services/geminiService';
+import { getStaticFlashcards } from './services/contentService'; // Changed import
 import { saveUser, getUser } from './services/storageService';
 import { CategorySelection } from './components/CategorySelection';
 import { ActiveGame } from './components/ActiveGame';
@@ -13,16 +12,13 @@ import { CustomVocabSetup } from './components/CustomVocabSetup';
 import { GrammarChat } from './components/GrammarChat';
 import { StoryGame } from './components/StoryGame';
 import { Login } from './components/Login';
+import { LandingPage } from './components/LandingPage';
 import { LOADING_MESSAGES } from './constants';
 
 const App: React.FC = () => {
-  // User Authentication
   const [user, setUser] = useState<User | null>(null);
-
-  // Navigation State
+  const [uiState, setUiState] = useState<'landing' | 'login' | 'app'>('landing');
   const [currentMode, setCurrentMode] = useState<GameMode>(GameMode.DASHBOARD);
-  
-  // Flashcard Game State
   const [appState, setAppState] = useState<AppState>(AppState.MENU);
   const [flashcards, setFlashcards] = useState<FlashCard[]>([]);
   const [results, setResults] = useState<GameResult[]>([]);
@@ -30,36 +26,38 @@ const App: React.FC = () => {
   const [loadingMsg, setLoadingMsg] = useState<string>(LOADING_MESSAGES[0]);
   const [vocabDirection, setVocabDirection] = useState<FlashCardDirection>(FlashCardDirection.SER_HUN);
 
-  // Load user on mount
   useEffect(() => {
     const loadedUser = getUser();
     if (loadedUser) {
       setUser(loadedUser);
+      setUiState('app');
+    } else {
+      setUiState('landing');
     }
   }, []);
 
   const handleLogin = (name: string) => {
     const newUser = saveUser(name);
     setUser(newUser);
+    setUiState('app');
   };
 
-  // Handler for standard vocab game
   const handleVocabStart = async (category: WordCategory, level: DifficultyLevel, direction: FlashCardDirection) => {
     setAppState(AppState.LOADING);
     setVocabDirection(direction);
     setLoadingMsg(LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)]);
     try {
-      const cards = await generateFlashcards(category, level);
+      // Use static service
+      const cards = await getStaticFlashcards(category, level);
       setFlashcards(cards);
       setAppState(AppState.PLAYING);
     } catch (err) {
       console.error(err);
-      setErrorMsg("Nije uspelo generisanje kartica.");
+      setErrorMsg("Nije uspelo učitavanje kartica.");
       setAppState(AppState.ERROR);
     }
   };
 
-  // Handler for custom vocab game start
   const handleCustomStart = (cards: FlashCard[]) => {
     setFlashcards(cards);
     setVocabDirection(FlashCardDirection.SER_HUN); 
@@ -84,33 +82,21 @@ const App: React.FC = () => {
     setResults([]);
   };
 
-  if (!user) {
-    return <Login onLogin={handleLogin} />;
-  }
+  if (uiState === 'landing') return <LandingPage onStart={() => setUiState('login')} />;
+  if (uiState === 'login' || !user) return <Login onLogin={handleLogin} />;
 
-  // Render content based on current Mode
   const renderContent = () => {
     switch (currentMode) {
-      case GameMode.DASHBOARD:
-        return <Dashboard onSelectMode={handleNavigation} user={user} />;
-      
-      case GameMode.CONJUGATION:
-        return <ConjugationGame />;
-      
-      case GameMode.GRAMMAR:
-        return <GrammarChat />;
-
-      case GameMode.STORIES:
-        return <StoryGame />;
-        
+      case GameMode.DASHBOARD: return <Dashboard onSelectMode={handleNavigation} user={user} />;
+      case GameMode.CONJUGATION: return <ConjugationGame />;
+      case GameMode.GRAMMAR: return <GrammarChat />;
+      case GameMode.STORIES: return <StoryGame />;
       case GameMode.VOCAB:
       case GameMode.CUSTOM_VOCAB:
         if (appState === AppState.MENU) {
-            if (currentMode === GameMode.VOCAB) {
-                return <CategorySelection onSelect={handleVocabStart} />;
-            } else {
-                return <CustomVocabSetup onStart={handleCustomStart} />;
-            }
+            return currentMode === GameMode.VOCAB 
+              ? <CategorySelection onSelect={handleVocabStart} />
+              : <CustomVocabSetup onStart={handleCustomStart} />;
         }
         if (appState === AppState.LOADING) {
           return (
@@ -143,18 +129,14 @@ const App: React.FC = () => {
           return <Results results={results} onRestart={handleRestart} />;
         }
         return null;
-        
-      default:
-        return <Dashboard onSelectMode={handleNavigation} user={user} />;
+      default: return <Dashboard onSelectMode={handleNavigation} user={user} />;
     }
   };
 
   return (
     <div className="min-h-screen w-full bg-slate-50 flex flex-col font-sans">
       <Navbar currentMode={currentMode} onNavigate={handleNavigation} user={user} />
-      <main className="flex-1 w-full">
-        {renderContent()}
-      </main>
+      <main className="flex-1 w-full">{renderContent()}</main>
     </div>
   );
 };
