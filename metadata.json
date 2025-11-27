@@ -1,0 +1,7 @@
+{
+  "name": "MagyarMaster",
+  "description": "A focused flashcard application to learn Hungarian nouns, verbs, and adjectives using AI-generated vocabulary and strict spelling challenges.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
