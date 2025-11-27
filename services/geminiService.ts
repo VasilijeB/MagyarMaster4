@@ -33,7 +33,6 @@ export const getGrammarResponse = async (history: ChatMessage[], newMessage: str
 };
 
 // --- CUSTOM VOCAB (AI Helper) ---
-// Kept because parsing user raw input requires NLP
 export const generateCustomFlashcards = async (userInput: string): Promise<FlashCard[]> => {
   const prompt = `User input: "${userInput}". Extract words, translate (Serbian<->Hungarian), return JSON array {serbian, hungarian, alternatives[]}. Verbs as infinitives.`;
   const response = await ai.models.generateContent({
@@ -78,7 +77,11 @@ const base64ToBytes = (base64: string): Uint8Array => {
 const pcmToAudioBuffer = (pcmData: Uint8Array, audioContext: AudioContext): AudioBuffer => {
   const sampleRate = 24000;
   const numChannels = 1;
-  const int16Data = new Int16Array(pcmData.buffer, pcmData.byteOffset, pcmData.length / 2);
+  
+  const evenLength = pcmData.length % 2 === 0 ? pcmData.length : pcmData.length - 1;
+  const safePcmData = pcmData.subarray(0, evenLength);
+
+  const int16Data = new Int16Array(safePcmData.buffer, safePcmData.byteOffset, safePcmData.length / 2);
   const buffer = audioContext.createBuffer(numChannels, int16Data.length, sampleRate);
   const channelData = buffer.getChannelData(0);
   for (let i = 0; i < int16Data.length; i++) {
@@ -96,42 +99,47 @@ const getAudioContext = (): AudioContext => {
   return sharedAudioContext;
 };
 
+export const ensureAudioContext = async () => {
+  const ctx = getAudioContext();
+  if (ctx.state === 'suspended') {
+    await ctx.resume();
+  }
+  return ctx;
+};
+
+// Helper to phoneticize Hungarian for the TTS engine
 const optimizeForHungarianTTS = (text: string): string => {
   let processed = text;
-  // Phonetic optimization
+  // 1. Protect 'sz' (sound /s/ like 'sun') with a placeholder
   processed = processed.replace(/sz/gi, '$$SZ$$');
-  processed = processed.replace(/zs/gi, 'zh');
-  processed = processed.replace(/cs/gi, 'ch');
-  processed = processed.replace(/gy/gi, 'dy');
-  processed = processed.replace(/ly/gi, 'y');
-  processed = processed.replace(/ny/gi, 'ny');
-  processed = processed.replace(/a/g, 'o'); 
-  processed = processed.replace(/A/g, 'O');
-  processed = processed.replace(/á/g, 'aa');
-  processed = processed.replace(/Á/g, 'AA');
-  processed = processed.replace(/é/g, 'ay');
-  processed = processed.replace(/É/g, 'AY');
+  // 2. Convert 's' to 'sh' (sound /ʃ/ like 'shoe')
   processed = processed.replace(/s/gi, 'sh');
-  processed = processed.replace(/c/gi, 'ts');
-  processed = processed.replace(/j/gi, 'y');
+  // 3. Convert 'cs' to 'ch' (sound /tʃ/ like 'check')
+  processed = processed.replace(/cs/gi, 'ch');
+  // 4. Convert 'gy' to 'dy' (sound /ɟ/ like 'during')
+  processed = processed.replace(/gy/gi, 'dy');
+  // 5. Restore 'sz' to 's' (English 's')
   processed = processed.replace(/\$\$SZ\$\$/gi, 's');
   return processed;
 };
 
 export const playPronunciation = async (text: string) => {
-  const phoneticText = optimizeForHungarianTTS(text);
   try {
+    const audioContext = await ensureAudioContext();
+    const phoneticText = optimizeForHungarianTTS(text);
+
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash-preview-tts",
       contents: [{ parts: [{ text: phoneticText }] }],
       config: {
-        responseModalities: [Modality.AUDIO],
-        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } } },
+        responseModalities: ["AUDIO"],
+        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } } },
       },
     });
+
     const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+    
     if (base64Audio) {
-      const audioContext = getAudioContext();
       if (audioContext.state === 'suspended') await audioContext.resume();
       const pcmBytes = base64ToBytes(base64Audio);
       const audioBuffer = pcmToAudioBuffer(pcmBytes, audioContext);

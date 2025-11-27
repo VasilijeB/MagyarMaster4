@@ -1,8 +1,6 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { FlashCard, GameResult, FlashCardDirection } from '../types';
 import { VirtualKeyboard } from './VirtualKeyboard';
-import { playPronunciation } from '../services/geminiService';
 import { HUNGARIAN_CHARS, SERBIAN_CHARS } from '../constants';
 
 interface ActiveGameProps {
@@ -13,18 +11,14 @@ interface ActiveGameProps {
 }
 
 export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCancel, direction = FlashCardDirection.SER_HUN }) => {
-  // 1. Declare all Hooks at the top level
   const [deck, setDeck] = useState<FlashCard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [results, setResults] = useState<GameResult[]>([]);
   const [feedback, setFeedback] = useState<'none' | 'correct' | 'incorrect'>('none');
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [lastResultCorrect, setLastResultCorrect] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // 2. Define Effects
   useEffect(() => {
     setDeck(cards);
     setCurrentIndex(0);
@@ -32,26 +26,14 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   }, [cards]);
 
   useEffect(() => {
-    // Only focus if the input exists and we are in a 'playing' state (no feedback shown)
     if (inputRef.current && feedback === 'none') {
       inputRef.current.focus();
     }
   }, [currentIndex, feedback, deck.length]);
 
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
-  // 3. Helper Functions
   const currentCard = deck[currentIndex];
 
   const proceedToNext = (isCorrect: boolean) => {
-    // Clear any pending audio timeout if user skips ahead quickly
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
     const newResult: GameResult = {
       card: currentCard,
       userAnswer: inputValue.trim(),
@@ -61,7 +43,6 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     const newResults = [...results, newResult];
     setResults(newResults);
 
-    // Logic to repeat wrong answers: Append current card to end of deck
     if (!isCorrect) {
       setDeck(prev => [...prev, currentCard]);
     }
@@ -75,7 +56,6 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     }
   };
 
-  // Effect to handle Enter key for navigation when feedback is shown
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Enter' && feedback !== 'none') {
@@ -89,19 +69,16 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [feedback, lastResultCorrect, deck, currentIndex, inputValue, results]);
 
-  // 4. Conditional Returns (Guard Clauses) AFTER all hooks
   if (deck.length === 0) return null;
 
-  // Determine question/answer based on direction
   const isHungToSerb = direction === FlashCardDirection.HUN_SER;
-  
   const questionText = isHungToSerb ? currentCard.hungarian : currentCard.serbian;
   const targetAnswerPrimary = isHungToSerb ? currentCard.serbian : currentCard.hungarian;
   const validAnswers = isHungToSerb 
-    ? [currentCard.serbian.toLowerCase()] // Can expand to serbian synonyms if added later
+    ? [currentCard.serbian.toLowerCase()] 
     : [currentCard.hungarian.toLowerCase(), ...currentCard.hungarianAlt];
     
-  const inputPlaceholder = isHungToSerb ? "Upišite na srpskom..." : "Upišite na mađarskom...";
+  const inputPlaceholder = isHungToSerb ? "Prevedi na srpski..." : "Prevedi na mađarski...";
   const keyboardChars = isHungToSerb ? SERBIAN_CHARS : HUNGARIAN_CHARS;
 
   const handleVirtualKey = (char: string) => {
@@ -109,143 +86,104 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     inputRef.current?.focus();
   };
 
-  const handleAudioClick = async () => {
-    if (isPlayingAudio) return;
-    setIsPlayingAudio(true);
-    await playPronunciation(currentCard.hungarian);
-    setIsPlayingAudio(false);
-  };
-
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!inputValue.trim()) return;
 
     const cleanInput = inputValue.trim().toLowerCase();
-    
-    // Check against accepted answers
     const isCorrect = validAnswers.includes(cleanInput);
 
     setFeedback(isCorrect ? 'correct' : 'incorrect');
     setLastResultCorrect(isCorrect);
-
-    // Play audio after 100ms delay for near-instant feedback
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-        playPronunciation(currentCard.hungarian);
-    }, 100);
   };
 
-  const progressPercentage = ((currentIndex) / deck.length) * 100;
-
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 min-h-screen flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <button 
-          onClick={onCancel}
-          className="text-slate-400 hover:text-slate-600 font-medium text-sm transition-colors"
-        >
-          ← Izađi
-        </button>
-        <div className="text-slate-400 text-sm font-mono">
-          {currentIndex + 1} / {deck.length}
+    <div className="max-w-3xl mx-auto px-4 py-6 min-h-[calc(100vh-80px)] flex flex-col">
+      {/* Header & Progress */}
+      <div className="flex flex-col gap-6 mb-8">
+        <div className="flex items-center justify-between">
+          <button 
+            onClick={onCancel}
+            className="text-slate-400 hover:text-slate-600 font-bold text-sm bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-full transition-colors"
+          >
+            ✕ Izađi
+          </button>
+          <div className="bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+            Kartica {currentIndex + 1} od {deck.length}
+          </div>
+        </div>
+
+        {/* Segmented Progress Bar */}
+        <div className="flex gap-1 h-2 w-full">
+          {deck.map((_, idx) => (
+            <div 
+              key={idx}
+              className={`flex-1 rounded-full transition-all duration-500 ${
+                idx < currentIndex ? 'bg-emerald-400' : 
+                idx === currentIndex ? 'bg-slate-800' : 'bg-slate-200'
+              }`}
+            />
+          ))}
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="w-full bg-slate-200 h-2 rounded-full mb-12 overflow-hidden">
-        <div 
-          className="bg-emerald-500 h-full transition-all duration-500 ease-out" 
-          style={{ width: `${progressPercentage}%` }}
-        />
-      </div>
+      {/* Main Game Area */}
+      <div className="flex-1 flex flex-col justify-center gap-8">
+        
+        {/* Flashcard */}
+        <div className="perspective-1000">
+          <div className="relative bg-white rounded-[2rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-10 md:p-16 text-center transform transition-transform duration-500 hover:scale-[1.01] overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+            
+            <h2 className="text-slate-400 uppercase tracking-[0.2em] text-xs font-extrabold mb-6">
+              {isHungToSerb ? "MAĐARSKI" : "SRPSKI"}
+            </h2>
+            
+            <p className="text-4xl md:text-6xl font-extrabold text-slate-800 mb-2 leading-tight">
+              {questionText}
+            </p>
 
-      {/* Card Area */}
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="relative bg-white rounded-3xl shadow-xl border border-slate-100 p-8 md:p-12 text-center mb-8 transition-all duration-300">
-          <h2 className="text-slate-500 uppercase tracking-widest text-xs font-bold mb-4">Prevedite ovu reč</h2>
-          <div className="flex flex-col items-center justify-center gap-4">
-             <p className="text-3xl md:text-5xl font-bold text-slate-800 mb-2 break-words max-w-full">
-               {questionText}
-             </p>
-             {/* Show audio hint ONLY if question is in Hungarian */}
-             {isHungToSerb && (
-                <button 
-                   onClick={handleAudioClick}
-                   disabled={isPlayingAudio}
-                   className="flex items-center gap-2 px-4 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-xs font-medium transition-colors"
-                >
-                   {isPlayingAudio ? <span>Reprodukovanje...</span> : <><span>🔊</span> <span>Poslušaj</span></>}
-                </button>
-             )}
-             
-             {!isHungToSerb && (
-                <button 
-                  type="button"
-                  disabled={true}
-                  className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-300 rounded-full text-xs md:text-sm font-medium cursor-not-allowed"
-                  title="Proverite odgovor da biste čuli izgovor"
-                >
-                    <span>🔊</span>
-                    <span>Izgovor (Mađarski)</span>
-                </button>
-             )}
-          </div>
-          
-          {/* Feedback Overlay */}
-          {feedback !== 'none' && (
-            <div className={`absolute inset-0 rounded-3xl flex items-center justify-center backdrop-blur-sm bg-white/90 transition-opacity duration-300 z-10`}>
-               <div className="text-center animate-scale-in px-4 w-full">
+            {/* Feedback Overlay (Absolute) */}
+            {feedback !== 'none' && (
+              <div className="absolute inset-0 z-20 rounded-[2rem] bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-8 animate-scale-in">
                  {feedback === 'correct' ? (
                    <>
-                     <div className="text-6xl mb-2">✨</div>
-                     <div className="text-emerald-600 font-bold text-2xl mb-4">Tačno!</div>
-                     <button 
-                        onClick={handleAudioClick}
-                        disabled={isPlayingAudio}
-                        className="flex items-center gap-2 mx-auto px-6 py-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-full text-sm font-bold transition-colors shadow-sm mb-6"
-                     >
-                       {isPlayingAudio ? <span className="animate-pulse">Reprodukovanje...</span> : <><span>🔊</span> <span>Poslušaj izgovor</span></>}
-                     </button>
-                     <div>
-                      <button
-                        onClick={() => proceedToNext(true)}
-                        className="px-8 py-3 bg-emerald-600 text-white rounded-xl font-bold text-lg hover:bg-emerald-700 hover:scale-105 transition-all shadow-lg border-2 border-emerald-700"
-                      >
-                        Sledeće pitanje → <span className="text-sm opacity-70 font-normal ml-1">(Enter)</span>
-                      </button>
+                     <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center text-4xl mb-4 animate-bounce">
+                       ✨
                      </div>
+                     <h3 className="text-3xl font-bold text-emerald-600 mb-2">Tačno!</h3>
+                     <p className="text-slate-400 mb-8 font-medium">Sjajno obavljeno.</p>
                    </>
                  ) : (
                    <>
-                     <div className="text-6xl mb-2">❌</div>
-                     <div className="text-rose-600 font-bold text-xl mb-1">Netačno.</div>
-                     <div className="text-slate-500 mb-6 flex flex-col items-center">
-                        <span>Tačan odgovor: <span className="font-bold text-slate-800">{targetAnswerPrimary}</span></span>
-                        <button 
-                            onClick={handleAudioClick}
-                            disabled={isPlayingAudio}
-                            className="mt-2 flex items-center gap-2 px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-xs font-bold transition-colors"
-                        >
-                           {isPlayingAudio ? <span className="animate-pulse">Reprodukovanje...</span> : <><span>🔊</span> <span>Poslušaj</span></>}
-                        </button>
+                     <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center text-4xl mb-4 animate-shake">
+                       ❌
                      </div>
-                     <button
-                       onClick={() => proceedToNext(false)}
-                       className="px-8 py-3 bg-emerald-600 text-white rounded-xl font-bold text-lg hover:bg-emerald-700 hover:scale-105 transition-all shadow-lg border-2 border-emerald-700"
-                     >
-                       Sledeće pitanje → <span className="text-sm opacity-70 font-normal ml-1">(Enter)</span>
-                     </button>
+                     <h3 className="text-3xl font-bold text-rose-600 mb-2">Netačno</h3>
+                     <div className="text-slate-500 mb-8 text-lg">
+                        Tačan odgovor je: <br/>
+                        <span className="font-bold text-slate-800 text-2xl">{targetAnswerPrimary}</span>
+                     </div>
                    </>
                  )}
-               </div>
-            </div>
-          )}
+                 
+                 <button
+                   onClick={() => proceedToNext(feedback === 'correct')}
+                   autoFocus
+                   className={`px-10 py-4 rounded-2xl font-bold text-lg text-white shadow-xl hover:scale-105 transition-all w-full md:w-auto
+                     ${feedback === 'correct' ? 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-200' : 'bg-rose-500 hover:bg-rose-600 shadow-rose-200'}
+                   `}
+                 >
+                   Nastavi (Enter) →
+                 </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Input Area */}
-        <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
-          <div className="relative">
+        {/* Input & Keyboard */}
+        <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto relative z-10">
+          <div className="relative group">
             <input
               ref={inputRef}
               type="text"
@@ -253,27 +191,26 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
               onChange={(e) => setInputValue(e.target.value)}
               disabled={feedback !== 'none'}
               placeholder={inputPlaceholder}
-              className={`w-full text-center text-xl md:text-2xl p-4 rounded-xl border-2 focus:outline-none focus:ring-4 transition-all shadow-sm font-bold
+              className={`w-full text-center text-xl md:text-2xl p-6 rounded-2xl border-2 outline-none transition-all shadow-lg shadow-slate-100 font-bold placeholder:font-normal
                 ${feedback === 'none' 
-                  ? 'border-emerald-500 bg-white text-emerald-900 placeholder:text-emerald-300/50' 
-                  : feedback === 'correct'
-                    ? 'border-emerald-500 bg-white text-emerald-800'
-                    : 'border-rose-500 bg-white text-rose-800'
+                  ? 'border-slate-200 bg-white text-slate-800 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10' 
+                  : 'border-slate-100 bg-slate-50 text-slate-400'
                 }
               `}
             />
-            {feedback === 'none' && (
+            {feedback === 'none' && inputValue.trim() && (
               <button
                 type="submit"
-                disabled={!inputValue.trim()}
-                className="absolute right-2 top-2 bottom-2 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+                className="absolute right-3 top-3 bottom-3 aspect-square bg-slate-900 hover:bg-slate-800 text-white rounded-xl flex items-center justify-center transition-all hover:scale-105 shadow-md"
               >
-                Proveri
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" /></svg>
               </button>
             )}
           </div>
           
-          <VirtualKeyboard onCharClick={handleVirtualKey} characters={keyboardChars} />
+          <div className="mt-8">
+            <VirtualKeyboard onCharClick={handleVirtualKey} characters={keyboardChars} />
+          </div>
         </form>
       </div>
     </div>

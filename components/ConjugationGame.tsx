@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { DifficultyLevel, ConjugationTask } from '../types';
 import { getStaticConjugationTask } from '../services/contentService';
-import { playPronunciation } from '../services/geminiService';
 import { VirtualKeyboard } from './VirtualKeyboard';
 
 export const ConjugationGame: React.FC = () => {
@@ -132,12 +131,6 @@ export const ConjugationGame: React.FC = () => {
         <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Konjugujte glagol</h2>
         <div className="text-4xl font-bold text-slate-800 mb-2">{task.verbInfinite}</div>
         <p className="text-lg text-slate-500 italic mb-4">{task.translation}</p>
-        <button 
-           onClick={() => playPronunciation(task.verbInfinite)}
-           className="text-sm bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-full text-slate-600 font-medium transition-colors"
-        >
-          🔊 Poslušaj
-        </button>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 mb-8">
