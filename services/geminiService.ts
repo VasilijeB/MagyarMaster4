@@ -1,9 +1,7 @@
-
 import { GoogleGenAI, Type, Modality } from "@google/genai";
 import { FlashCard, WordCategory, DifficultyLevel, ConjugationTask, ChatMessage, StoryTask } from '../types';
 
-const API_KEY = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const getLevelInstruction = (level: DifficultyLevel): string => {
   switch (level) {
@@ -19,8 +17,6 @@ const getLevelInstruction = (level: DifficultyLevel): string => {
 // --- VOCABULARY ---
 
 export const generateFlashcards = async (category: WordCategory, level: DifficultyLevel): Promise<FlashCard[]> => {
-  if (!API_KEY) throw new Error("API Key is missing");
-
   const levelPrompt = getLevelInstruction(level);
   const prompt = `Generate exactly 10 distinct Hungarian ${category.toLowerCase()}.
   ${levelPrompt}
@@ -346,8 +342,6 @@ const optimizeForHungarianTTS = (text: string): string => {
 };
 
 export const playPronunciation = async (text: string) => {
-  if (!API_KEY) return;
-  
   // Apply phonetic optimization to fix accents (e.g. s -> sh, sz -> s)
   const phoneticText = optimizeForHungarianTTS(text);
 
@@ -356,7 +350,7 @@ export const playPronunciation = async (text: string) => {
       model: "gemini-2.5-flash-preview-tts",
       contents: [{ parts: [{ text: phoneticText }] }],
       config: {
-        responseModalities: ["AUDIO" as Modality],
+        responseModalities: [Modality.AUDIO],
         speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } } },
       },
     });
@@ -383,8 +377,6 @@ export const playPronunciation = async (text: string) => {
 };
 
 export const evaluatePronunciation = async (hungarianText: string, base64Audio: string): Promise<string> => {
-  if (!API_KEY) throw new Error("API Key is missing");
-
   const prompt = `
   Analyze the pronunciation of the following Hungarian text: "${hungarianText}".
   The audio provided is from a Serbian speaker learning Hungarian.
