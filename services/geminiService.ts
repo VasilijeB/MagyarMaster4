@@ -1,6 +1,8 @@
 import { GoogleGenAI, Type, Modality } from "@google/genai";
 import { FlashCard, WordCategory, DifficultyLevel, ConjugationTask, ChatMessage, StoryTask } from '../types';
 
+// The API key must be obtained exclusively from the environment variable process.env.API_KEY.
+// We assume process.env.API_KEY is pre-configured and available in the execution context.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const getLevelInstruction = (level: DifficultyLevel): string => {
@@ -350,7 +352,7 @@ export const playPronunciation = async (text: string) => {
       model: "gemini-2.5-flash-preview-tts",
       contents: [{ parts: [{ text: phoneticText }] }],
       config: {
-        responseModalities: [Modality.AUDIO],
+        responseModalities: [Modality.AUDIO], // Use the Enum here
         speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } } },
       },
     });
