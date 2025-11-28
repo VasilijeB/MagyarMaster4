@@ -1,8 +1,11 @@
 
+
 export enum WordCategory {
   NOUNS = 'Nouns',
   VERBS = 'Verbs',
-  ADJECTIVES = 'Adjectives'
+  ADJECTIVES = 'Adjectives',
+  NUMBERS = 'Numbers',
+  ADVERBS = 'Adverbs'
 }
 
 export type DifficultyLevel = 1 | 2 | 3 | 4 | 5;

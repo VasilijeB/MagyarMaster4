@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
               <NavButton 
                 active={currentMode === GameMode.VOCAB} 
                 onClick={() => handleNavClick(GameMode.VOCAB)}
-                label="Reči"
+                label="Vežbaj reči"
                 icon="📇"
               />
               <NavButton 
@@ -129,7 +129,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
                 <MobileNavButton 
                   active={currentMode === GameMode.VOCAB} 
                   onClick={() => handleNavClick(GameMode.VOCAB)}
-                  label="Kartice Reči"
+                  label="Vežbaj reči"
                   icon="📇"
                 />
                 <MobileNavButton 

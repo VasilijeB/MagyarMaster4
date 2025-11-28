@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { FlashCard, GameResult, FlashCardDirection } from '../types';
 import { VirtualKeyboard } from './VirtualKeyboard';
@@ -10,8 +11,16 @@ interface ActiveGameProps {
   direction?: FlashCardDirection;
 }
 
+type CardStatus = 'pending' | 'correct' | 'incorrect';
+
 export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCancel, direction = FlashCardDirection.SER_HUN }) => {
+  // The actual playing deck (can grow if user makes mistakes)
   const [deck, setDeck] = useState<FlashCard[]>([]);
+  // The fixed original deck for the progress bar
+  const [originalDeck, setOriginalDeck] = useState<FlashCard[]>([]);
+  // Track status of unique card IDs
+  const [cardStatus, setCardStatus] = useState<Record<string, CardStatus>>({});
+  
   const [currentIndex, setCurrentIndex] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [results, setResults] = useState<GameResult[]>([]);
@@ -21,6 +30,13 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
 
   useEffect(() => {
     setDeck(cards);
+    setOriginalDeck(cards);
+    
+    // Initialize statuses
+    const initialStatus: Record<string, CardStatus> = {};
+    cards.forEach(c => initialStatus[c.id] = 'pending');
+    setCardStatus(initialStatus);
+
     setCurrentIndex(0);
     setResults([]);
   }, [cards]);
@@ -43,7 +59,16 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     const newResults = [...results, newResult];
     setResults(newResults);
 
+    // Update status for the progress bar
+    // If it's correct, mark it correct (even if it was previously incorrect/red)
+    // If it's incorrect, mark it incorrect
+    setCardStatus(prev => ({
+      ...prev,
+      [currentCard.id]: isCorrect ? 'correct' : 'incorrect'
+    }));
+
     if (!isCorrect) {
+      // Add to end of deck to retry later
       setDeck(prev => [...prev, currentCard]);
     }
 
@@ -98,9 +123,9 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 min-h-[calc(100vh-80px)] flex flex-col">
+    <div className="max-w-2xl mx-auto px-4 py-4 md:py-6 min-h-[calc(100vh-80px)] flex flex-col">
       {/* Header & Progress */}
-      <div className="flex flex-col gap-6 mb-8">
+      <div className="flex flex-col gap-4 md:gap-6 mb-6 md:mb-8">
         <div className="flex items-center justify-between">
           <button 
             onClick={onCancel}
@@ -108,74 +133,71 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
           >
             ✕ Izađi
           </button>
-          <div className="bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-            Kartica {currentIndex + 1} od {deck.length}
-          </div>
-        </div>
+          
+          {/* Progress Bar (Fixed Original Deck) */}
+          <div className="flex-1 mx-4 flex gap-1 h-3">
+            {originalDeck.map((card) => {
+              const status = cardStatus[card.id];
+              const isCurrent = currentCard.id === card.id;
+              
+              let bgClass = 'bg-slate-200'; // Default pending
+              if (status === 'correct') bgClass = 'bg-emerald-500';
+              if (status === 'incorrect') bgClass = 'bg-rose-500';
 
-        {/* Segmented Progress Bar */}
-        <div className="flex gap-1 h-2 w-full">
-          {deck.map((_, idx) => (
-            <div 
-              key={idx}
-              className={`flex-1 rounded-full transition-all duration-500 ${
-                idx < currentIndex ? 'bg-emerald-400' : 
-                idx === currentIndex ? 'bg-slate-800' : 'bg-slate-200'
-              }`}
-            />
-          ))}
+              return (
+                <div 
+                  key={card.id}
+                  className={`flex-1 rounded-full transition-all duration-300 relative ${bgClass} ${isCurrent ? 'ring-2 ring-slate-400 ring-offset-1 transform scale-110 z-10' : ''}`}
+                >
+                  {/* Optional: Tiny indicator for current active card if needed, currently handled by ring */}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
       {/* Main Game Area */}
-      <div className="flex-1 flex flex-col justify-center gap-8">
+      <div className="flex-1 flex flex-col justify-center gap-6 md:gap-8">
         
         {/* Flashcard */}
-        <div className="perspective-1000">
-          <div className="relative bg-white rounded-[2rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-10 md:p-16 text-center transform transition-transform duration-500 hover:scale-[1.01] overflow-hidden">
+        <div className="perspective-1000 overflow-hidden rounded-[2rem] w-full">
+          <div className="relative bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[300px] md:min-h-[450px] flex flex-col items-center justify-center p-6 md:p-12 text-center overflow-hidden transition-all duration-300">
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
             
-            <h2 className="text-slate-400 uppercase tracking-[0.2em] text-xs font-extrabold mb-6">
+            <h2 className="text-slate-400 uppercase tracking-[0.2em] text-xs font-extrabold mb-4 md:mb-6">
               {isHungToSerb ? "MAĐARSKI" : "SRPSKI"}
             </h2>
             
-            <p className="text-4xl md:text-6xl font-extrabold text-slate-800 mb-2 leading-tight">
+            <p className="text-3xl md:text-6xl font-extrabold text-slate-800 mb-2 leading-tight break-words max-w-full">
               {questionText}
             </p>
 
-            {/* Feedback Overlay (Absolute) */}
+            {/* Feedback Overlay */}
             {feedback !== 'none' && (
-              <div className="absolute inset-0 z-20 rounded-[2rem] bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-8 animate-scale-in">
-                 {feedback === 'correct' ? (
-                   <>
-                     <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center text-4xl mb-4 animate-bounce">
-                       ✨
-                     </div>
-                     <h3 className="text-3xl font-bold text-emerald-600 mb-2">Tačno!</h3>
-                     <p className="text-slate-400 mb-8 font-medium">Sjajno obavljeno.</p>
-                   </>
-                 ) : (
-                   <>
-                     <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center text-4xl mb-4 animate-shake">
-                       ❌
-                     </div>
-                     <h3 className="text-3xl font-bold text-rose-600 mb-2">Netačno</h3>
-                     <div className="text-slate-500 mb-8 text-lg">
-                        Tačan odgovor je: <br/>
-                        <span className="font-bold text-slate-800 text-2xl">{targetAnswerPrimary}</span>
-                     </div>
-                   </>
-                 )}
-                 
-                 <button
-                   onClick={() => proceedToNext(feedback === 'correct')}
-                   autoFocus
-                   className={`px-10 py-4 rounded-2xl font-bold text-lg text-white shadow-xl hover:scale-105 transition-all w-full md:w-auto
-                     ${feedback === 'correct' ? 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-200' : 'bg-rose-500 hover:bg-rose-600 shadow-rose-200'}
-                   `}
-                 >
-                   Nastavi (Enter) →
-                 </button>
+              <div className="absolute inset-0 z-20 bg-white/98 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-8 animate-scale-in">
+                 <div className="flex flex-col items-center justify-center w-full">
+                   {feedback === 'correct' ? (
+                     <>
+                       <div className="w-12 h-12 md:w-20 md:h-20 bg-emerald-100 rounded-full flex items-center justify-center text-2xl md:text-4xl mb-3 md:mb-6 animate-bounce">
+                         ✨
+                       </div>
+                       <h3 className="text-xl md:text-3xl font-bold text-emerald-600 mb-1 md:mb-2">Tačno!</h3>
+                       <p className="text-slate-400 font-medium text-sm md:text-base">Sjajno obavljeno.</p>
+                     </>
+                   ) : (
+                     <>
+                       <div className="w-12 h-12 md:w-20 md:h-20 bg-rose-100 rounded-full flex items-center justify-center text-2xl md:text-4xl mb-3 md:mb-6 animate-shake">
+                         ❌
+                       </div>
+                       <h3 className="text-xl md:text-3xl font-bold text-rose-600 mb-1 md:mb-4">Netačno</h3>
+                       <div className="text-slate-500 text-sm md:text-lg">
+                          Tačan odgovor je: <br/>
+                          <span className="font-bold text-slate-800 text-3xl md:text-5xl mt-2 block">{targetAnswerPrimary}</span>
+                       </div>
+                     </>
+                   )}
+                 </div>
               </div>
             )}
           </div>
@@ -191,24 +213,44 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
               onChange={(e) => setInputValue(e.target.value)}
               disabled={feedback !== 'none'}
               placeholder={inputPlaceholder}
-              className={`w-full text-center text-xl md:text-2xl p-6 rounded-2xl border-2 outline-none transition-all shadow-lg shadow-slate-100 font-bold placeholder:font-normal
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
+              className={`w-full text-center text-xl md:text-2xl p-4 md:p-6 rounded-2xl border-2 outline-none transition-all shadow-lg shadow-slate-100 font-bold placeholder:font-normal px-12 md:px-32
                 ${feedback === 'none' 
                   ? 'border-slate-200 bg-white text-slate-800 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10' 
                   : 'border-slate-100 bg-slate-50 text-slate-400'
                 }
               `}
             />
+            
+            {/* Submit Button (Visible only when typing) */}
             {feedback === 'none' && inputValue.trim() && (
               <button
                 type="submit"
-                className="absolute right-3 top-3 bottom-3 aspect-square bg-slate-900 hover:bg-slate-800 text-white rounded-xl flex items-center justify-center transition-all hover:scale-105 shadow-md"
+                className="absolute right-2 md:right-3 top-2 bottom-2 md:top-3 md:bottom-3 aspect-square bg-slate-900 hover:bg-slate-800 text-white rounded-xl flex items-center justify-center transition-all hover:scale-105 shadow-md"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" /></svg>
+                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" /></svg>
+              </button>
+            )}
+
+            {/* Continue Button (Replaces Submit on Feedback) */}
+            {feedback !== 'none' && (
+              <button
+                type="button"
+                onClick={() => proceedToNext(feedback === 'correct')}
+                autoFocus
+                className={`absolute right-2 md:right-3 top-2 bottom-2 md:top-3 md:bottom-3 px-4 md:px-6 rounded-xl font-bold text-white shadow-lg transition-all hover:scale-105 flex items-center gap-2
+                  ${feedback === 'correct' ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-rose-500 hover:bg-rose-600'}
+                `}
+              >
+                <span className="hidden md:inline">Nastavi</span> <span className="text-xl">→</span>
               </button>
             )}
           </div>
           
-          <div className="mt-8">
+          <div className="mt-4 md:mt-8">
             <VirtualKeyboard onCharClick={handleVirtualKey} characters={keyboardChars} />
           </div>
         </form>

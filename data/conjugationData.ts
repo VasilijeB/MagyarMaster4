@@ -81,6 +81,87 @@ export const CONJUGATION_DATA: Record<DifficultyLevel, ConjugationTask[]> = {
     {
       verbInfinite: "várni", translation: "čekati",
       forms: { en: "várok", te: "vársz", o: "vár", mi: "várunk", ti: "vártok", ok: "várnak" }
+    },
+    // New L1 Verbs
+    {
+      verbInfinite: "állni", translation: "stajati",
+      forms: { en: "állok", te: "állsz", o: "áll", mi: "állunk", ti: "álltok", ok: "állnak" }
+    },
+    {
+      verbInfinite: "ülni", translation: "sedeti",
+      forms: { en: "ülök", te: "ülsz", o: "ül", mi: "ülünk", ti: "ültök", ok: "ülnek" }
+    },
+    {
+      verbInfinite: "inni", translation: "piti",
+      forms: { en: "iszok", te: "iszol", o: "iszik", mi: "iszunk", ti: "isztok", ok: "isznak" }
+    },
+    {
+      verbInfinite: "enni", translation: "jesti",
+      forms: { en: "eszek", te: "eszel", o: "eszik", mi: "eszünk", ti: "esztek", ok: "esznek" }
+    },
+    {
+      verbInfinite: "lakni", translation: "stanovati",
+      forms: { en: "lakok", te: "laksz", o: "lakik", mi: "lakunk", ti: "laktok", ok: "laknak" }
+    },
+    {
+      verbInfinite: "dolgozni", translation: "raditi",
+      forms: { en: "dolgozok", te: "dolgozol", o: "dolgozik", mi: "dolgozunk", ti: "dolgoztok", ok: "dolgoznak" }
+    },
+    {
+      verbInfinite: "tanulni", translation: "učiti",
+      forms: { en: "tanulok", te: "tanulsz", o: "tanul", mi: "tanulunk", ti: "tanultok", ok: "tanulnak" }
+    },
+    {
+      verbInfinite: "ismerni", translation: "poznavati",
+      forms: { en: "ismerek", te: "ismersz", o: "ismer", mi: "ismerünk", ti: "ismertek", ok: "ismernek" }
+    },
+    {
+      verbInfinite: "érteni", translation: "razumeti",
+      forms: { en: "értek", te: "értesz", o: "ért", mi: "értünk", ti: "értetek", ok: "értenek" }
+    },
+    {
+      verbInfinite: "beszélni", translation: "govoriti",
+      forms: { en: "beszélek", te: "beszélsz", o: "beszél", mi: "beszélünk", ti: "beszéltek", ok: "beszélnek" }
+    },
+    {
+      verbInfinite: "kérni", translation: "moliti/tražiti",
+      forms: { en: "kérek", te: "kérsz", o: "kér", mi: "kérünk", ti: "kértek", ok: "kérnek" }
+    },
+    {
+      verbInfinite: "szeretni", translation: "voleti",
+      forms: { en: "szeretek", te: "szeretsz", o: "szeret", mi: "szeretünk", ti: "szerettek", ok: "szeretnek" }
+    },
+    {
+      verbInfinite: "tudni", translation: "znati",
+      forms: { en: "tudok", te: "tudsz", o: "tud", mi: "tudunk", ti: "tudtok", ok: "tudnak" }
+    },
+    {
+      verbInfinite: "hinni", translation: "verovati",
+      forms: { en: "hiszek", te: "hiszel", o: "hisz", mi: "hiszünk", ti: "hisztek", ok: "hisznek" }
+    },
+    {
+      verbInfinite: "főzni", translation: "kuvati",
+      forms: { en: "főzök", te: "főzöl", o: "főz", mi: "főzünk", ti: "főztök", ok: "főznek" }
+    },
+    {
+      verbInfinite: "keresni", translation: "tražiti",
+      forms: { en: "keresek", te: "keresel", o: "keres", mi: "keresünk", ti: "kerestek", ok: "keresnek" }
+    },
+    {
+      verbInfinite: "siettetni", translation: "požurivati",
+      forms: { en: "siettetek", te: "siettetsz", o: "siettet", mi: "siettetünk", ti: "siettettek", ok: "siettetnek" }
+    },
+    {
+      verbInfinite: "vásárolni", translation: "kupovati",
+      forms: { en: "vásárlok", te: "vásárolsz", o: "vásárol", mi: "vásárolunk", ti: "vásároltok", ok: "vásárolnak" }
+    },
+    {
+      verbInfinite: "táncolni", translation: "plesati",
+      forms: { en: "táncolok", te: "táncolsz", o: "táncol", mi: "táncolunk", ti: "táncoltok", ok: "táncolnak" }
+    },
+    {
+      verbInfinite: "énekelni", translation: "pevati",
+      forms: { en: "énekelek", te: "énekelsz", o: "énekel", mi: "énekelünk", ti: "énekeltek", ok: "énekelnek" }
     }
   ],
   2: [
@@ -163,6 +244,87 @@ export const CONJUGATION_DATA: Record<DifficultyLevel, ConjugationTask[]> = {
     {
       verbInfinite: "venni", translation: "uzeti/kupiti",
       forms: { en: "veszek", te: "veszel", o: "vesz", mi: "veszünk", ti: "vesztek", ok: "vesznek" }
+    },
+    // New L2 Verbs
+    {
+      verbInfinite: "gyűjteni", translation: "sakupljati",
+      forms: { en: "gyűjtök", te: "gyűjtesz", o: "gyűjt", mi: "gyűjtünk", ti: "gyűjtötök", ok: "gyűjtenek" }
+    },
+    {
+      verbInfinite: "felejteni", translation: "zaboraviti",
+      forms: { en: "felejtek", te: "felejtesz", o: "felejt", mi: "felejtünk", ti: "felejtetek", ok: "felejtenek" }
+    },
+    {
+      verbInfinite: "veszíteni", translation: "izgubiti",
+      forms: { en: "veszítek", te: "veszítesz", o: "veszít", mi: "veszítünk", ti: "veszítetek", ok: "veszítenek" }
+    },
+    {
+      verbInfinite: "kiabálni", translation: "vikati",
+      forms: { en: "kiabálok", te: "kiabálsz", o: "kiabál", mi: "kiabálunk", ti: "kiabáltok", ok: "kiabálnak" }
+    },
+    {
+      verbInfinite: "köszönni", translation: "pozdraviti/zahvaliti",
+      forms: { en: "köszönök", te: "köszönsz", o: "köszön", mi: "köszönünk", ti: "köszöntök", ok: "köszönnek" }
+    },
+    {
+      verbInfinite: "befejezni", translation: "završiti",
+      forms: { en: "befejezek", te: "befejezel", o: "befejez", mi: "befejezünk", ti: "befejeztek", ok: "befejeznek" }
+    },
+    {
+      verbInfinite: "kezdeni", translation: "početi",
+      forms: { en: "kezdek", te: "kezdesz", o: "kezd", mi: "kezdünk", ti: "kezdetek", ok: "kezdenek" }
+    },
+    {
+      verbInfinite: "ajánlani", translation: "preporučiti",
+      forms: { en: "ajánlok", te: "ajánlasz", o: "ajánl", mi: "ajánlunk", ti: "ajánlotok", ok: "ajánlanak" }
+    },
+    {
+      verbInfinite: "mutatni", translation: "pokazati",
+      forms: { en: "mutatok", te: "mutatsz", o: "mutat", mi: "mutatunk", ti: "mutattok", ok: "mutatnak" }
+    },
+    {
+      verbInfinite: "nézni", translation: "gledati",
+      forms: { en: "nézek", te: "nézel", o: "néz", mi: "nézünk", ti: "néztek", ok: "néznek" }
+    },
+    {
+      verbInfinite: "pihenni", translation: "odmarati",
+      forms: { en: "pihenek", te: "pihensz", o: "pihen", mi: "pihenünk", ti: "pihentek", ok: "pihennek" }
+    },
+    {
+      verbInfinite: "fáradni", translation: "umoriti se",
+      forms: { en: "fáradok", te: "fáradsz", o: "fárad", mi: "fáradunk", ti: "fáradtok", ok: "fáradnak" }
+    },
+    {
+      verbInfinite: "megállni", translation: "zaustaviti se",
+      forms: { en: "megállok", te: "megállsz", o: "megáll", mi: "megállunk", ti: "megálltok", ok: "megállnak" }
+    },
+    {
+      verbInfinite: "fordulni", translation: "okrenuti se",
+      forms: { en: "fordulok", te: "fordulsz", o: "fordul", mi: "fordulunk", ti: "fordultok", ok: "fordulnak" }
+    },
+    {
+      verbInfinite: "ugrani", translation: "skočiti",
+      forms: { en: "ugrok", te: "ugrasz", o: "ugrik", mi: "ugrunk", ti: "ugrotok", ok: "ugranak" }
+    },
+    {
+      verbInfinite: "dobni", translation: "baciti",
+      forms: { en: "dobok", te: "dobsz", o: "dob", mi: "dobunk", ti: "dobtok", ok: "dobnak" }
+    },
+    {
+      verbInfinite: "húzni", translation: "vući",
+      forms: { en: "húzok", te: "húzol", o: "húz", mi: "húzunk", ti: "húztok", ok: "húznak" }
+    },
+    {
+      verbInfinite: "tolni", translation: "gurati",
+      forms: { en: "tolok", te: "tolsz", o: "tol", mi: "tolunk", ti: "toltok", ok: "tolnak" }
+    },
+    {
+      verbInfinite: "emelni", translation: "podizati",
+      forms: { en: "emelek", te: "emelsz", o: "emel", mi: "emelünk", ti: "emeltek", ok: "emelnek" }
+    },
+    {
+      verbInfinite: "számolni", translation: "računati",
+      forms: { en: "számolok", te: "számolsz", o: "számol", mi: "számolunk", ti: "számoltok", ok: "számolnak" }
     }
   ],
   3: [

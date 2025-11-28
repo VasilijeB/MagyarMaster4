@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface LandingPageProps {
@@ -7,171 +6,129 @@ interface LandingPageProps {
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
   return (
-    <div className="min-h-screen bg-white font-sans selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen bg-slate-50 font-sans selection:bg-emerald-100 selection:text-emerald-900">
       {/* Navigation */}
       <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="text-2xl font-bold text-slate-900">
             Magyar<span className="text-emerald-600">Master</span>
           </div>
           <button 
             onClick={onStart}
-            className="px-6 py-2 bg-slate-900 text-white rounded-full font-medium hover:bg-slate-800 transition-all hover:scale-105"
+            className="px-6 py-2 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition-all hover:scale-105 shadow-lg shadow-slate-200"
           >
-            Prijava
+            Počni vežbanje
           </button>
         </div>
       </nav>
 
       {/* Hero Section */}
       <header className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
-          <div className="inline-block mb-6 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 font-semibold text-sm uppercase tracking-wide animate-fade-in-up">
-            ✨ Pokreće veštačka inteligencija
+        <div className="max-w-5xl mx-auto px-6 relative z-10 text-center">
+          <div className="inline-block mb-6 px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 font-bold text-sm uppercase tracking-wide animate-fade-in-up">
+            👋 Dobrodošli
           </div>
           <h1 className="text-5xl md:text-7xl font-bold text-slate-900 mb-8 tracking-tight leading-tight animate-fade-in-up delay-100">
-            Savladajte mađarski jezik <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">
-              brže i pametnije.
+            Vežbajte mađarske <br className="hidden md:block" />
+            <span className="text-emerald-600">
+              reči svakog dana.
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up delay-200">
-            Vaš lični instruktor za vokabular, gramatiku, izgovor i konverzaciju. 
-            Prilagođeno Vašem nivou znanja.
+          <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up delay-200 font-medium">
+            Opušteno vežbanje reči, izraza i glagola. 
+            Bez pritiska, samo vi i reči.
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center animate-fade-in-up delay-300">
             <button 
               onClick={onStart}
-              className="px-8 py-4 bg-emerald-600 text-white text-lg font-bold rounded-2xl hover:bg-emerald-700 shadow-xl shadow-emerald-200 hover:-translate-y-1 transition-all"
+              className="px-10 py-5 bg-emerald-600 text-white text-lg font-bold rounded-2xl hover:bg-emerald-700 shadow-xl shadow-emerald-200 hover:-translate-y-1 transition-all"
             >
-              Započnite besplatno
-            </button>
-            <button 
-              onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-              className="px-8 py-4 bg-white text-slate-700 border-2 border-slate-200 text-lg font-bold rounded-2xl hover:border-slate-400 hover:bg-slate-50 transition-all"
-            >
-              Saznajte više
+              Kreni sa učenjem
             </button>
           </div>
         </div>
         
-        {/* Abstract Background Shapes */}
+        {/* Abstract Background Shapes - Neutral Colors */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 overflow-hidden opacity-40">
-           <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
-           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
-           <div className="absolute bottom-[-20%] left-[20%] w-[500px] h-[500px] bg-teal-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
+           <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
+           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
+           <div className="absolute bottom-[-20%] left-[20%] w-[500px] h-[500px] bg-slate-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
         </div>
       </header>
 
-      {/* Features Grid (Bento Box Style) */}
-      <section id="features" className="py-24 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* Features Grid */}
+      <section id="features" className="py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">Sve što Vam treba na jednom mestu</h2>
-            <p className="text-xl text-slate-500 max-w-2xl mx-auto">
-              Zaboravite na dosadne udžbenike. MagyarMaster koristi napredne jezičke modele da kreira vežbe samo za Vas.
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Jednostavno i efikasno</h2>
+            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+              Sve što vam treba da obogatite rečnik i poboljšate znanje.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Feature 1: Flashcards */}
-            <div className="md:col-span-2 p-8 md:p-12 rounded-3xl bg-white border border-slate-200 shadow-lg hover:shadow-xl transition-all group overflow-hidden relative">
-              <div className="relative z-10">
-                <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">📇</div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">Pametne Kartice Reči</h3>
-                <p className="text-slate-500 text-lg leading-relaxed max-w-md">
-                  Vežbajte imenice, glagole i prideve kroz 5 nivoa težine (A1-B2). 
-                  Aplikacija nove reči svaki put, tako da nikada ne učite isto.
-                  Uključuje automatski izgovor i prepoznavanje sinonima.
+            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors text-center">
+                <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm">📇</div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">Vežbaj reči</h3>
+                <p className="text-slate-500 leading-relaxed">
+                  Vežbajte prevod imenica, glagola, prideva i fraza.
                 </p>
-              </div>
-              <div className="absolute right-0 bottom-0 opacity-10 translate-x-10 translate-y-10">
-                <div className="text-[200px]">🇭🇺</div>
-              </div>
             </div>
 
-            {/* Feature 2: Grammar */}
-            <div className="p-8 md:p-12 rounded-3xl bg-slate-900 text-white shadow-lg hover:shadow-xl transition-all group relative overflow-hidden">
-               <div className="relative z-10">
-                <div className="w-14 h-14 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-3xl mb-6 text-emerald-400">💡</div>
-                <h3 className="text-2xl font-bold mb-4">Gramatički Mentor</h3>
-                <p className="text-slate-400 text-lg">
-                  Imate pitanje o sufiksima ili padežima? Naš četbot objašnjava gramatiku jednostavno, na srpskom jeziku, uz primere.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 3: Stories */}
-            <div className="p-8 md:p-12 rounded-3xl bg-white border border-slate-200 shadow-lg hover:shadow-xl transition-all group">
-               <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center text-3xl mb-6">📖</div>
-               <h3 className="text-2xl font-bold text-slate-900 mb-4">Interaktivne Priče</h3>
-               <p className="text-slate-500 text-lg">
-                 Generišite jedinstvene kratke priče prilagođene Vašem nivou. Prevedite ih, a će oceniti Vaše razumevanje i ukazati na greške.
+            {/* Feature 2: Conjugation */}
+             <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors text-center">
+               <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm">✍️</div>
+               <h3 className="text-xl font-bold text-slate-900 mb-3">Konjugacija</h3>
+               <p className="text-slate-500 leading-relaxed">
+                 Vežbajte promene glagola kroz sva lica i vremena.
                </p>
             </div>
 
-             {/* Feature 4: Conjugation */}
-             <div className="p-8 md:p-12 rounded-3xl bg-white border border-slate-200 shadow-lg hover:shadow-xl transition-all group">
-               <div className="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center text-3xl mb-6">✍️</div>
-               <h3 className="text-2xl font-bold text-slate-900 mb-4">Master Konjugacije</h3>
-               <p className="text-slate-500 text-lg">
-                 Mađarski glagoli su teški. Vežbajte sve forme (jednina i množina) uz momentalnu proveru i ispravke.
+            {/* Feature 3: Stories (New) */}
+            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors text-center">
+               <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm">📖</div>
+               <h3 className="text-xl font-bold text-slate-900 mb-3">Kratke Priče</h3>
+               <p className="text-slate-500 leading-relaxed">
+                 Čitajte zanimljive priče prilagođene vašem nivou i vežbajte prevod.
+               </p>
+            </div>
+
+            {/* Feature 4: Grammar (New) */}
+            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors text-center">
+               <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm">💡</div>
+               <h3 className="text-xl font-bold text-slate-900 mb-3">Gramatika</h3>
+               <p className="text-slate-500 leading-relaxed">
+                 Interaktivna objašnjenja i pomoć oko gramatičkih pravila.
                </p>
             </div>
 
             {/* Feature 5: Custom */}
-            <div className="md:col-span-1 p-8 md:p-12 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg hover:shadow-xl transition-all group">
-               <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-3xl mb-6 text-white">⭐</div>
-               <h3 className="text-2xl font-bold mb-4">Moji Izrazi</h3>
-               <p className="text-emerald-100 text-lg">
-                 Unesite sopstvene reči ili fraze, a aplikacija će automatski kreirati lekcije za Vas.
+            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors text-center">
+               <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm">⭐</div>
+               <h3 className="text-xl font-bold text-slate-900 mb-3">Moji Izrazi</h3>
+               <p className="text-slate-500 leading-relaxed">
+                 Unesite svoje reči i napravite lični set za vežbu.
                </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats/Methodology */}
-      <section className="py-24 bg-white border-t border-slate-100">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold text-slate-900 mb-16">Zašto MagyarMaster?</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div>
-                    <div className="text-5xl font-bold text-emerald-600 mb-2">∞</div>
-                    <h3 className="text-xl font-bold text-slate-800 mb-2">Beskonačan sadržaj</h3>
-                    <p className="text-slate-500"> nikada nećete raditi istu vežbu dvaput.</p>
-                </div>
-                <div>
-                    <div className="text-5xl font-bold text-emerald-600 mb-2">A1-B2</div>
-                    <h3 className="text-xl font-bold text-slate-800 mb-2">Strukturirano učenje</h3>
-                    <p className="text-slate-500">Sadržaj prati CEFR standarde, vodeći vas od početnika do samostalnog govornika.</p>
-                </div>
-                <div>
-                    <div className="text-5xl font-bold text-emerald-600 mb-2">24/7</div>
-                    <h3 className="text-xl font-bold text-slate-800 mb-2">Uvek dostupno</h3>
-                    <p className="text-slate-500">Učite svojim tempom, bilo gde, na bilo kom uređaju.</p>
-                </div>
-            </div>
-        </div>
-      </section>
-
       {/* CTA Footer */}
-      <footer className="py-24 bg-slate-900 text-center relative overflow-hidden">
-          <div className="relative z-10 max-w-4xl mx-auto px-6">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">Spremni da progovorite mađarski?</h2>
+      <footer className="py-20 bg-slate-50 text-center border-t border-slate-200">
+          <div className="max-w-4xl mx-auto px-6">
+              <h2 className="text-3xl font-bold text-slate-800 mb-8">Počnite odmah</h2>
               <button 
                 onClick={onStart}
-                className="px-10 py-5 bg-emerald-500 text-white text-xl font-bold rounded-2xl hover:bg-emerald-600 hover:scale-105 transition-all shadow-2xl shadow-emerald-500/30"
+                className="px-10 py-4 bg-slate-900 text-white text-lg font-bold rounded-xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-300"
               >
-                Kreirajte svoj profil
+                Otvori aplikaciju
               </button>
               <p className="mt-8 text-slate-400 text-sm">
-                  © {new Date().getFullYear()} MagyarMaster. Sva prava zadržana.
+                  © {new Date().getFullYear()} MagyarMaster.
               </p>
           </div>
-          
-          {/* Decorative glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-600/20 rounded-full blur-3xl -z-0"></div>
       </footer>
     </div>
   );

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { GameMode, User } from '../types';
 
@@ -21,101 +22,97 @@ export const Dashboard: React.FC<DashboardProps> = ({ onSelectMode, user }) => {
   const games = [
     {
       mode: GameMode.VOCAB,
-      title: "Kartice Reči",
-      desc: "Imenice, glagoli, pridevi",
+      title: "Vežbaj reči",
+      desc: "Vežbajte prevod imenica, glagola i prideva",
       icon: "📇",
-      gradient: "from-blue-500 to-indigo-500",
-      bg: "bg-blue-50",
-      delay: "delay-0"
+      color: "text-blue-600",
+      bg: "bg-blue-50 group-hover:bg-blue-100",
+      border: "hover:border-blue-200"
     },
     {
       mode: GameMode.CONJUGATION,
       title: "Konjugacija",
-      desc: "Glagolski oblici",
+      desc: "Vežbanje glagolskih oblika",
       icon: "✍️",
-      gradient: "from-rose-500 to-pink-500",
-      bg: "bg-rose-50",
-      delay: "delay-75"
+      color: "text-rose-600",
+      bg: "bg-rose-50 group-hover:bg-rose-100",
+      border: "hover:border-rose-200"
     },
     {
       mode: GameMode.STORIES,
       title: "Kratke Priče",
       desc: "Čitanje i prevod",
       icon: "📖",
-      gradient: "from-teal-500 to-emerald-500",
-      bg: "bg-teal-50",
-      delay: "delay-100"
+      color: "text-teal-600",
+      bg: "bg-teal-50 group-hover:bg-teal-100",
+      border: "hover:border-teal-200"
     },
     {
       mode: GameMode.GRAMMAR,
       title: "Gramatika",
-      desc: "AI Instruktor",
+      desc: "Pomoć i objašnjenja",
       icon: "💡",
-      gradient: "from-amber-400 to-orange-500",
-      bg: "bg-amber-50",
-      delay: "delay-150"
+      color: "text-amber-600",
+      bg: "bg-amber-50 group-hover:bg-amber-100",
+      border: "hover:border-amber-200"
     },
     {
       mode: GameMode.CUSTOM_VOCAB,
       title: "Moji Izrazi",
-      desc: "Tvoje reči",
+      desc: "Vaše reči za vežbu",
       icon: "⭐",
-      gradient: "from-violet-500 to-purple-500",
-      bg: "bg-violet-50",
-      delay: "delay-200"
+      color: "text-violet-600",
+      bg: "bg-violet-50 group-hover:bg-violet-100",
+      border: "hover:border-violet-200"
     }
   ];
 
   const greetingName = user ? toVocative(user.name) : 'Gosti';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-12 animate-fade-in">
+    <div className="max-w-3xl mx-auto px-4 py-8 md:py-12 animate-fade-in flex flex-col min-h-[calc(100vh-100px)]">
       {/* Hero Header */}
-      <div className="relative mb-16 p-8 md:p-12 rounded-3xl bg-slate-900 text-white overflow-hidden shadow-2xl shadow-slate-200">
-        <div className="relative z-10">
-          <h1 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
-            Zdravo, <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">{greetingName}</span>! 👋
-          </h1>
-          <p className="text-slate-300 text-lg md:text-xl max-w-2xl font-medium leading-relaxed">
-            Spremni za učenje? Izaberite modul i nastavite svoj napredak u mađarskom jeziku.
-          </p>
-        </div>
-        
-        {/* Decorative background blobs */}
-        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-60 h-60 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+      <div className="text-center mb-6 md:mb-10">
+         <h1 className="text-2xl md:text-5xl font-bold text-slate-900 mb-2">
+            Zdravo, <span className="text-emerald-600">{greetingName}</span>! 👋
+         </h1>
+         <p className="text-slate-500 text-sm md:text-lg">
+            Šta želite da učite danas?
+         </p>
       </div>
 
-      <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-        <span className="w-2 h-8 bg-emerald-500 rounded-full"></span>
-        Dostupni Moduli
-      </h2>
-
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {games.map((game) => (
+      {/* Vertical List */}
+      <div className="flex flex-col gap-3 md:gap-4 w-full">
+        {games.map((game, index) => (
           <button
             key={game.mode}
             onClick={() => onSelectMode(game.mode)}
-            className={`group relative p-6 rounded-3xl border border-slate-100 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left overflow-hidden animate-fade-in-up ${game.delay}`}
+            className={`group w-full p-4 rounded-2xl bg-white border border-slate-100 shadow-sm transition-all duration-200 ease-out hover:shadow-lg flex items-center text-left relative overflow-hidden ${game.border}`}
+            style={{ animationDelay: `${index * 50}ms` }}
           >
-            <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${game.gradient} opacity-5 rounded-full blur-2xl -mr-10 -mt-10 group-hover:opacity-10 transition-opacity`}></div>
-            
-            <div className="flex items-start justify-between mb-4">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-sm ${game.bg} group-hover:scale-110 transition-transform duration-300`}>
-                {game.icon}
-              </div>
-              <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
-                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+            {/* Icon Box */}
+            <div className={`w-12 h-12 md:w-16 md:h-16 rounded-xl flex items-center justify-center text-2xl md:text-3xl shadow-sm transition-colors duration-300 flex-shrink-0 ${game.bg} ${game.color}`}>
+              {game.icon}
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 ml-4 z-10">
+              <h3 className="text-lg md:text-xl font-bold text-slate-800 group-hover:text-slate-900 transition-colors">
+                {game.title}
+              </h3>
+              
+              {/* Description - Hidden by default, reveals on hover (Desktop) / Always visible small (Mobile) */}
+              <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-300 ease-out">
+                 <p className="overflow-hidden text-slate-500 text-sm md:text-base font-medium opacity-50 group-hover:opacity-100 transition-opacity duration-300">
+                   <span className="block pt-1">{game.desc}</span>
+                 </p>
               </div>
             </div>
-            
-            <h3 className="text-xl font-bold text-slate-800 mb-1 group-hover:text-emerald-600 transition-colors">
-              {game.title}
-            </h3>
-            <p className="text-slate-500 text-sm font-medium">
-              {game.desc}
-            </p>
+
+            {/* Arrow */}
+            <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-slate-100 group-hover:text-emerald-500 transition-colors ml-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+            </div>
           </button>
         ))}
       </div>
