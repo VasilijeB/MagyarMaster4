@@ -99,7 +99,8 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   }, [cards]);
 
   useEffect(() => {
-    if (inputRef.current && feedback === 'none') {
+    // Keep focus on input even when feedback changes, unless game is over
+    if (inputRef.current) {
       inputRef.current.focus();
     }
   }, [currentIndex, feedback, deck.length]);
@@ -125,19 +126,15 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     if (!isCorrect) {
       // Add to end of deck to retry later
       setDeck(prev => [...prev, currentCard]);
-      // If we are adding a card, we definitely need to continue playing.
-      // Even if we are at the 'end' currently, the deck just grew.
       setCurrentIndex(prev => prev + 1);
       setInputValue('');
       setFeedback('none');
     } else {
-      // If correct, only continue if we are NOT at the end of the deck
       if (currentIndex < deck.length - 1) {
         setCurrentIndex(prev => prev + 1);
         setInputValue('');
         setFeedback('none');
       } else {
-        // We are at the end and got it right (so no new card was added)
         onComplete(newResults);
       }
     }
@@ -162,18 +159,17 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   const questionText = isHungToSerb ? currentCard.hungarian : currentCard.serbian;
   const targetAnswerPrimary = isHungToSerb ? currentCard.serbian : currentCard.hungarian;
   
-  // Prepare valid answers (handling synonyms)
   const validAnswers = isHungToSerb 
     ? [currentCard.serbian.toLowerCase()] 
     : [currentCard.hungarian.toLowerCase(), ...currentCard.hungarianAlt.map(a => a.toLowerCase())];
   
-  // Display synonyms if they exist (for feedback)
   const synonyms = isHungToSerb ? [] : currentCard.hungarianAlt;
     
   const inputPlaceholder = isHungToSerb ? "Prevedi na srpski..." : "Prevedi na mađarski...";
   const keyboardChars = isHungToSerb ? SERBIAN_CHARS : HUNGARIAN_CHARS;
 
   const handleVirtualKey = (char: string) => {
+    // Prevent default touch behavior to keep keyboard open
     setInputValue(prev => prev + char);
     inputRef.current?.focus();
   };
@@ -188,14 +184,13 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     setFeedback(isCorrect ? 'correct' : 'incorrect');
     setLastResultCorrect(isCorrect);
     
-    // Play feedback sound
     playFeedbackSound(isCorrect ? 'correct' : 'incorrect');
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-4 md:py-6 min-h-[calc(100vh-80px)] flex flex-col">
-      {/* Header & Progress */}
-      <div className="flex flex-col gap-4 md:gap-6 mb-6 md:mb-8">
+    <div className="max-w-2xl mx-auto px-4 py-2 md:py-6 min-h-[100dvh] flex flex-col">
+      {/* Header & Progress - Reduced margins for mobile */}
+      <div className="flex flex-col gap-2 md:gap-6 mb-2 md:mb-8">
         <div className="flex items-center justify-between">
           <button 
             onClick={onCancel}
@@ -204,13 +199,12 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
             ✕ Izađi
           </button>
           
-          {/* Progress Bar (Fixed Original Deck) */}
-          <div className="flex-1 mx-4 flex gap-1 h-3">
+          <div className="flex-1 mx-4 flex gap-1 h-2 md:h-3">
             {originalDeck.map((card) => {
               const status = cardStatus[card.id];
               const isCurrent = currentCard.id === card.id;
               
-              let bgClass = 'bg-slate-200'; // Default pending
+              let bgClass = 'bg-slate-200';
               if (status === 'correct') bgClass = 'bg-emerald-500';
               if (status === 'incorrect') bgClass = 'bg-rose-500';
 
@@ -226,50 +220,49 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
         </div>
       </div>
 
-      {/* Main Game Area */}
-      <div className="flex-1 flex flex-col justify-center gap-6 md:gap-8">
+      {/* Main Game Area - Compacted gaps */}
+      <div className="flex-1 flex flex-col justify-start md:justify-center gap-3 md:gap-8">
         
-        {/* Flashcard */}
-        <div className="perspective-1000 overflow-hidden rounded-[2rem] w-full">
-          <div className="relative bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[300px] md:min-h-[450px] flex flex-col items-center justify-center p-6 md:p-12 text-center overflow-hidden transition-all duration-300 group">
+        {/* Flashcard - Reduced min-height for mobile to fit above keyboard */}
+        <div className="perspective-1000 overflow-hidden rounded-[1.5rem] md:rounded-[2rem] w-full flex-shrink-0">
+          <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[200px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-12 text-center overflow-hidden transition-all duration-300 group">
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
             
-            <h2 className="text-slate-400 uppercase tracking-[0.2em] text-xs font-extrabold mb-4 md:mb-6 flex items-center gap-2">
+            <h2 className="text-slate-400 uppercase tracking-[0.2em] text-[10px] md:text-xs font-extrabold mb-2 md:mb-6 flex items-center gap-2">
               {isHungToSerb ? "MAĐARSKI" : "SRPSKI"}
             </h2>
             
-            <p className="text-3xl md:text-6xl font-extrabold text-slate-800 mb-2 leading-tight break-words max-w-full">
+            <p className="text-2xl md:text-6xl font-extrabold text-slate-800 mb-2 leading-tight break-words max-w-full">
               {questionText}
             </p>
 
-            {/* Feedback Overlay */}
+            {/* Feedback Overlay - Compacted for mobile */}
             {feedback !== 'none' && (
               <div className="absolute inset-0 z-20 bg-white/98 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-8 animate-scale-in">
                  <div className="flex flex-col items-center justify-center w-full">
                    {feedback === 'correct' ? (
                      <>
-                       <div className="w-12 h-12 md:w-20 md:h-20 bg-emerald-100 rounded-full flex items-center justify-center text-2xl md:text-4xl mb-3 md:mb-6 animate-bounce">
+                       <div className="w-10 h-10 md:w-20 md:h-20 bg-emerald-100 rounded-full flex items-center justify-center text-xl md:text-4xl mb-2 md:mb-6 animate-bounce">
                          ✨
                        </div>
-                       <h3 className="text-xl md:text-3xl font-bold text-emerald-600 mb-1 md:mb-2">Tačno!</h3>
-                       <p className="text-slate-400 font-medium text-sm md:text-base">Sjajno obavljeno.</p>
-                       <div className="mt-4 text-emerald-600 font-bold text-lg flex items-center gap-2">
+                       <h3 className="text-lg md:text-3xl font-bold text-emerald-600 mb-1 md:mb-2">Tačno!</h3>
+                       <div className="mt-2 text-emerald-600 font-bold text-base md:text-lg flex items-center gap-2">
                           {currentCard.hungarian}
                        </div>
                      </>
                    ) : (
                      <>
-                       <div className="w-12 h-12 md:w-20 md:h-20 bg-rose-100 rounded-full flex items-center justify-center text-2xl md:text-4xl mb-3 md:mb-6 animate-shake">
+                       <div className="w-10 h-10 md:w-20 md:h-20 bg-rose-100 rounded-full flex items-center justify-center text-xl md:text-4xl mb-2 md:mb-6 animate-shake">
                          ❌
                        </div>
-                       <h3 className="text-xl md:text-3xl font-bold text-rose-600 mb-1 md:mb-4">Netačno</h3>
+                       <h3 className="text-lg md:text-3xl font-bold text-rose-600 mb-1 md:mb-4">Netačno</h3>
                        <div className="text-slate-500 text-sm md:text-lg">
-                          Tačan odgovor je: <br/>
-                          <div className="font-bold text-slate-800 text-3xl md:text-5xl mt-2 flex items-center justify-center gap-3">
+                          Tačan odgovor: <br/>
+                          <div className="font-bold text-slate-800 text-2xl md:text-5xl mt-1 md:mt-2 flex items-center justify-center gap-3">
                             {targetAnswerPrimary}
                           </div>
                           {synonyms.length > 0 && (
-                            <p className="text-sm mt-3 text-slate-400">
+                            <p className="text-xs md:text-sm mt-2 text-slate-400">
                               (Takođe: {synonyms.join(', ')})
                             </p>
                           )}
@@ -283,44 +276,48 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
         </div>
 
         {/* Input & Keyboard */}
-        <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto relative z-10">
+        <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto relative z-10 pb-2">
           <div className="relative group">
             <input
               ref={inputRef}
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              disabled={feedback !== 'none'}
+              // Use readOnly instead of disabled to keep keyboard open
+              readOnly={feedback !== 'none'}
               placeholder={inputPlaceholder}
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              className={`w-full text-center text-xl md:text-2xl p-4 md:p-6 rounded-2xl border-2 outline-none transition-all shadow-lg shadow-slate-100 font-bold placeholder:font-normal px-12 md:px-32
+              className={`w-full text-center text-lg md:text-2xl p-3 md:p-6 rounded-2xl border-2 outline-none transition-all shadow-lg shadow-slate-100 font-bold placeholder:font-normal px-12 md:px-32
                 ${feedback === 'none' 
                   ? 'border-slate-200 bg-white text-slate-800 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10' 
-                  : 'border-slate-100 bg-slate-50 text-slate-400'
+                  : 'border-slate-100 bg-slate-50 text-slate-400 select-none'
                 }
               `}
             />
             
-            {/* Submit Button (Visible only when typing) */}
+            {/* Submit Button */}
             {feedback === 'none' && inputValue.trim() && (
               <button
                 type="submit"
+                // Prevent mouse down from stealing focus
+                onMouseDown={(e) => e.preventDefault()}
                 className="absolute right-2 md:right-3 top-2 bottom-2 md:top-3 md:bottom-3 aspect-square bg-slate-900 hover:bg-slate-800 text-white rounded-xl flex items-center justify-center transition-all hover:scale-105 shadow-md"
               >
                 <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" /></svg>
               </button>
             )}
 
-            {/* Continue Button (Replaces Submit on Feedback) */}
+            {/* Continue Button */}
             {feedback !== 'none' && (
               <button
                 type="button"
                 onClick={() => proceedToNext(feedback === 'correct')}
-                autoFocus
-                className={`absolute right-2 md:right-3 top-2 bottom-2 md:top-3 md:bottom-3 px-4 md:px-6 rounded-xl font-bold text-white shadow-lg transition-all hover:scale-105 flex items-center gap-2
+                // CRITICAL: Prevents button click from closing the keyboard
+                onMouseDown={(e) => e.preventDefault()}
+                className={`absolute right-2 md:right-3 top-2 bottom-2 md:top-3 md:bottom-3 px-3 md:px-6 rounded-xl font-bold text-white shadow-lg transition-all hover:scale-105 flex items-center gap-2
                   ${feedback === 'correct' ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-rose-500 hover:bg-rose-600'}
                 `}
               >
@@ -329,8 +326,11 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
             )}
           </div>
           
-          <div className="mt-4 md:mt-8">
-            <VirtualKeyboard onCharClick={handleVirtualKey} characters={keyboardChars} />
+          <div className="mt-3 md:mt-8">
+            <VirtualKeyboard 
+              onCharClick={handleVirtualKey} 
+              characters={keyboardChars} 
+            />
           </div>
         </form>
       </div>
