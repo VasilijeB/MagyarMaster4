@@ -23,6 +23,7 @@ const playFeedbackSound = (type: 'correct' | 'incorrect') => {
     
     if (type === 'correct') {
       // Pleasant "Success Chime" (C5 -> E5)
+      // Note 1
       const osc1 = ctx.createOscillator();
       const gain1 = ctx.createGain();
       osc1.type = 'sine';
@@ -34,6 +35,7 @@ const playFeedbackSound = (type: 'correct' | 'incorrect') => {
       osc1.start(now);
       osc1.stop(now + 0.4);
 
+      // Note 2 (slightly delayed)
       const osc2 = ctx.createOscillator();
       const gain2 = ctx.createGain();
       osc2.type = 'sine';
@@ -50,9 +52,9 @@ const playFeedbackSound = (type: 'correct' | 'incorrect') => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       
-      osc.type = 'triangle'; 
+      osc.type = 'triangle'; // Softer than sawtooth
       osc.frequency.setValueAtTime(150, now);
-      osc.frequency.exponentialRampToValueAtTime(50, now + 0.3); 
+      osc.frequency.exponentialRampToValueAtTime(50, now + 0.3); // Pitch drop
       
       gain.gain.setValueAtTime(0.2, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
@@ -69,8 +71,11 @@ const playFeedbackSound = (type: 'correct' | 'incorrect') => {
 };
 
 export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCancel, direction = FlashCardDirection.SER_HUN }) => {
+  // The actual playing deck (can grow if user makes mistakes)
   const [deck, setDeck] = useState<FlashCard[]>([]);
+  // The fixed original deck for the progress bar
   const [originalDeck, setOriginalDeck] = useState<FlashCard[]>([]);
+  // Track status of unique card IDs
   const [cardStatus, setCardStatus] = useState<Record<string, CardStatus>>({});
   
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -83,14 +88,18 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   useEffect(() => {
     setDeck(cards);
     setOriginalDeck(cards);
+    
+    // Initialize statuses
     const initialStatus: Record<string, CardStatus> = {};
     cards.forEach(c => initialStatus[c.id] = 'pending');
     setCardStatus(initialStatus);
+
     setCurrentIndex(0);
     setResults([]);
   }, [cards]);
 
   useEffect(() => {
+    // Keep focus on input even when feedback changes, unless game is over
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -108,12 +117,14 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     const newResults = [...results, newResult];
     setResults(newResults);
 
+    // Update status for the progress bar
     setCardStatus(prev => ({
       ...prev,
       [currentCard.id]: isCorrect ? 'correct' : 'incorrect'
     }));
 
     if (!isCorrect) {
+      // Add to end of deck to retry later
       setDeck(prev => [...prev, currentCard]);
       setCurrentIndex(prev => prev + 1);
       setInputValue('');
@@ -158,6 +169,7 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   const keyboardChars = isHungToSerb ? SERBIAN_CHARS : HUNGARIAN_CHARS;
 
   const handleVirtualKey = (char: string) => {
+    // Prevent default touch behavior to keep keyboard open
     setInputValue(prev => prev + char);
     inputRef.current?.focus();
   };
@@ -176,15 +188,13 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   };
 
   return (
-    // Use h-[100dvh] to perfectly fit the visible area above the keyboard on mobile
-    <div className="max-w-2xl mx-auto px-4 py-2 md:py-6 h-[100dvh] flex flex-col justify-between overflow-hidden">
-      
-      {/* Header & Progress - Compact on mobile */}
-      <div className="flex-none flex flex-col gap-1 md:gap-6 mb-1 md:mb-8">
+    <div className="max-w-2xl mx-auto px-4 py-1 md:py-6 min-h-[100dvh] flex flex-col">
+      {/* Header & Progress - Reduced margins for mobile */}
+      <div className="flex flex-col gap-2 md:gap-6 mb-2 md:mb-8">
         <div className="flex items-center justify-between">
           <button 
             onClick={onCancel}
-            className="text-slate-400 hover:text-slate-600 font-bold text-xs md:text-sm bg-slate-100 hover:bg-slate-200 px-3 py-1.5 md:px-4 md:py-2 rounded-full transition-colors"
+            className="text-slate-400 hover:text-slate-600 font-bold text-sm bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-full transition-colors"
           >
             ✕ Izađi
           </button>
@@ -210,49 +220,49 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
         </div>
       </div>
 
-      {/* Main Game Area - Flex-1 to take available space but allow shrinking */}
-      <div className="flex-1 flex flex-col justify-center gap-2 md:gap-8 min-h-0">
+      {/* Main Game Area - Compacted gaps */}
+      <div className="flex-1 flex flex-col justify-start md:justify-center gap-2 md:gap-8">
         
-        {/* Flashcard - Flexible height, compact minimums */}
-        <div className="perspective-1000 overflow-hidden rounded-[1.5rem] md:rounded-[2rem] w-full shrink-1 basis-auto relative">
-          <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 h-full min-h-[150px] md:min-h-[450px] flex flex-col items-center justify-center p-2 md:p-12 text-center overflow-hidden transition-all duration-300 group">
+        {/* Flashcard - Reduced min-height for mobile to fit above keyboard */}
+        <div className="perspective-1000 overflow-hidden rounded-[1.5rem] md:rounded-[2rem] w-full flex-shrink-0">
+          <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[180px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-12 text-center overflow-hidden transition-all duration-300 group">
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
             
-            <h2 className="text-slate-400 uppercase tracking-[0.2em] text-[10px] md:text-xs font-extrabold mb-1 md:mb-6 flex items-center gap-2">
+            <h2 className="text-slate-400 uppercase tracking-[0.2em] text-[10px] md:text-xs font-extrabold mb-2 md:mb-6 flex items-center gap-2">
               {isHungToSerb ? "MAĐARSKI" : "SRPSKI"}
             </h2>
             
-            <p className="text-5xl md:text-7xl font-extrabold text-slate-800 mb-2 leading-tight break-words max-w-full px-2">
+            <p className="text-4xl md:text-7xl font-extrabold text-slate-800 mb-2 leading-tight break-words max-w-full">
               {questionText}
             </p>
 
-            {/* Feedback Overlay */}
+            {/* Feedback Overlay - Compacted for mobile */}
             {feedback !== 'none' && (
-              <div className="absolute inset-0 z-20 bg-white/98 backdrop-blur-md flex flex-col items-center justify-center p-2 md:p-8 animate-scale-in">
+              <div className="absolute inset-0 z-20 bg-white/98 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-8 animate-scale-in">
                  <div className="flex flex-col items-center justify-center w-full">
                    {feedback === 'correct' ? (
                      <>
-                       <div className="w-12 h-12 md:w-20 md:h-20 bg-emerald-100 rounded-full flex items-center justify-center text-2xl md:text-4xl mb-2 md:mb-6 animate-bounce">
+                       <div className="w-10 h-10 md:w-20 md:h-20 bg-emerald-100 rounded-full flex items-center justify-center text-xl md:text-4xl mb-2 md:mb-6 animate-bounce">
                          ✨
                        </div>
                        <h3 className="text-lg md:text-3xl font-bold text-emerald-600 mb-1 md:mb-2">Tačno!</h3>
-                       <div className="mt-1 text-emerald-600 font-bold text-lg md:text-2xl flex items-center gap-2">
+                       <div className="mt-2 text-emerald-600 font-bold text-base md:text-lg flex items-center gap-2">
                           {currentCard.hungarian}
                        </div>
                      </>
                    ) : (
                      <>
-                       <div className="w-12 h-12 md:w-20 md:h-20 bg-rose-100 rounded-full flex items-center justify-center text-2xl md:text-4xl mb-2 md:mb-6 animate-shake">
+                       <div className="w-10 h-10 md:w-20 md:h-20 bg-rose-100 rounded-full flex items-center justify-center text-xl md:text-4xl mb-2 md:mb-6 animate-shake">
                          ❌
                        </div>
-                       {/* Compact Error Layout - NO 'Netačno' text */}
-                       <div className="text-slate-500 text-xs md:text-lg">
+                       {/* Removed 'Netačno' title here as requested */}
+                       <div className="text-slate-500 text-sm md:text-lg">
                           Tačan odgovor: <br/>
-                          <div className="font-bold text-slate-800 text-4xl md:text-6xl mt-1 md:mt-2 flex items-center justify-center gap-3">
+                          <div className="font-bold text-slate-800 text-3xl md:text-6xl mt-1 md:mt-2 flex items-center justify-center gap-3">
                             {targetAnswerPrimary}
                           </div>
                           {synonyms.length > 0 && (
-                            <p className="text-[10px] md:text-sm mt-1 text-slate-400">
+                            <p className="text-xs md:text-sm mt-2 text-slate-400">
                               (Takođe: {synonyms.join(', ')})
                             </p>
                           )}
@@ -265,21 +275,22 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
           </div>
         </div>
 
-        {/* Input & Keyboard - Fixed at bottom of flex area */}
-        <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto relative z-10 pb-1 flex-none">
+        {/* Input & Keyboard */}
+        <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto relative z-10 pb-2">
           <div className="relative group">
             <input
               ref={inputRef}
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
+              // Use readOnly instead of disabled to keep keyboard open
               readOnly={feedback !== 'none'}
               placeholder={inputPlaceholder}
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              className={`w-full text-center text-2xl md:text-2xl p-3 md:p-6 rounded-2xl border-2 outline-none transition-all shadow-lg shadow-slate-100 font-bold placeholder:font-normal px-12 md:px-32
+              className={`w-full text-center text-lg md:text-2xl p-3 md:p-6 rounded-2xl border-2 outline-none transition-all shadow-lg shadow-slate-100 font-bold placeholder:font-normal px-12 md:px-32
                 ${feedback === 'none' 
                   ? 'border-slate-200 bg-white text-slate-800 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10' 
                   : 'border-slate-100 bg-slate-50 text-slate-400 select-none'
@@ -291,6 +302,7 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
             {feedback === 'none' && inputValue.trim() && (
               <button
                 type="submit"
+                // Prevent mouse down from stealing focus
                 onMouseDown={(e) => e.preventDefault()}
                 className="absolute right-2 md:right-3 top-2 bottom-2 md:top-3 md:bottom-3 aspect-square bg-slate-900 hover:bg-slate-800 text-white rounded-xl flex items-center justify-center transition-all hover:scale-105 shadow-md"
               >
@@ -298,11 +310,12 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
               </button>
             )}
 
-            {/* Continue Button (Inside Input) */}
+            {/* Continue Button */}
             {feedback !== 'none' && (
               <button
                 type="button"
                 onClick={() => proceedToNext(feedback === 'correct')}
+                // CRITICAL: Prevents button click from closing the keyboard
                 onMouseDown={(e) => e.preventDefault()}
                 className={`absolute right-2 md:right-3 top-2 bottom-2 md:top-3 md:bottom-3 px-3 md:px-6 rounded-xl font-bold text-white shadow-lg transition-all hover:scale-105 flex items-center gap-2
                   ${feedback === 'correct' ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-rose-500 hover:bg-rose-600'}
