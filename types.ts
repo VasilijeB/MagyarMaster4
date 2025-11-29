@@ -4,7 +4,8 @@ export enum WordCategory {
   NOUNS = 'Nouns',
   VERBS = 'Verbs',
   ADJECTIVES = 'Adjectives',
-  NUMBERS = 'Numbers',
+  NUMBERS_CARDINAL = 'NumbersCardinal',
+  NUMBERS_ORDINAL = 'NumbersOrdinal',
   ADVERBS = 'Adverbs'
 }
 

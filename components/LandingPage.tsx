@@ -23,7 +23,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
       </nav>
 
       {/* Hero Section */}
-      <header className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+      <header className="relative pt-32 pb-10 lg:pt-48 lg:pb-20 overflow-hidden">
         <div className="max-w-5xl mx-auto px-6 relative z-10 text-center">
           <div className="inline-block mb-6 px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 font-bold text-sm uppercase tracking-wide animate-fade-in-up">
             👋 Dobrodošli
@@ -34,10 +34,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
               reči svakog dana.
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up delay-200 font-medium">
-            Opušteno vežbanje reči, izraza i glagola. 
-            Bez pritiska, samo vi i reči.
-          </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center animate-fade-in-up delay-300">
             <button 
               onClick={onStart}
@@ -48,24 +44,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
           </div>
         </div>
         
-        {/* Abstract Background Shapes - Neutral Colors */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 overflow-hidden opacity-40">
-           <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
-           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
-           <div className="absolute bottom-[-20%] left-[20%] w-[500px] h-[500px] bg-slate-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
-        </div>
+        
       </header>
 
       {/* Features Grid */}
-      <section id="features" className="py-24 bg-white">
+      <section id="features" className="pt-8 pb-24 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Jednostavno i efikasno</h2>
-            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-              Sve što vam treba da obogatite rečnik i poboljšate znanje.
-            </p>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Feature 1: Flashcards */}
             <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors text-center">

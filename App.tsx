@@ -88,15 +88,15 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (currentMode) {
       case GameMode.DASHBOARD: return <Dashboard onSelectMode={handleNavigation} user={user} />;
-      case GameMode.CONJUGATION: return <ConjugationGame />;
-      case GameMode.GRAMMAR: return <GrammarChat />;
-      case GameMode.STORIES: return <StoryGame />;
+      case GameMode.CONJUGATION: return <ConjugationGame onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
+      case GameMode.GRAMMAR: return <GrammarChat onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
+      case GameMode.STORIES: return <StoryGame onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
       case GameMode.VOCAB:
       case GameMode.CUSTOM_VOCAB:
         if (appState === AppState.MENU) {
             return currentMode === GameMode.VOCAB 
-              ? <CategorySelection onSelect={handleVocabStart} />
-              : <CustomVocabSetup onStart={handleCustomStart} />;
+              ? <CategorySelection onSelect={handleVocabStart} onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />
+              : <CustomVocabSetup onStart={handleCustomStart} onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
         }
         if (appState === AppState.LOADING) {
           return (

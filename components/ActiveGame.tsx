@@ -13,6 +13,63 @@ interface ActiveGameProps {
 
 type CardStatus = 'pending' | 'correct' | 'incorrect';
 
+// Helper to play instant feedback sounds using browser AudioContext
+const playFeedbackSound = (type: 'correct' | 'incorrect') => {
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+    const now = ctx.currentTime;
+    
+    if (type === 'correct') {
+      // Pleasant "Success Chime" (C5 -> E5)
+      // Note 1
+      const osc1 = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(523.25, now); // C5
+      gain1.gain.setValueAtTime(0.1, now);
+      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      osc1.connect(gain1);
+      gain1.connect(ctx.destination);
+      osc1.start(now);
+      osc1.stop(now + 0.4);
+
+      // Note 2 (slightly delayed)
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(659.25, now + 0.1); // E5
+      gain2.gain.setValueAtTime(0.1, now + 0.1);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.start(now + 0.1);
+      osc2.stop(now + 0.5);
+
+    } else {
+      // Softer "Error Thud"
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.type = 'triangle'; // Softer than sawtooth
+      osc.frequency.setValueAtTime(150, now);
+      osc.frequency.exponentialRampToValueAtTime(50, now + 0.3); // Pitch drop
+      
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      osc.start(now);
+      osc.stop(now + 0.3);
+    }
+  } catch (e) {
+    console.error("Audio playback error", e);
+  }
+};
+
 export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCancel, direction = FlashCardDirection.SER_HUN }) => {
   // The actual playing deck (can grow if user makes mistakes)
   const [deck, setDeck] = useState<FlashCard[]>([]);
@@ -60,8 +117,6 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     setResults(newResults);
 
     // Update status for the progress bar
-    // If it's correct, mark it correct (even if it was previously incorrect/red)
-    // If it's incorrect, mark it incorrect
     setCardStatus(prev => ({
       ...prev,
       [currentCard.id]: isCorrect ? 'correct' : 'incorrect'
@@ -70,14 +125,21 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     if (!isCorrect) {
       // Add to end of deck to retry later
       setDeck(prev => [...prev, currentCard]);
-    }
-
-    if (currentIndex < deck.length - 1) {
+      // If we are adding a card, we definitely need to continue playing.
+      // Even if we are at the 'end' currently, the deck just grew.
       setCurrentIndex(prev => prev + 1);
       setInputValue('');
       setFeedback('none');
     } else {
-      onComplete(newResults);
+      // If correct, only continue if we are NOT at the end of the deck
+      if (currentIndex < deck.length - 1) {
+        setCurrentIndex(prev => prev + 1);
+        setInputValue('');
+        setFeedback('none');
+      } else {
+        // We are at the end and got it right (so no new card was added)
+        onComplete(newResults);
+      }
     }
   };
 
@@ -99,9 +161,14 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   const isHungToSerb = direction === FlashCardDirection.HUN_SER;
   const questionText = isHungToSerb ? currentCard.hungarian : currentCard.serbian;
   const targetAnswerPrimary = isHungToSerb ? currentCard.serbian : currentCard.hungarian;
+  
+  // Prepare valid answers (handling synonyms)
   const validAnswers = isHungToSerb 
     ? [currentCard.serbian.toLowerCase()] 
-    : [currentCard.hungarian.toLowerCase(), ...currentCard.hungarianAlt];
+    : [currentCard.hungarian.toLowerCase(), ...currentCard.hungarianAlt.map(a => a.toLowerCase())];
+  
+  // Display synonyms if they exist (for feedback)
+  const synonyms = isHungToSerb ? [] : currentCard.hungarianAlt;
     
   const inputPlaceholder = isHungToSerb ? "Prevedi na srpski..." : "Prevedi na mađarski...";
   const keyboardChars = isHungToSerb ? SERBIAN_CHARS : HUNGARIAN_CHARS;
@@ -120,6 +187,9 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
 
     setFeedback(isCorrect ? 'correct' : 'incorrect');
     setLastResultCorrect(isCorrect);
+    
+    // Play feedback sound
+    playFeedbackSound(isCorrect ? 'correct' : 'incorrect');
   };
 
   return (
@@ -149,7 +219,6 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
                   key={card.id}
                   className={`flex-1 rounded-full transition-all duration-300 relative ${bgClass} ${isCurrent ? 'ring-2 ring-slate-400 ring-offset-1 transform scale-110 z-10' : ''}`}
                 >
-                  {/* Optional: Tiny indicator for current active card if needed, currently handled by ring */}
                 </div>
               );
             })}
@@ -162,10 +231,10 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
         
         {/* Flashcard */}
         <div className="perspective-1000 overflow-hidden rounded-[2rem] w-full">
-          <div className="relative bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[300px] md:min-h-[450px] flex flex-col items-center justify-center p-6 md:p-12 text-center overflow-hidden transition-all duration-300">
+          <div className="relative bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[300px] md:min-h-[450px] flex flex-col items-center justify-center p-6 md:p-12 text-center overflow-hidden transition-all duration-300 group">
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
             
-            <h2 className="text-slate-400 uppercase tracking-[0.2em] text-xs font-extrabold mb-4 md:mb-6">
+            <h2 className="text-slate-400 uppercase tracking-[0.2em] text-xs font-extrabold mb-4 md:mb-6 flex items-center gap-2">
               {isHungToSerb ? "MAĐARSKI" : "SRPSKI"}
             </h2>
             
@@ -184,6 +253,9 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
                        </div>
                        <h3 className="text-xl md:text-3xl font-bold text-emerald-600 mb-1 md:mb-2">Tačno!</h3>
                        <p className="text-slate-400 font-medium text-sm md:text-base">Sjajno obavljeno.</p>
+                       <div className="mt-4 text-emerald-600 font-bold text-lg flex items-center gap-2">
+                          {currentCard.hungarian}
+                       </div>
                      </>
                    ) : (
                      <>
@@ -193,7 +265,14 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
                        <h3 className="text-xl md:text-3xl font-bold text-rose-600 mb-1 md:mb-4">Netačno</h3>
                        <div className="text-slate-500 text-sm md:text-lg">
                           Tačan odgovor je: <br/>
-                          <span className="font-bold text-slate-800 text-3xl md:text-5xl mt-2 block">{targetAnswerPrimary}</span>
+                          <div className="font-bold text-slate-800 text-3xl md:text-5xl mt-2 flex items-center justify-center gap-3">
+                            {targetAnswerPrimary}
+                          </div>
+                          {synonyms.length > 0 && (
+                            <p className="text-sm mt-3 text-slate-400">
+                              (Takođe: {synonyms.join(', ')})
+                            </p>
+                          )}
                        </div>
                      </>
                    )}

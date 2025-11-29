@@ -1,13 +1,13 @@
-
 import React, { useState } from 'react';
 import { generateCustomFlashcards } from '../services/geminiService';
 import { FlashCard } from '../types';
 
 interface CustomVocabSetupProps {
   onStart: (cards: FlashCard[]) => void;
+  onGoBack: () => void;
 }
 
-export const CustomVocabSetup: React.FC<CustomVocabSetupProps> = ({ onStart }) => {
+export const CustomVocabSetup: React.FC<CustomVocabSetupProps> = ({ onStart, onGoBack }) => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -36,6 +36,13 @@ export const CustomVocabSetup: React.FC<CustomVocabSetupProps> = ({ onStart }) =
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-12 animate-fade-in">
+      <button 
+        onClick={onGoBack}
+        className="mb-6 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium"
+      >
+        ← Nazad na početnu
+      </button>
+
       <h2 className="text-3xl font-bold text-slate-800 mb-4">Moji Izrazi</h2>
       <p className="text-slate-600 mb-8">
         Unesite reči ili fraze koje želite da naučite (na srpskom ili mađarskom). 

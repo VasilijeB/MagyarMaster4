@@ -1,11 +1,14 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { ChatMessage } from '../types';
 import { getGrammarResponse } from '../services/geminiService';
 
-export const GrammarChat: React.FC = () => {
+interface GrammarChatProps {
+  onGoBack: () => void;
+}
+
+export const GrammarChat: React.FC<GrammarChatProps> = ({ onGoBack }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: 'Szia! Ja sam tvoj profesor mađarske gramatike. Šta te danas zanima? (Npr. kada koristiti -ban/-ben, ili određeni član?)' }
+    { role: 'model', text: 'Szia! Ja ti mogu pomoći oko mađarske gramatike. Šta te danas zanima? (Npr. kada koristiti -ban/-ben, ili određeni član?)' }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -36,6 +39,15 @@ export const GrammarChat: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto h-[calc(100vh-100px)] flex flex-col pt-6 pb-2">
+      <div className="px-4 mb-2">
+         <button 
+            onClick={onGoBack}
+            className="text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium"
+         >
+            ← Nazad na početnu
+         </button>
+      </div>
+
       <div className="flex-1 overflow-y-auto px-4 space-y-4">
         {messages.map((msg, idx) => (
           <div 

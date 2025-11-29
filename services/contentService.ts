@@ -1,7 +1,7 @@
 
 
 import { WordCategory, DifficultyLevel, FlashCard, ConjugationTask, StoryTask } from '../types';
-import { NOUNS, VERBS, ADJECTIVES, NUMBERS, ADVERBS } from '../data/vocabData';
+import { NOUNS, VERBS, ADJECTIVES, NUMBERS_CARDINAL, NUMBERS_ORDINAL, ADVERBS } from '../data/vocabData';
 import { CONJUGATION_DATA } from '../data/conjugationData';
 import { STORIES } from '../data/storyData';
 
@@ -19,7 +19,8 @@ export const getStaticFlashcards = async (category: WordCategory, level: Difficu
     case WordCategory.NOUNS: sourceData = NOUNS[level] || NOUNS[1]; break;
     case WordCategory.VERBS: sourceData = VERBS[level] || VERBS[1]; break;
     case WordCategory.ADJECTIVES: sourceData = ADJECTIVES[level] || ADJECTIVES[1]; break;
-    case WordCategory.NUMBERS: sourceData = NUMBERS[level] || NUMBERS[1]; break;
+    case WordCategory.NUMBERS_CARDINAL: sourceData = NUMBERS_CARDINAL[level] || NUMBERS_CARDINAL[1]; break;
+    case WordCategory.NUMBERS_ORDINAL: sourceData = NUMBERS_ORDINAL[level] || NUMBERS_ORDINAL[1]; break;
     case WordCategory.ADVERBS: sourceData = ADVERBS[level] || ADVERBS[1]; break;
   }
 

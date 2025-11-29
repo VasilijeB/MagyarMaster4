@@ -3,7 +3,11 @@ import { DifficultyLevel, StoryTask } from '../types';
 import { getStaticStoryTask, evaluateTranslationLocally } from '../services/contentService';
 import { playPronunciation } from '../services/geminiService';
 
-export const StoryGame: React.FC = () => {
+interface StoryGameProps {
+  onGoBack: () => void;
+}
+
+export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
   const [level, setLevel] = useState<DifficultyLevel | null>(null);
   const [task, setTask] = useState<StoryTask | null>(null);
   const [userTranslation, setUserTranslation] = useState('');
@@ -51,6 +55,12 @@ export const StoryGame: React.FC = () => {
   if (!level) {
     return (
       <div className="max-w-2xl mx-auto px-6 py-12 text-center animate-fade-in">
+        <button 
+          onClick={onGoBack}
+          className="mb-6 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium mx-auto md:mx-0"
+        >
+          ← Nazad na početnu
+        </button>
         <h2 className="text-3xl font-bold mb-8 text-slate-800">Izaberite nivo priče</h2>
         <div className="grid gap-4">
           {[1, 2, 3, 4, 5].map((l) => (
@@ -70,7 +80,7 @@ export const StoryGame: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
-         <button onClick={() => setLevel(null)} className="text-slate-500 hover:text-slate-800">← Promeni nivo</button>
+         <button onClick={() => setLevel(null)} className="text-slate-500 hover:text-slate-800 font-medium">← Promeni nivo</button>
          <span className="font-bold text-emerald-600">Nivo {level}</span>
       </div>
 

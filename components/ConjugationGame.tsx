@@ -3,7 +3,11 @@ import { DifficultyLevel, ConjugationTask } from '../types';
 import { getStaticConjugationTask } from '../services/contentService';
 import { VirtualKeyboard } from './VirtualKeyboard';
 
-export const ConjugationGame: React.FC = () => {
+interface ConjugationGameProps {
+  onGoBack: () => void;
+}
+
+export const ConjugationGame: React.FC<ConjugationGameProps> = ({ onGoBack }) => {
   const [level, setLevel] = useState<DifficultyLevel | null>(null);
   const [task, setTask] = useState<ConjugationTask | null>(null);
   const [loading, setLoading] = useState(false);
@@ -54,6 +58,12 @@ export const ConjugationGame: React.FC = () => {
   if (!level) {
     return (
       <div className="max-w-2xl mx-auto px-6 py-12 text-center animate-fade-in">
+        <button 
+          onClick={onGoBack}
+          className="mb-6 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium mx-auto md:mx-0"
+        >
+          ← Nazad na početnu
+        </button>
         <h2 className="text-3xl font-bold mb-8 text-slate-800">Izaberite nivo konjugacije</h2>
         <div className="grid gap-4">
           {[1, 2, 3, 4, 5].map((l) => (
@@ -70,8 +80,8 @@ export const ConjugationGame: React.FC = () => {
     );
   }
 
-  if (loading) return <div>Učitavanje...</div>;
-  if (!task) return <div>Greška.</div>;
+  if (loading) return <div className="text-center p-12">Učitavanje...</div>;
+  if (!task) return <div className="text-center p-12">Greška. <button onClick={() => setLevel(null)}>Nazad</button></div>;
 
   const singularPronouns = [
     { key: 'en', label: 'Én (Ja)' },
@@ -123,7 +133,7 @@ export const ConjugationGame: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto px-6 py-8 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
-         <button onClick={() => setLevel(null)} className="text-slate-500 hover:text-slate-800">← Promeni nivo</button>
+         <button onClick={() => setLevel(null)} className="text-slate-500 hover:text-slate-800 font-medium">← Promeni nivo</button>
          <span className="font-bold text-emerald-600">Nivo {level}</span>
       </div>
 

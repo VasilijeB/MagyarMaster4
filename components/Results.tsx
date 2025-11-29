@@ -7,8 +7,12 @@ interface ResultsProps {
 }
 
 export const Results: React.FC<ResultsProps> = ({ results, onRestart }) => {
+  // Calculate score based on total attempts vs correct answers
+  // (Assuming results contains all attempts. If we want score based on unique cards, logic would differ, 
+  // but usually "Game Score" implies accuracy of inputs)
   const correctCount = results.filter(r => r.isCorrect).length;
-  const percentage = Math.round((correctCount / results.length) * 100);
+  // Prevent division by zero
+  const percentage = results.length > 0 ? Math.round((correctCount / results.length) * 100) : 0;
 
   let message = "";
   let subMessage = "";
@@ -31,6 +35,15 @@ export const Results: React.FC<ResultsProps> = ({ results, onRestart }) => {
     subMessage = "Ne odustajte! 💪";
     colorClass = "text-slate-500";
   }
+
+  // Deduplicate cards to show a clean vocabulary list
+  const uniqueCardsMap = new Map();
+  results.forEach(r => {
+    if (!uniqueCardsMap.has(r.card.id)) {
+      uniqueCardsMap.set(r.card.id, r.card);
+    }
+  });
+  const uniqueCards = Array.from(uniqueCardsMap.values());
 
   // Conic gradient for the score circle
   const circleStyle = {
@@ -62,44 +75,20 @@ export const Results: React.FC<ResultsProps> = ({ results, onRestart }) => {
         </div>
       </div>
 
-      <h3 className="text-xl font-bold text-slate-800 mb-6 pl-4">Pregled Odgovora</h3>
+      <h3 className="text-xl font-bold text-slate-800 mb-4 pl-2">Reči iz ove vežbe ({uniqueCards.length})</h3>
       
-      <div className="space-y-4 mb-12">
-        {results.map((result, idx) => (
+      <div className="space-y-2 mb-12">
+        {uniqueCards.map((card, idx) => (
           <div 
             key={idx}
-            className={`flex flex-col sm:flex-row sm:items-center justify-between p-6 rounded-2xl bg-white shadow-sm border border-slate-100 transition-all hover:shadow-md ${
-              !result.isCorrect ? 'bg-rose-50/30' : ''
-            }`}
+            className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-wrap items-center justify-start gap-3 text-left"
           >
-            <div className="flex-1 mb-2 sm:mb-0">
-              <div className="text-xs text-slate-400 uppercase tracking-wider font-bold mb-2">
-                {result.card.serbian}
-              </div>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                {result.isCorrect ? (
-                   <span className="text-xl font-bold text-slate-800">{result.userAnswer}</span>
-                ) : (
-                  <>
-                     <span className="text-xl font-bold text-rose-500 line-through decoration-2 opacity-60">
-                       {result.userAnswer || "..."}
-                     </span>
-                     <span className="hidden sm:inline text-slate-300">➜</span>
-                     <span className="text-xl font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg">
-                       {result.card.hungarian}
-                     </span>
-                  </>
-                )}
-              </div>
-            </div>
-            
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-sm border-2 ${
-              result.isCorrect 
-                ? 'bg-emerald-100 border-emerald-200 text-emerald-600' 
-                : 'bg-rose-100 border-rose-200 text-rose-600'
-            }`}>
-              {result.isCorrect ? '✓' : '✕'}
-            </div>
+             <span className="text-slate-600 font-medium text-lg">{card.serbian}</span>
+             <span className="text-slate-300 font-light text-xl">−</span>
+             <span className="text-emerald-700 font-bold text-xl">{card.hungarian}</span>
+             {card.hungarianAlt && card.hungarianAlt.length > 0 && (
+               <span className="text-slate-400 text-sm">({card.hungarianAlt.join(', ')})</span>
+             )}
           </div>
         ))}
       </div>

@@ -1,12 +1,12 @@
-
 import React, { useState } from 'react';
 import { WordCategory, DifficultyLevel, FlashCardDirection } from '../types';
 
 interface CategorySelectionProps {
   onSelect: (category: WordCategory, level: DifficultyLevel, direction: FlashCardDirection) => void;
+  onGoBack: () => void;
 }
 
-export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect }) => {
+export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, onGoBack }) => {
   const [selectedCategory, setSelectedCategory] = useState<WordCategory | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel | null>(null);
 
@@ -33,11 +33,18 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect }
       color: "bg-emerald-50 border-emerald-200 hover:border-emerald-400 text-emerald-900"
     },
     { 
-      id: WordCategory.NUMBERS, 
-      label: "Brojevi (Számok)", 
-      desc: "Obični i redni brojevi.", 
+      id: WordCategory.NUMBERS_CARDINAL, 
+      label: "Obični Brojevi", 
+      desc: "Jedan, dva, tri...", 
       icon: "🔢",
       color: "bg-blue-50 border-blue-200 hover:border-blue-400 text-blue-900"
+    },
+    { 
+      id: WordCategory.NUMBERS_ORDINAL, 
+      label: "Redni Brojevi", 
+      desc: "Prvi, drugi, treći...", 
+      icon: "🥇",
+      color: "bg-cyan-50 border-cyan-200 hover:border-cyan-400 text-cyan-900"
     },
     { 
       id: WordCategory.ADVERBS, 
@@ -58,7 +65,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect }
 
   if (selectedCategory && selectedLevel) {
     return (
-        <div className="max-w-2xl mx-auto px-6 py-8 md:py-12 animate-fade-in">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 md:py-12 animate-fade-in">
              <button 
                 onClick={() => setSelectedLevel(null)}
                 className="mb-6 md:mb-8 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium"
@@ -106,7 +113,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect }
 
   if (selectedCategory) {
     return (
-      <div className="max-w-2xl mx-auto px-6 py-8 md:py-12 animate-fade-in">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 md:py-12 animate-fade-in">
          <button 
             onClick={() => setSelectedCategory(null)}
             className="mb-6 md:mb-8 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium"
@@ -146,6 +153,13 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect }
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-4 md:py-12 animate-fade-in min-h-[calc(100vh-100px)] flex flex-col">
+      <button 
+        onClick={onGoBack}
+        className="mb-4 md:mb-8 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium"
+      >
+        ← Nazad na početnu
+      </button>
+
       <div className="text-center mb-4 md:mb-12">
         <h1 className="text-2xl md:text-6xl font-bold text-slate-800 mb-1 md:mb-4 tracking-tight">
           Vežbaj <span className="text-emerald-600">reči</span>
@@ -175,7 +189,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect }
         ))}
       </div>
       
-      {/* Decorative Flag - Positioned to be compact */}
+      {/* Decorative Flag */}
       <div className="mt-4 md:mt-16 flex justify-center opacity-50 pb-4">
         <div className="flex flex-col shadow-sm">
           <div className="w-16 md:w-24 h-1.5 md:h-4 bg-red-600 rounded-t-lg"></div>
