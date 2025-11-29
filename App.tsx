@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { AppState, FlashCard, GameResult, WordCategory, DifficultyLevel, GameMode, FlashCardDirection, User } from './types';
 import { getStaticFlashcards } from './services/contentService'; // Changed import
-import { saveUser, getUser } from './services/storageService';
+import { saveUser, getUser, addMistakes, removeMistakes } from './services/storageService';
 import { CategorySelection } from './components/CategorySelection';
 import { ActiveGame } from './components/ActiveGame';
 import { Results } from './components/Results';
@@ -67,6 +68,41 @@ const App: React.FC = () => {
   const handleGameComplete = (gameResults: GameResult[]) => {
     setResults(gameResults);
     setAppState(AppState.RESULTS);
+
+    // --- MISTAKE TRACKING LOGIC ---
+    // Analyze results to see which words were difficult
+    const struggles: string[] = [];
+    const mastered: string[] = [];
+    
+    // Map to track if a word ID had ANY incorrect attempt
+    const incorrectMap = new Set<string>();
+    
+    // First pass: Find all incorrect attempts
+    gameResults.forEach(res => {
+      if (!res.isCorrect) {
+        incorrectMap.add(res.card.serbian);
+      }
+    });
+
+    // Second pass: Categorize
+    // We iterate through unique cards played
+    const uniqueCards = new Set<string>();
+    gameResults.forEach(res => {
+      const key = res.card.serbian;
+      if (!uniqueCards.has(key)) {
+        uniqueCards.add(key);
+        if (incorrectMap.has(key)) {
+          // If the user made a mistake on this word at any point (even if corrected later), it's a struggle
+          struggles.push(key);
+        } else {
+          // If the user never made a mistake on this word, it's mastered
+          mastered.push(key);
+        }
+      }
+    });
+
+    if (struggles.length > 0) addMistakes(struggles);
+    if (mastered.length > 0) removeMistakes(mastered);
   };
 
   const handleRestart = () => {

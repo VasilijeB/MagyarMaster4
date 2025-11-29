@@ -23,7 +23,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onSelectMode, user }) => {
     {
       mode: GameMode.VOCAB,
       title: "Vežbaj reči",
-      desc: "Vežbajte prevod imenica, glagola i prideva",
+      desc: "Vežbajte prevod imenica, glagola, prideva i brojeva",
       icon: "📇",
       color: "text-blue-600",
       bg: "bg-blue-50 group-hover:bg-blue-100",
@@ -59,7 +59,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onSelectMode, user }) => {
     {
       mode: GameMode.CUSTOM_VOCAB,
       title: "Moji Izrazi",
-      desc: "Vaše reči za vežbu",
+      desc: "Ubaci svoje reči za vežbu",
       icon: "⭐",
       color: "text-violet-600",
       bg: "bg-violet-50 group-hover:bg-violet-100",
