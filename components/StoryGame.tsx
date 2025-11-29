@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { DifficultyLevel, StoryTask } from '../types';
-import { getStaticStoryTask, evaluateTranslationLocally } from '../services/contentService';
+import { getStaticStoryTask } from '../services/contentService';
 import { playPronunciation } from '../services/geminiService';
 
 interface StoryGameProps {
@@ -11,7 +12,7 @@ export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
   const [level, setLevel] = useState<DifficultyLevel | null>(null);
   const [task, setTask] = useState<StoryTask | null>(null);
   const [userTranslation, setUserTranslation] = useState('');
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -19,7 +20,7 @@ export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
     setLoading(true);
     setTask(null);
     setUserTranslation('');
-    setFeedback(null);
+    setFeedback(false);
     try {
       const newTask = await getStaticStoryTask(lvl);
       setTask(newTask);
@@ -34,15 +35,11 @@ export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
   const handleCheck = async () => {
     if (!task || !userTranslation.trim()) return;
     setLoading(true);
-    try {
-      // Local check instead of AI
-      const result = evaluateTranslationLocally(task.serbianTranslation, userTranslation);
-      setFeedback(result);
-    } catch (e) {
-      setFeedback("Greška pri evaluaciji.");
-    } finally {
-      setLoading(false);
-    }
+    // Simulate a brief processing delay for better UX
+    setTimeout(() => {
+        setFeedback(true);
+        setLoading(false);
+    }, 500);
   };
 
   const handlePlayAudio = async () => {
@@ -54,24 +51,26 @@ export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
   
   if (!level) {
     return (
-      <div className="max-w-2xl mx-auto px-6 py-12 text-center animate-fade-in">
+      <div className="max-w-2xl mx-auto px-6 py-12 animate-fade-in">
         <button 
           onClick={onGoBack}
-          className="mb-6 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium mx-auto md:mx-0"
+          className="mb-6 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium"
         >
           ← Nazad na početnu
         </button>
-        <h2 className="text-3xl font-bold mb-8 text-slate-800">Izaberite nivo priče</h2>
-        <div className="grid gap-4">
-          {[1, 2, 3, 4, 5].map((l) => (
-            <button
-              key={l}
-              onClick={() => { setLevel(l as DifficultyLevel); loadStory(l as DifficultyLevel); }}
-              className="p-4 bg-white border-2 border-slate-200 rounded-xl hover:border-emerald-500 hover:bg-emerald-50 transition-all font-bold text-lg"
-            >
-              Nivo {l} {l === 5 ? "(B2)" : ""}
-            </button>
-          ))}
+        <div className="text-center">
+          <h2 className="text-3xl font-bold mb-8 text-slate-800">Izaberite nivo priče</h2>
+          <div className="grid gap-4">
+            {[1, 2, 3, 4, 5].map((l) => (
+              <button
+                key={l}
+                onClick={() => { setLevel(l as DifficultyLevel); loadStory(l as DifficultyLevel); }}
+                className="p-4 bg-white border-2 border-slate-200 rounded-xl hover:border-emerald-500 hover:bg-emerald-50 transition-all font-bold text-lg"
+              >
+                Nivo {l} {l === 5 ? "(B2)" : ""}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -124,7 +123,7 @@ export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
                onChange={(e) => setUserTranslation(e.target.value)}
                placeholder="Ovde upišite prevod priče..."
                className="w-full h-40 p-4 rounded-xl border-2 border-slate-300 bg-white text-black focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 outline-none transition-all text-base md:text-lg"
-               disabled={!!feedback}
+               disabled={feedback}
              />
              {!feedback && (
                 <button
@@ -139,14 +138,10 @@ export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
 
            {feedback && (
              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 md:p-8 animate-fade-in-up">
-               <h3 className="font-bold text-blue-900 mb-4 text-lg">Rezultat:</h3>
-               <div className="prose text-blue-800 whitespace-pre-wrap mb-6">
-                 {feedback}
-               </div>
+               <h3 className="font-bold text-blue-900 mb-4 text-lg">Uporedite svoj prevod sa originalom:</h3>
                
-               <div className="bg-white/50 p-4 rounded-lg mb-6">
-                 <p className="text-xs font-bold text-slate-400 uppercase mb-1">Referentni prevod:</p>
-                 <p className="text-slate-700 italic">{task.serbianTranslation}</p>
+               <div className="bg-white p-6 rounded-xl mb-6 shadow-sm border border-blue-100">
+                 <p className="text-slate-800 text-lg italic leading-relaxed">"{task.serbianTranslation}"</p>
                </div>
 
                <button

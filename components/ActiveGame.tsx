@@ -188,9 +188,9 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-1 md:py-6 min-h-[100dvh] flex flex-col">
+    <div className="max-w-2xl mx-auto px-4 py-1 md:py-6 min-h-[100dvh] h-[100dvh] flex flex-col overflow-hidden">
       {/* Header & Progress - Reduced margins for mobile */}
-      <div className="flex flex-col gap-2 md:gap-6 mb-2 md:mb-8">
+      <div className="flex flex-col gap-2 md:gap-6 mb-2 md:mb-8 flex-shrink-0">
         <div className="flex items-center justify-between">
           <button 
             onClick={onCancel}
@@ -221,48 +221,52 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
       </div>
 
       {/* Main Game Area - Compacted gaps */}
-      <div className="flex-1 flex flex-col justify-start md:justify-center gap-2 md:gap-8">
+      <div className="flex-1 flex flex-col justify-start md:justify-center gap-2 md:gap-8 overflow-hidden">
         
         {/* Flashcard - Reduced min-height for mobile to fit above keyboard */}
         <div className="perspective-1000 overflow-hidden rounded-[1.5rem] md:rounded-[2rem] w-full flex-shrink-0">
-          <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[180px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-12 text-center overflow-hidden transition-all duration-300 group">
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+          <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[150px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-12 text-center overflow-hidden transition-all duration-300 group">
+            {/* Dynamic Top Gradient: Red for incorrect, Green for correct/neutral */}
+            <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${feedback === 'incorrect' ? 'from-rose-500 to-red-600' : 'from-emerald-400 to-teal-500'}`}></div>
             
             <h2 className="text-slate-400 uppercase tracking-[0.2em] text-[10px] md:text-xs font-extrabold mb-2 md:mb-6 flex items-center gap-2">
               {isHungToSerb ? "MAĐARSKI" : "SRPSKI"}
             </h2>
             
-            <p className="text-4xl md:text-7xl font-extrabold text-slate-800 mb-2 leading-tight break-words max-w-full">
+            <p className="text-5xl md:text-8xl font-extrabold text-slate-800 mb-2 leading-tight break-words max-w-full">
               {questionText}
             </p>
 
             {/* Feedback Overlay - Compacted for mobile */}
             {feedback !== 'none' && (
-              <div className="absolute inset-0 z-20 bg-white/98 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-8 animate-scale-in">
+              // Speed up animation here: animate-[scale-in_0.15s_ease-out_forwards]
+              <div className="absolute inset-0 z-20 bg-white/98 backdrop-blur-md flex flex-col items-center justify-center p-2 md:p-8 animate-[scale-in_0.15s_ease-out_forwards]">
                  <div className="flex flex-col items-center justify-center w-full">
                    {feedback === 'correct' ? (
                      <>
-                       <div className="w-10 h-10 md:w-20 md:h-20 bg-emerald-100 rounded-full flex items-center justify-center text-xl md:text-4xl mb-2 md:mb-6 animate-bounce">
-                         ✨
+                       {/* Green Check Mark */}
+                       <div className="w-12 h-12 md:w-24 md:h-24 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2 md:mb-6 animate-scale-in">
+                          <svg className="w-6 h-6 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>
                        </div>
-                       <h3 className="text-lg md:text-3xl font-bold text-emerald-600 mb-1 md:mb-2">Tačno!</h3>
-                       <div className="mt-2 text-emerald-600 font-bold text-base md:text-lg flex items-center gap-2">
+                       <h3 className="text-xl md:text-4xl font-bold text-emerald-600 mb-2">Tačno!</h3>
+                       {/* Big Text */}
+                       <div className="text-emerald-600 font-extrabold text-4xl md:text-8xl flex items-center justify-center text-center leading-tight">
                           {currentCard.hungarian}
                        </div>
                      </>
                    ) : (
                      <>
-                       <div className="w-10 h-10 md:w-20 md:h-20 bg-rose-100 rounded-full flex items-center justify-center text-xl md:text-4xl mb-2 md:mb-6 animate-shake">
-                         ❌
+                       <div className="w-10 h-10 md:w-20 md:h-20 bg-rose-100 rounded-full flex items-center justify-center text-xl md:text-4xl mb-2 md:mb-6 animate-shake text-rose-600">
+                         <svg className="w-5 h-5 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" /></svg>
                        </div>
-                       {/* Removed 'Netačno' title here as requested */}
-                       <div className="text-slate-500 text-sm md:text-lg">
+                       {/* Red text for incorrect feedback */}
+                       <div className="text-rose-500 text-sm md:text-lg font-bold">
                           Tačan odgovor: <br/>
-                          <div className="font-bold text-slate-800 text-3xl md:text-6xl mt-1 md:mt-2 flex items-center justify-center gap-3">
+                          <div className="font-extrabold text-rose-700 text-3xl md:text-6xl mt-1 md:mt-2 flex items-center justify-center gap-3">
                             {targetAnswerPrimary}
                           </div>
                           {synonyms.length > 0 && (
-                            <p className="text-xs md:text-sm mt-2 text-slate-400">
+                            <p className="text-xs md:text-sm mt-2 text-slate-400 font-medium">
                               (Takođe: {synonyms.join(', ')})
                             </p>
                           )}
@@ -276,7 +280,7 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
         </div>
 
         {/* Input & Keyboard */}
-        <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto relative z-10 pb-2">
+        <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto relative z-10 pb-2 flex-shrink-0">
           <div className="relative group">
             <input
               ref={inputRef}
@@ -290,7 +294,7 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              className={`w-full text-center text-lg md:text-2xl p-3 md:p-6 rounded-2xl border-2 outline-none transition-all shadow-lg shadow-slate-100 font-bold placeholder:font-normal px-12 md:px-32
+              className={`w-full text-center text-lg md:text-2xl p-3 md:p-6 rounded-2xl border-2 outline-none transition-all shadow-lg shadow-slate-100 font-bold placeholder:font-normal px-12 md:px-8
                 ${feedback === 'none' 
                   ? 'border-slate-200 bg-white text-slate-800 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10' 
                   : 'border-slate-100 bg-slate-50 text-slate-400 select-none'
@@ -317,11 +321,15 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
                 onClick={() => proceedToNext(feedback === 'correct')}
                 // CRITICAL: Prevents button click from closing the keyboard
                 onMouseDown={(e) => e.preventDefault()}
-                className={`absolute right-2 md:right-3 top-2 bottom-2 md:top-3 md:bottom-3 px-3 md:px-6 rounded-xl font-bold text-white shadow-lg transition-all hover:scale-105 flex items-center gap-2
+                className={`absolute right-2 md:right-3 top-2 bottom-2 md:top-3 md:bottom-3 px-3 md:px-6 rounded-xl font-bold text-white shadow-lg transition-all hover:scale-105 flex items-center justify-center gap-2
                   ${feedback === 'correct' ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-rose-500 hover:bg-rose-600'}
                 `}
               >
-                <span className="hidden md:inline">Nastavi</span> <span className="text-xl">→</span>
+                <span className="hidden md:inline">Nastavi</span> 
+                {/* SVG Arrow for better centering */}
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
               </button>
             )}
           </div>

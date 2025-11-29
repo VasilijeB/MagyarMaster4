@@ -57,24 +57,26 @@ export const ConjugationGame: React.FC<ConjugationGameProps> = ({ onGoBack }) =>
 
   if (!level) {
     return (
-      <div className="max-w-2xl mx-auto px-6 py-12 text-center animate-fade-in">
+      <div className="max-w-2xl mx-auto px-6 py-12 animate-fade-in">
         <button 
           onClick={onGoBack}
-          className="mb-6 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium mx-auto md:mx-0"
+          className="mb-6 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium"
         >
           ← Nazad na početnu
         </button>
-        <h2 className="text-3xl font-bold mb-8 text-slate-800">Izaberite nivo konjugacije</h2>
-        <div className="grid gap-4">
-          {[1, 2, 3, 4, 5].map((l) => (
-            <button
-              key={l}
-              onClick={() => { setLevel(l as DifficultyLevel); loadTask(l as DifficultyLevel); }}
-              className="p-4 bg-white border-2 border-slate-200 rounded-xl hover:border-emerald-500 hover:bg-emerald-50 transition-all font-bold text-lg"
-            >
-              Nivo {l}
-            </button>
-          ))}
+        <div className="text-center">
+          <h2 className="text-3xl font-bold mb-8 text-slate-800">Izaberite nivo konjugacije</h2>
+          <div className="grid gap-4">
+            {[1, 2, 3, 4, 5].map((l) => (
+              <button
+                key={l}
+                onClick={() => { setLevel(l as DifficultyLevel); loadTask(l as DifficultyLevel); }}
+                className="p-4 bg-white border-2 border-slate-200 rounded-xl hover:border-emerald-500 hover:bg-emerald-50 transition-all font-bold text-lg"
+              >
+                Nivo {l}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     );
