@@ -188,7 +188,7 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-2 md:py-6 min-h-[100dvh] flex flex-col">
+    <div className="max-w-2xl mx-auto px-4 py-1 md:py-6 min-h-[100dvh] flex flex-col">
       {/* Header & Progress - Reduced margins for mobile */}
       <div className="flex flex-col gap-2 md:gap-6 mb-2 md:mb-8">
         <div className="flex items-center justify-between">
@@ -221,18 +221,18 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
       </div>
 
       {/* Main Game Area - Compacted gaps */}
-      <div className="flex-1 flex flex-col justify-start md:justify-center gap-3 md:gap-8">
+      <div className="flex-1 flex flex-col justify-start md:justify-center gap-2 md:gap-8">
         
         {/* Flashcard - Reduced min-height for mobile to fit above keyboard */}
         <div className="perspective-1000 overflow-hidden rounded-[1.5rem] md:rounded-[2rem] w-full flex-shrink-0">
-          <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[200px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-12 text-center overflow-hidden transition-all duration-300 group">
+          <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[180px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-12 text-center overflow-hidden transition-all duration-300 group">
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
             
             <h2 className="text-slate-400 uppercase tracking-[0.2em] text-[10px] md:text-xs font-extrabold mb-2 md:mb-6 flex items-center gap-2">
               {isHungToSerb ? "MAĐARSKI" : "SRPSKI"}
             </h2>
             
-            <p className="text-2xl md:text-6xl font-extrabold text-slate-800 mb-2 leading-tight break-words max-w-full">
+            <p className="text-4xl md:text-7xl font-extrabold text-slate-800 mb-2 leading-tight break-words max-w-full">
               {questionText}
             </p>
 
@@ -255,10 +255,10 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
                        <div className="w-10 h-10 md:w-20 md:h-20 bg-rose-100 rounded-full flex items-center justify-center text-xl md:text-4xl mb-2 md:mb-6 animate-shake">
                          ❌
                        </div>
-                       <h3 className="text-lg md:text-3xl font-bold text-rose-600 mb-1 md:mb-4">Netačno</h3>
+                       {/* Removed 'Netačno' title here as requested */}
                        <div className="text-slate-500 text-sm md:text-lg">
                           Tačan odgovor: <br/>
-                          <div className="font-bold text-slate-800 text-2xl md:text-5xl mt-1 md:mt-2 flex items-center justify-center gap-3">
+                          <div className="font-bold text-slate-800 text-3xl md:text-6xl mt-1 md:mt-2 flex items-center justify-center gap-3">
                             {targetAnswerPrimary}
                           </div>
                           {synonyms.length > 0 && (
@@ -326,7 +326,7 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
             )}
           </div>
           
-          <div className="mt-3 md:mt-8">
+          <div className="mt-2 md:mt-8">
             <VirtualKeyboard 
               onCharClick={handleVirtualKey} 
               characters={keyboardChars} 
