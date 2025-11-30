@@ -169,6 +169,9 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Prevent default Enter behavior if it conflicts with form submit, 
+      // but usually form submit handles it.
+      // We keep this to handle Enter when focus might not be on input directly (unlikely)
       if (e.key === 'Enter' && feedback !== 'none') {
         e.preventDefault();
         e.stopPropagation();
@@ -204,12 +207,21 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
 
   const handleVirtualKey = (char: string) => {
     // Prevent default touch behavior to keep keyboard open
-    setInputValue(prev => prev + char);
-    inputRef.current?.focus();
+    if (feedback === 'none') {
+        setInputValue(prev => prev + char);
+        inputRef.current?.focus();
+    }
   };
 
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
+
+    // If feedback is showing, Enter/Submit acts as "Next"
+    if (feedback !== 'none') {
+        proceedToNext(lastResultCorrect);
+        return;
+    }
+
     if (!inputValue.trim()) return;
 
     const cleanInput = inputValue.trim().toLowerCase();
@@ -320,18 +332,23 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
               ref={inputRef}
               type="text"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              // Use readOnly instead of disabled to keep keyboard open
-              readOnly={feedback !== 'none'}
+              onChange={(e) => {
+                // IMPORTANT: Only update state if feedback is hidden.
+                // We do NOT use readOnly because it closes the keyboard on Android.
+                if (feedback === 'none') {
+                    setInputValue(e.target.value);
+                }
+              }}
               placeholder={inputPlaceholder}
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
+              autoFocus
               className={`w-full text-center text-lg md:text-2xl p-3 md:p-6 rounded-2xl border-2 outline-none transition-all shadow-lg shadow-slate-100 font-bold placeholder:font-normal px-12 md:px-8
                 ${feedback === 'none' 
                   ? 'border-slate-200 bg-white text-slate-800 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10' 
-                  : 'border-slate-100 bg-slate-50 text-slate-400 select-none'
+                  : 'border-slate-100 bg-slate-50 text-slate-400'
                 }
               `}
             />
