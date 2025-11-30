@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { GameMode, User } from '../types';
 
@@ -55,6 +56,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ onSelectMode, user }) => {
       color: "text-amber-600",
       bg: "bg-amber-50 group-hover:bg-amber-100",
       border: "hover:border-amber-200"
+    },
+    {
+      mode: GameMode.DICTIONARY,
+      title: "Rečnik",
+      desc: "Sve reči na jednom mestu",
+      icon: "📚",
+      color: "text-indigo-600",
+      bg: "bg-indigo-50 group-hover:bg-indigo-100",
+      border: "hover:border-indigo-200"
     },
     {
       mode: GameMode.CUSTOM_VOCAB,

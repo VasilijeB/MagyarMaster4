@@ -4,10 +4,11 @@ import { WordCategory, DifficultyLevel, FlashCardDirection } from '../types';
 interface CategorySelectionProps {
   onSelect: (category: WordCategory, level: DifficultyLevel, direction: FlashCardDirection) => void;
   onGoBack: () => void;
+  initialCategory?: WordCategory | null;
 }
 
-export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, onGoBack }) => {
-  const [selectedCategory, setSelectedCategory] = useState<WordCategory | null>(null);
+export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, onGoBack, initialCategory }) => {
+  const [selectedCategory, setSelectedCategory] = useState<WordCategory | null>(initialCategory || null);
   const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel | null>(null);
 
   const categories = [
@@ -112,6 +113,8 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, 
   }
 
   if (selectedCategory) {
+    const currentCategoryLabel = categories.find(c => c.id === selectedCategory)?.label;
+    
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 md:py-12 animate-fade-in">
          <button 
@@ -122,9 +125,11 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, 
          </button>
 
          <div className="text-center mb-8 md:mb-10">
-           <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 md:mb-3">Izaberite težinu</h2>
+           <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 md:mb-3">
+             {currentCategoryLabel}
+           </h2>
            <p className="text-slate-500 text-sm md:text-base">
-             Izaberite nivo za <span className="font-bold text-slate-800">{categories.find(c => c.id === selectedCategory)?.label}</span>.
+             Izaberite težinu nivoa za <span className="font-bold text-slate-800">{currentCategoryLabel}</span>.
            </p>
          </div>
 

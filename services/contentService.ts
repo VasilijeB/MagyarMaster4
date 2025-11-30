@@ -1,11 +1,10 @@
 
 
-
 import { WordCategory, DifficultyLevel, FlashCard, ConjugationTask, StoryTask } from '../types';
 import { NOUNS, VERBS, ADJECTIVES, NUMBERS_CARDINAL, NUMBERS_ORDINAL, ADVERBS } from '../data/vocabData';
 import { CONJUGATION_DATA } from '../data/conjugationData';
 import { STORIES } from '../data/storyData';
-import { getMistakes } from './storageService';
+import { getMistakes, getMastered } from './storageService';
 
 // Helper to shuffle array
 const shuffle = <T>(array: T[]): T[] => {
@@ -16,7 +15,7 @@ export const getStaticFlashcards = async (category: WordCategory, level: Difficu
   // Simulate network delay for effect (optional)
   await new Promise(resolve => setTimeout(resolve, 200));
 
-  let sourceData: { serbian: string; hungarian: string; hungarianAlt: string[] }[] = [];
+  let sourceData: { serbian: string; hungarian: string; hungarianAlt: string[]; display?: string }[] = [];
   switch (category) {
     case WordCategory.NOUNS: sourceData = NOUNS[level] || NOUNS[1]; break;
     case WordCategory.VERBS: sourceData = VERBS[level] || VERBS[1]; break;
@@ -27,31 +26,50 @@ export const getStaticFlashcards = async (category: WordCategory, level: Difficu
   }
 
   // --- SMART SHUFFLE LOGIC ---
-  const savedMistakes = getMistakes(); // Array of serbian words
+  const savedMistakes = getMistakes(); // Words user struggled with
+  const savedMastered = getMastered(); // Words user got right on first try
   
-  // 1. Separate source data into "Priority (Mistakes)" and "Standard"
-  const priorityWords = sourceData.filter(item => savedMistakes.includes(item.serbian));
-  const standardWords = sourceData.filter(item => !savedMistakes.includes(item.serbian));
+  // 1. Identify Priority Words (Mistakes available in this level)
+  const priorityList = sourceData.filter(item => savedMistakes.includes(item.serbian));
+  
+  // 2. Identify New Words (Words NOT in Mistakes AND NOT in Mastered)
+  const newList = sourceData.filter(item => 
+    !savedMistakes.includes(item.serbian) && 
+    !savedMastered.includes(item.serbian)
+  );
 
-  // 2. Decide how many priority words to include
-  // We want up to 5 priority words (50% of the deck), or fewer if we don't have enough.
-  const maxPriorityCount = 5; 
-  const shuffledPriority = shuffle(priorityWords);
-  const selectedPriority = shuffledPriority.slice(0, maxPriorityCount);
+  // 3. Identify Review Words (Mastered words, used as fallback if we run out of new ones)
+  const reviewList = sourceData.filter(item => savedMastered.includes(item.serbian));
 
-  // 3. Fill the rest of the 10 slots with standard words
-  const slotsRemaining = 10 - selectedPriority.length;
-  const shuffledStandard = shuffle(standardWords);
-  const selectedStandard = shuffledStandard.slice(0, slotsRemaining);
+  // Construct Deck
+  const deckSize = 10;
+  let deck: typeof sourceData = [];
 
-  // 4. Combine and shuffle again so mistakes aren't always first
-  const finalSelection = shuffle([...selectedPriority, ...selectedStandard]);
+  // A. Add Priority Words (Mistakes) - up to 5 (50% of deck)
+  const shuffledPriority = shuffle(priorityList);
+  deck = [...deck, ...shuffledPriority.slice(0, 5)];
+
+  // B. Fill remaining slots with New Words (Unseen)
+  let remainingSlots = deckSize - deck.length;
+  const shuffledNew = shuffle(newList);
+  deck = [...deck, ...shuffledNew.slice(0, remainingSlots)];
+
+  // C. If deck is still not full (e.g. user mastered almost everything), fill with Review Words
+  remainingSlots = deckSize - deck.length;
+  if (remainingSlots > 0) {
+    const shuffledReview = shuffle(reviewList);
+    deck = [...deck, ...shuffledReview.slice(0, remainingSlots)];
+  }
+  
+  // Final shuffle of the assembled deck so mistakes aren't always at the start
+  const finalSelection = shuffle(deck);
 
   return finalSelection.map((item, index) => ({
     id: `${category}-${level}-${index}-${Date.now()}`,
     serbian: item.serbian,
     hungarian: item.hungarian,
-    hungarianAlt: item.hungarianAlt
+    hungarianAlt: item.hungarianAlt,
+    display: item.display
   }));
 };
 
@@ -72,7 +90,6 @@ export const getStaticStoryTask = async (level: DifficultyLevel): Promise<StoryT
 };
 
 export const evaluateTranslationLocally = (correct: string, user: string): string => {
-   // Simple evaluation since we don't use AI
    return `
    Hvala na prevodu!
    

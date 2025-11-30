@@ -1,5 +1,6 @@
 
 
+
 export enum WordCategory {
   NOUNS = 'Nouns',
   VERBS = 'Verbs',
@@ -17,7 +18,8 @@ export enum GameMode {
   CONJUGATION = 'CONJUGATION',
   CUSTOM_VOCAB = 'CUSTOM_VOCAB',
   GRAMMAR = 'GRAMMAR',
-  STORIES = 'STORIES'
+  STORIES = 'STORIES',
+  DICTIONARY = 'DICTIONARY'
 }
 
 export enum FlashCardDirection {
@@ -30,6 +32,7 @@ export interface FlashCard {
   serbian: string;
   hungarian: string;
   hungarianAlt: string[];
+  display?: string;
 }
 
 export interface GameResult {

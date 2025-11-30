@@ -1,15 +1,20 @@
 
-
 import { DifficultyLevel } from '../types';
 
 interface VocabEntry {
   serbian: string;
   hungarian: string;
   hungarianAlt: string[]; // Synonyms
+  display?: string; // Optional display override (e.g. "1" instead of "jedan")
 }
 
 // Helper to create entry
-const c = (ser: string, hun: string, alt: string[] = []): VocabEntry => ({ serbian: ser, hungarian: hun, hungarianAlt: alt });
+const c = (ser: string, hun: string, alt: string[] = [], disp?: string): VocabEntry => ({ 
+  serbian: ser, 
+  hungarian: hun, 
+  hungarianAlt: alt,
+  display: disp 
+});
 
 // --- NUMBER GENERATORS (CARDINAL) ---
 
@@ -20,6 +25,7 @@ const sHundreds = ["", "sto", "dvesta", "trista", "četiristo", "petsto", "šest
 
 const genSer = (n: number): string => {
   if (n === 0) return "nula";
+  if (n === 1000000) return "milion";
   if (n >= 1000) {
     const th = Math.floor(n / 1000);
     const rem = n % 1000;
@@ -57,6 +63,7 @@ const hTens = ["", "tíz", "húsz", "harminc", "negyven", "ötven", "hatvan", "h
 
 const genHun = (n: number): string => {
   if (n === 0) return "nulla";
+  if (n === 1000000) return "egymillió";
   if (n >= 1000) {
     const th = Math.floor(n / 1000);
     const rem = n % 1000;
@@ -101,23 +108,9 @@ const genHun = (n: number): string => {
 
 const genRange = (start: number, end: number) => {
   const arr = [];
-  for (let i = start; i <= end; i++) arr.push(c(genSer(i), genHun(i)));
-  return arr;
-};
-
-const genRandom = (count: number, min: number, max: number) => {
-  const arr = [];
-  for (let i = 0; i < count; i++) {
-    const n = Math.floor(Math.random() * (max - min + 1)) + min;
-    arr.push(c(genSer(n), genHun(n)));
-  }
-  return arr;
-};
-
-const genEvenThousands = (max: number) => {
-  const arr = [];
-  for (let i = 2000; i <= max; i += 2000) {
-    arr.push(c(genSer(i), genHun(i)));
+  for (let i = start; i <= end; i++) {
+    // Pass the number as a string for display in Dictionary
+    arr.push(c(genSer(i), genHun(i), [], i.toString()));
   }
   return arr;
 };
@@ -170,61 +163,68 @@ export const ADVERBS: Record<DifficultyLevel, VocabEntry[]> = {
 // --- CARDINAL NUMBERS (Obični) ---
 export const NUMBERS_CARDINAL: Record<DifficultyLevel, VocabEntry[]> = {
   1: [
-    c("nula", "nulla"), c("jedan", "egy"), c("dva", "kettő", ["két"]), c("tri", "három"),
-    c("četiri", "négy"), c("pet", "öt"), c("šest", "hat"), c("sedam", "hét"),
-    c("osam", "nyolc"), c("devet", "kilenc"), c("deset", "tíz")
+    c("nula", "nulla", [], "0"), c("jedan", "egy", [], "1"), c("dva", "kettő", ["két"], "2"), c("tri", "három", [], "3"),
+    c("četiri", "négy", [], "4"), c("pet", "öt", [], "5"), c("šest", "hat", [], "6"), c("sedam", "hét", [], "7"),
+    c("osam", "nyolc", [], "8"), c("devet", "kilenc", [], "9"), c("deset", "tíz", [], "10")
   ],
   2: [
-    c("jedanaest", "tizenegy"), c("dvanaest", "tizenkettő"), c("trinaest", "tizenhárom"),
-    c("četrnaest", "tizennégy"), c("petnaest", "tizenöt"), c("šesnaest", "tizenhat"),
-    c("sedamnaest", "tizenhét"), c("osamnaest", "tizennyolc"), c("devetnaest", "tizenkilenc"),
-    c("dvadeset", "húsz")
+    c("jedanaest", "tizenegy", [], "11"), c("dvanaest", "tizenkettő", [], "12"), c("trinaest", "tizenhárom", [], "13"),
+    c("četrnaest", "tizennégy", [], "14"), c("petnaest", "tizenöt", [], "15"), c("šesnaest", "tizenhat", [], "16"),
+    c("sedamnaest", "tizenhét", [], "17"), c("osamnaest", "tizennyolc", [], "18"), c("devetnaest", "tizenkilenc", [], "19"),
+    c("dvadeset", "húsz", [], "20")
   ],
   3: [
     ...genRange(21, 100)
   ],
   4: [
-    ...genRandom(300, 101, 1000)
+    c("sto", "száz", [], "100"), c("dvesta", "kétszáz", [], "200"), c("trista", "háromszáz", [], "300"),
+    c("četiristo", "négyszáz", [], "400"), c("petsto", "ötszáz", [], "500"), c("šesto", "hatszáz", [], "600"),
+    c("sedamsto", "hétszáz", [], "700"), c("osamsto", "nyolcszáz", [], "800"), c("devetsto", "kilencszáz", [], "900")
   ],
   5: [
-    ...genEvenThousands(20000)
+    c("hiljada", "ezer", [], "1000"), c("dve hiljade", "kétezer", [], "2000"), 
+    c("tri hiljade", "háromezer", [], "3000"), c("četiri hiljade", "négyezer", [], "4000"),
+    c("pet hiljada", "ötezer", [], "5000"), c("šest hiljada", "hatezer", [], "6000"),
+    c("sedam hiljada", "hétezer", [], "7000"), c("osam hiljada", "nyolcezer", [], "8000"),
+    c("devet hiljada", "kilencezer", [], "9000"), c("deset hiljada", "tízezer", [], "10000"),
+    c("milion", "egymillió", [], "1000000")
   ]
 };
 
 // --- ORDINAL NUMBERS (Redni) ---
 export const NUMBERS_ORDINAL: Record<DifficultyLevel, VocabEntry[]> = {
   1: [
-    c("prvi", "első"), c("drugi", "második"), c("treći", "harmadik"),
-    c("četvrti", "negyedik"), c("peti", "ötödik"), c("šesti", "hatodik"),
-    c("sedmi", "hetedik"), c("osmi", "nyolcadik"), c("deveti", "kilencedik"),
-    c("deseti", "tizedik")
+    c("prvi", "első", [], "1."), c("drugi", "második", [], "2."), c("treći", "harmadik", [], "3."),
+    c("četvrti", "negyedik", [], "4."), c("peti", "ötödik", [], "5."), c("šesti", "hatodik", [], "6."),
+    c("sedmi", "hetedik", [], "7."), c("osmi", "nyolcadik", [], "8."), c("deveti", "kilencedik", [], "9."),
+    c("deseti", "tizedik", [], "10.")
   ],
   2: [
-    c("jedanaesti", "tizenegyedik"), c("dvanaesti", "tizenkettedik"),
-    c("trinaesti", "tizenharmadik"), c("četrnaesti", "tizennegyedik"),
-    c("petnaesti", "tizenötödik"), c("šesnaesti", "tizenhatodik"),
-    c("sedamnaesti", "tizenhetedik"), c("osamnaesti", "tizennyolcadik"),
-    c("devetnaesti", "tizenkilencedik"), c("dvadeseti", "huszadik")
+    c("jedanaesti", "tizenegyedik", [], "11."), c("dvanaesti", "tizenkettedik", [], "12."),
+    c("trinaesti", "tizenharmadik", [], "13."), c("četrnaesti", "tizennegyedik", [], "14."),
+    c("petnaesti", "tizenötödik", [], "15."), c("šesnaesti", "tizenhatodik", [], "16."),
+    c("sedamnaesti", "tizenhetedik", [], "17."), c("osamnaesti", "tizennyolcadik", [], "18."),
+    c("devetnaesti", "tizenkilencedik", [], "19."), c("dvadeseti", "huszadik", [], "20.")
   ],
   3: [
-    c("dvadeset prvi", "huszonegyedik"), c("dvadeset drugi", "huszonkettedik"),
-    c("dvadeset treći", "huszonharmadik"), c("trideseti", "harmincadik"),
-    c("trideset prvi", "harmincegyedik"), c("četrdeseti", "negyvenedik"),
-    c("pedeseti", "ötvenedik"), c("šezdeseti", "hatvanadik"),
-    c("sedamdeseti", "hetvenedik"), c("osamdeseti", "nyolcvanadik"),
-    c("devedeseti", "kilencvenedik"), c("devedeset deveti", "kilencvenkilencedik")
+    c("dvadeset prvi", "huszonegyedik", [], "21."), c("dvadeset drugi", "huszonkettedik", [], "22."),
+    c("dvadeset treći", "huszonharmadik", [], "23."), c("trideseti", "harmincadik", [], "30."),
+    c("trideset prvi", "harmincegyedik", [], "31."), c("četrdeseti", "negyvenedik", [], "40."),
+    c("pedeseti", "ötvenedik", [], "50."), c("šezdeseti", "hatvanadik", [], "60."),
+    c("sedamdeseti", "hetvenedik", [], "70."), c("osamdeseti", "nyolcvanadik", [], "80."),
+    c("devedeseti", "kilencvenedik", [], "90."), c("devedeset deveti", "kilencvenkilencedik", [], "99.")
   ],
   4: [
-    c("stoti", "századik"), c("sto prvi", "százegyedik"),
-    c("dvestoti", "kétszázadik"), c("tristoti", "háromszázadik"),
-    c("četiristoti", "négyszázadik"), c("petstoti", "ötszázadik"),
-    c("šestoti", "hatszázadik"), c("sedamstoti", "hétszázadik"),
-    c("osamstoti", "nyolcszázadik"), c("devetstoti", "kilencszázadik")
+    c("stoti", "századik", [], "100."), c("sto prvi", "százegyedik", [], "101."),
+    c("dvestoti", "kétszázadik", [], "200."), c("tristoti", "háromszázadik", [], "300."),
+    c("četiristoti", "négyszázadik", [], "400."), c("petstoti", "ötszázadik", [], "500."),
+    c("šestoti", "hatszázadik", [], "600."), c("sedamstoti", "hétszázadik", [], "700."),
+    c("osamstoti", "nyolcszázadik", [], "800."), c("devetstoti", "kilencszázadik", [], "900.")
   ],
   5: [
-    c("hiljaditi", "ezredik"), c("dve hiljaditi", "kétezredik"),
-    c("pet hiljaditi", "ötezredik"), c("deset hiljaditi", "tízezredik"),
-    c("stohiljaditi", "százezredik"), c("milioniti", "milliomodik")
+    c("hiljaditi", "ezredik", [], "1000."), c("dve hiljaditi", "kétezredik", [], "2000."),
+    c("pet hiljaditi", "ötezredik", [], "5000."), c("deset hiljaditi", "tízezredik", [], "10000."),
+    c("stohiljaditi", "százezredik", [], "100000."), c("milioniti", "milliomodik", [], "1000000.")
   ]
 };
 

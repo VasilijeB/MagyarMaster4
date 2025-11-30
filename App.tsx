@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { AppState, FlashCard, GameResult, WordCategory, DifficultyLevel, GameMode, FlashCardDirection, User } from './types';
 import { getStaticFlashcards } from './services/contentService'; // Changed import
-import { saveUser, getUser, addMistakes, removeMistakes } from './services/storageService';
+import { saveUser, getUser, addMistakes, addMastered } from './services/storageService';
 import { CategorySelection } from './components/CategorySelection';
 import { ActiveGame } from './components/ActiveGame';
 import { Results } from './components/Results';
@@ -12,6 +11,7 @@ import { ConjugationGame } from './components/ConjugationGame';
 import { CustomVocabSetup } from './components/CustomVocabSetup';
 import { GrammarChat } from './components/GrammarChat';
 import { StoryGame } from './components/StoryGame';
+import { Dictionary } from './components/Dictionary';
 import { Login } from './components/Login';
 import { LandingPage } from './components/LandingPage';
 import { LOADING_MESSAGES } from './constants';
@@ -26,6 +26,7 @@ const App: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loadingMsg, setLoadingMsg] = useState<string>(LOADING_MESSAGES[0]);
   const [vocabDirection, setVocabDirection] = useState<FlashCardDirection>(FlashCardDirection.SER_HUN);
+  const [vocabCategory, setVocabCategory] = useState<WordCategory | null>(null);
 
   useEffect(() => {
     const loadedUser = getUser();
@@ -44,6 +45,7 @@ const App: React.FC = () => {
   };
 
   const handleVocabStart = async (category: WordCategory, level: DifficultyLevel, direction: FlashCardDirection) => {
+    setVocabCategory(category);
     setAppState(AppState.LOADING);
     setVocabDirection(direction);
     setLoadingMsg(LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)]);
@@ -102,7 +104,7 @@ const App: React.FC = () => {
     });
 
     if (struggles.length > 0) addMistakes(struggles);
-    if (mastered.length > 0) removeMistakes(mastered);
+    if (mastered.length > 0) addMastered(mastered);
   };
 
   const handleRestart = () => {
@@ -116,6 +118,7 @@ const App: React.FC = () => {
     setAppState(AppState.MENU);
     setFlashcards([]);
     setResults([]);
+    setVocabCategory(null); // Clear selected category when navigating via menu/dashboard
   };
 
   if (uiState === 'landing') return <LandingPage onStart={() => setUiState('login')} />;
@@ -127,11 +130,16 @@ const App: React.FC = () => {
       case GameMode.CONJUGATION: return <ConjugationGame onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
       case GameMode.GRAMMAR: return <GrammarChat onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
       case GameMode.STORIES: return <StoryGame onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
+      case GameMode.DICTIONARY: return <Dictionary onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
       case GameMode.VOCAB:
       case GameMode.CUSTOM_VOCAB:
         if (appState === AppState.MENU) {
             return currentMode === GameMode.VOCAB 
-              ? <CategorySelection onSelect={handleVocabStart} onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />
+              ? <CategorySelection 
+                  onSelect={handleVocabStart} 
+                  onGoBack={() => handleNavigation(GameMode.DASHBOARD)} 
+                  initialCategory={vocabCategory}
+                />
               : <CustomVocabSetup onStart={handleCustomStart} onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
         }
         if (appState === AppState.LOADING) {

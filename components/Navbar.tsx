@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import { GameMode, User } from '../types';
 
@@ -60,9 +62,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
                 icon="💡"
               />
                <NavButton 
+                active={currentMode === GameMode.DICTIONARY} 
+                onClick={() => handleNavClick(GameMode.DICTIONARY)}
+                label="Rečnik"
+                icon="📚"
+              />
+              <NavButton 
                 active={currentMode === GameMode.CUSTOM_VOCAB} 
                 onClick={() => handleNavClick(GameMode.CUSTOM_VOCAB)}
-                label="Moje"
+                label="Moji Izrazi"
                 icon="⭐"
               />
             </div>
@@ -100,78 +108,90 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
       {/* Spacer for fixed navbar */}
       <div className="h-20"></div>
 
-      {/* Mobile Sidebar Overlay */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div 
-            className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm transition-opacity"
-            onClick={() => setIsMenuOpen(false)}
-          ></div>
-          
-          <div className="absolute right-0 top-0 bottom-0 w-3/4 max-w-sm bg-white shadow-2xl transform transition-transform duration-300 ease-out h-full flex flex-col p-6">
-             <div className="flex justify-between items-center mb-8">
-                <span className="font-bold text-xl text-slate-800">Meni</span>
-                <button 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-2 text-slate-400 hover:text-slate-600 bg-slate-50 rounded-full"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-             </div>
-             
-             <div className="flex-1 space-y-2">
+      {/* Mobile Sidebar Overlay (Always rendered, controlled via CSS classes for smooth transition) */}
+      <div 
+        className={`fixed inset-0 z-50 lg:hidden ${isMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
+      >
+        {/* Backdrop - Fades in/out */}
+        <div 
+          className={`absolute inset-0 bg-slate-900/20 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
+            isMenuOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={() => setIsMenuOpen(false)}
+        ></div>
+        
+        {/* Drawer - Slides in/out */}
+        <div className={`absolute right-0 top-0 bottom-0 w-3/4 max-w-sm bg-white shadow-2xl transform transition-transform duration-300 ease-out h-full flex flex-col p-6 ${
+           isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}>
+            <div className="flex justify-between items-center mb-8">
+              <span className="font-bold text-xl text-slate-800">Meni</span>
+              <button 
+                onClick={() => setIsMenuOpen(false)}
+                className="p-2 text-slate-400 hover:text-slate-600 bg-slate-50 rounded-full"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+            
+            <div className="flex-1 space-y-2 overflow-y-auto">
+              <MobileNavButton 
+                active={currentMode === GameMode.DASHBOARD} 
+                onClick={() => handleNavClick(GameMode.DASHBOARD)}
+                label="Početna"
+                icon="🏠"
+              />
+              <MobileNavButton 
+                active={currentMode === GameMode.VOCAB} 
+                onClick={() => handleNavClick(GameMode.VOCAB)}
+                label="Vežbaj reči"
+                icon="📇"
+              />
+              <MobileNavButton 
+                active={currentMode === GameMode.CONJUGATION} 
+                onClick={() => handleNavClick(GameMode.CONJUGATION)}
+                label="Konjugacija"
+                icon="✍️"
+              />
+              <MobileNavButton 
+                active={currentMode === GameMode.STORIES} 
+                onClick={() => handleNavClick(GameMode.STORIES)}
+                label="Kratke Priče"
+                icon="📖"
+              />
+              <MobileNavButton 
+                active={currentMode === GameMode.GRAMMAR} 
+                onClick={() => handleNavClick(GameMode.GRAMMAR)}
+                label="Gramatika"
+                icon="💡"
+              />
+              <MobileNavButton 
+                active={currentMode === GameMode.DICTIONARY} 
+                onClick={() => handleNavClick(GameMode.DICTIONARY)}
+                label="Rečnik"
+                icon="📚"
+              />
                 <MobileNavButton 
-                  active={currentMode === GameMode.DASHBOARD} 
-                  onClick={() => handleNavClick(GameMode.DASHBOARD)}
-                  label="Početna"
-                  icon="🏠"
-                />
-                <MobileNavButton 
-                  active={currentMode === GameMode.VOCAB} 
-                  onClick={() => handleNavClick(GameMode.VOCAB)}
-                  label="Vežbaj reči"
-                  icon="📇"
-                />
-                <MobileNavButton 
-                  active={currentMode === GameMode.CONJUGATION} 
-                  onClick={() => handleNavClick(GameMode.CONJUGATION)}
-                  label="Konjugacija"
-                  icon="✍️"
-                />
-                <MobileNavButton 
-                  active={currentMode === GameMode.STORIES} 
-                  onClick={() => handleNavClick(GameMode.STORIES)}
-                  label="Kratke Priče"
-                  icon="📖"
-                />
-                <MobileNavButton 
-                  active={currentMode === GameMode.GRAMMAR} 
-                  onClick={() => handleNavClick(GameMode.GRAMMAR)}
-                  label="Gramatika"
-                  icon="💡"
-                />
-                 <MobileNavButton 
-                  active={currentMode === GameMode.CUSTOM_VOCAB} 
-                  onClick={() => handleNavClick(GameMode.CUSTOM_VOCAB)}
-                  label="Moji Izrazi"
-                  icon="⭐"
-                />
-             </div>
+                active={currentMode === GameMode.CUSTOM_VOCAB} 
+                onClick={() => handleNavClick(GameMode.CUSTOM_VOCAB)}
+                label="Moji Izrazi"
+                icon="⭐"
+              />
+            </div>
 
-             <div className="mt-auto pt-6 border-t border-slate-100">
-                <div className="flex items-center gap-3">
-                   <div className="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold">
-                      {user?.name.charAt(0).toUpperCase()}
-                   </div>
-                   <div>
-                      <p className="font-bold text-slate-800">{user?.name}</p>
-                      <p className="text-xs text-slate-500">Ulogovan</p>
-                   </div>
-                </div>
-             </div>
-          </div>
+            <div className="mt-auto pt-6 border-t border-slate-100">
+              <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold">
+                    {user?.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="font-bold text-slate-800">{user?.name}</p>
+                    <p className="text-xs text-slate-500">Ulogovan</p>
+                  </div>
+              </div>
+            </div>
         </div>
-      )}
+      </div>
     </>
   );
 };

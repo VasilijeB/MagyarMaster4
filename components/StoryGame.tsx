@@ -59,7 +59,7 @@ export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
           ← Nazad na početnu
         </button>
         <div className="text-center">
-          <h2 className="text-3xl font-bold mb-8 text-slate-800">Izaberite nivo priče</h2>
+          <h2 className="text-3xl font-bold mb-8 text-slate-800">Izaberite složenost priče</h2>
           <div className="grid gap-4">
             {[1, 2, 3, 4, 5].map((l) => (
               <button

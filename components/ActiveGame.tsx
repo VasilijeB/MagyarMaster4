@@ -13,57 +13,84 @@ interface ActiveGameProps {
 
 type CardStatus = 'pending' | 'correct' | 'incorrect';
 
-// Helper to play instant feedback sounds using browser AudioContext
+// Singleton AudioContext to prevent resource exhaustion and distortion
+let audioContext: AudioContext | null = null;
+
 const playFeedbackSound = (type: 'correct' | 'incorrect') => {
   try {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioContextClass) return;
-    const ctx = new AudioContextClass();
+    if (!audioContext) {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioContextClass) {
+        audioContext = new AudioContextClass();
+      }
+    }
+    
+    if (!audioContext) return;
+    
+    // Browser policy requires resuming context after user interaction
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
+
+    const ctx = audioContext;
     const now = ctx.currentTime;
     
     if (type === 'correct') {
-      // Pleasant "Success Chime" (C5 -> E5)
-      // Note 1
+      // Pleasant "Success Chime" (Sine waves)
+      // Oscillator 1: Root note (High C)
       const osc1 = ctx.createOscillator();
       const gain1 = ctx.createGain();
+      
       osc1.type = 'sine';
       osc1.frequency.setValueAtTime(523.25, now); // C5
-      gain1.gain.setValueAtTime(0.1, now);
-      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      
+      // Smooth attack (fade in) to prevent click/pop distortion
+      gain1.gain.setValueAtTime(0, now);
+      gain1.gain.linearRampToValueAtTime(0.1, now + 0.02); 
+      // Smooth release (fade out)
+      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+      
       osc1.connect(gain1);
       gain1.connect(ctx.destination);
       osc1.start(now);
-      osc1.stop(now + 0.4);
+      osc1.stop(now + 0.55);
 
-      // Note 2 (slightly delayed)
+      // Oscillator 2: Harmony (E5) - Slightly delayed
       const osc2 = ctx.createOscillator();
       const gain2 = ctx.createGain();
+      
       osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(659.25, now + 0.1); // E5
-      gain2.gain.setValueAtTime(0.1, now + 0.1);
-      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+      osc2.frequency.setValueAtTime(659.25, now + 0.05); // E5
+      
+      gain2.gain.setValueAtTime(0, now + 0.05);
+      gain2.gain.linearRampToValueAtTime(0.1, now + 0.07);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+      
       osc2.connect(gain2);
       gain2.connect(ctx.destination);
-      osc2.start(now + 0.1);
-      osc2.stop(now + 0.5);
+      osc2.start(now + 0.05);
+      osc2.stop(now + 0.6);
 
     } else {
-      // Softer "Error Thud"
+      // Softer "Error" sound (Low Sine with pitch drop)
+      // Using 'sine' instead of triangle/sawtooth to avoid harsh distortion
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       
-      osc.type = 'triangle'; // Softer than sawtooth
-      osc.frequency.setValueAtTime(150, now);
+      osc.type = 'sine'; 
+      osc.frequency.setValueAtTime(200, now); // Lower start
       osc.frequency.exponentialRampToValueAtTime(50, now + 0.3); // Pitch drop
       
-      gain.gain.setValueAtTime(0.2, now);
+      // Smooth attack to avoid clicking
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.2, now + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
       
       osc.connect(gain);
       gain.connect(ctx.destination);
       
       osc.start(now);
-      osc.stop(now + 0.3);
+      osc.stop(now + 0.35);
     }
   } catch (e) {
     console.error("Audio playback error", e);
@@ -156,8 +183,15 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   if (deck.length === 0) return null;
 
   const isHungToSerb = direction === FlashCardDirection.HUN_SER;
-  const questionText = isHungToSerb ? currentCard.hungarian : currentCard.serbian;
-  const targetAnswerPrimary = isHungToSerb ? currentCard.serbian : currentCard.hungarian;
+  
+  // Use 'display' property if available (for Numbers to show Arabic numerals)
+  const questionText = isHungToSerb 
+    ? currentCard.hungarian 
+    : (currentCard.display || currentCard.serbian);
+    
+  const targetAnswerPrimary = isHungToSerb 
+    ? (currentCard.display || currentCard.serbian)
+    : currentCard.hungarian;
   
   const validAnswers = isHungToSerb 
     ? [currentCard.serbian.toLowerCase()] 
