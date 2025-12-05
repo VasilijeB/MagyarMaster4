@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { FlashCard, GameResult, FlashCardDirection } from '../types';
 import { VirtualKeyboard } from './VirtualKeyboard';
@@ -289,7 +288,7 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
         
         {/* Flashcard */}
         <div className="perspective-1000 overflow-hidden rounded-[1.5rem] md:rounded-[2rem] w-full flex-shrink-0">
-          <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[150px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-12 text-center overflow-hidden transition-all duration-300 group">
+          <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[180px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-8 text-center overflow-hidden transition-all duration-300 group">
             {/* Dynamic Top Gradient */}
             <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${gradientClass}`}></div>
             
@@ -297,62 +296,86 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
               {isHungToSerb ? "MAĐARSKI" : "SRPSKI"}
             </h2>
             
-            <p className="text-5xl md:text-8xl font-extrabold text-slate-800 mb-2 leading-tight break-words max-w-full">
+            <p className="text-4xl md:text-8xl font-extrabold text-slate-800 mb-2 leading-tight break-words max-w-full">
               {questionText}
             </p>
 
             {/* Feedback Overlay */}
             {feedback !== 'none' && (
-              <div className={`absolute inset-0 z-20 flex flex-col items-center justify-center p-2 md:p-8 animate-[scale-in_0.15s_ease-out_forwards]
-                ${feedback === 'almost' ? 'bg-amber-50/90 backdrop-blur-md' : 'bg-white/98 backdrop-blur-md'}
+              <div className={`absolute inset-0 z-20 flex flex-col items-center justify-center p-2 md:p-6 animate-[scale-in_0.15s_ease-out_forwards]
+                ${feedback === 'almost' ? 'bg-amber-50/98 backdrop-blur-md' : 'bg-white/98 backdrop-blur-md'}
               `}>
-                 <div className="flex flex-col items-center justify-center w-full">
+                 <div className="flex flex-col items-center justify-center w-full h-full max-w-lg mx-auto relative">
+                   
                    {feedback === 'correct' ? (
                      <>
-                       {/* Green Check Mark */}
-                       <div className="w-12 h-12 md:w-24 md:h-24 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2 md:mb-6 animate-scale-in">
-                          <svg className="w-6 h-6 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>
+                       {/* Green Check Mark - Reduced Size */}
+                       <div className="w-10 h-10 md:w-16 md:h-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2 animate-scale-in flex-shrink-0">
+                          <svg className="w-5 h-5 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>
                        </div>
-                       <h3 className="text-xl md:text-4xl font-bold text-emerald-600 mb-2">Tačno!</h3>
-                       <div className="text-emerald-600 font-extrabold text-4xl md:text-8xl flex items-center justify-center text-center leading-tight">
+                       
+                       {/* Answer - Reduced Size */}
+                       <div className="text-emerald-600 font-extrabold text-2xl md:text-5xl flex items-center justify-center text-center leading-tight mb-2 break-words w-full">
                           {currentCard.hungarian}
                        </div>
                      </>
                    ) : feedback === 'almost' ? (
                      <>
-                       {/* Yellow Warning Icon for Almost */}
-                       <div className="w-8 h-8 md:w-24 md:h-24 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mb-1 md:mb-6 animate-shake shadow-sm border-2 border-amber-200">
-                          <svg className="w-5 h-5 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                       {/* Yellow Warning Icon - Reduced Size */}
+                       <div className="w-8 h-8 md:w-14 md:h-14 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mb-2 animate-shake shadow-sm border-2 border-amber-200 flex-shrink-0">
+                          <svg className="w-4 h-4 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                        </div>
-                       <h3 className="text-lg md:text-4xl font-extrabold text-amber-500 mb-1 md:mb-2">Skoro tačno!</h3>
-                       <p className="text-amber-700 font-bold mb-2 md:mb-4 text-xs md:text-xl bg-amber-100 px-3 py-0.5 md:px-4 md:py-1 rounded-full">Pazi na akcente!</p>
                        
-                       <div className="text-amber-600 text-xs md:text-lg font-bold">
-                          Tačan odgovor: <br/>
-                          <div className="font-extrabold text-amber-600 text-3xl md:text-7xl mt-1 md:mt-2 flex items-center justify-center gap-3">
-                            {targetAnswerPrimary}
-                          </div>
+                       <p className="text-amber-700 font-bold mb-1 text-[10px] md:text-sm bg-amber-100 px-3 py-0.5 rounded-full">Pazi na akcente!</p>
+                       
+                       <div className="font-extrabold text-amber-600 text-xl md:text-4xl mb-2 flex items-center justify-center gap-3 text-center leading-tight break-words w-full">
+                          {targetAnswerPrimary}
                        </div>
                      </>
                    ) : (
                      <>
-                       {/* Red Cross for Incorrect */}
-                       <div className="w-10 h-10 md:w-20 md:h-20 bg-rose-100 rounded-full flex items-center justify-center text-xl md:text-4xl mb-2 md:mb-6 animate-shake text-rose-600">
-                         <svg className="w-5 h-5 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" /></svg>
+                       {/* Red Cross - Reduced Size */}
+                       <div className="w-8 h-8 md:w-14 md:h-14 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 mb-2 animate-shake flex-shrink-0">
+                         <svg className="w-4 h-4 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" /></svg>
                        </div>
-                       <div className="text-rose-500 text-sm md:text-lg font-bold">
-                          Tačan odgovor: <br/>
-                          <div className="font-extrabold text-rose-700 text-3xl md:text-6xl mt-1 md:mt-2 flex items-center justify-center gap-3">
-                            {targetAnswerPrimary}
-                          </div>
-                          {synonyms.length > 0 && (
-                            <p className="text-xs md:text-sm mt-2 text-slate-400 font-medium">
+                       
+                       <div className="text-rose-500 text-[10px] md:text-sm font-bold mb-0.5">
+                          Tačan odgovor:
+                       </div>
+                       <div className="font-extrabold text-rose-700 text-xl md:text-4xl mb-2 flex items-center justify-center gap-3 text-center leading-tight break-words w-full">
+                          {targetAnswerPrimary}
+                       </div>
+                       {synonyms.length > 0 && (
+                            <p className="text-[10px] md:text-xs mb-2 text-slate-400 font-medium">
                               (Takođe: {synonyms.join(', ')})
                             </p>
-                          )}
-                       </div>
+                       )}
                      </>
                    )}
+
+                   {/* HINT SECTION - Compact & Closer to Answer */}
+                   {currentCard.hint && (
+                     <div className={`mt-2 w-full p-2 rounded-xl border flex items-start gap-2 text-left animate-fade-in-up
+                       ${feedback === 'correct' ? 'bg-emerald-50 border-emerald-100' : 
+                         feedback === 'almost' ? 'bg-amber-50 border-amber-100' : 'bg-rose-50 border-rose-100'
+                       }
+                     `}>
+                        <div className="text-sm md:text-lg flex-shrink-0 mt-0.5">💡</div>
+                        <div className="min-w-0 flex-1">
+                          <p className={`text-[8px] md:text-[10px] font-bold uppercase opacity-60 mb-0.5 ${
+                             feedback === 'correct' ? 'text-emerald-800' : 
+                             feedback === 'almost' ? 'text-amber-800' : 'text-rose-800'
+                          }`}>Savet</p>
+                          <p className={`text-[10px] md:text-xs font-medium italic leading-snug ${
+                             feedback === 'correct' ? 'text-emerald-900' : 
+                             feedback === 'almost' ? 'text-amber-900' : 'text-rose-900'
+                          }`}>
+                            {currentCard.hint}
+                          </p>
+                        </div>
+                     </div>
+                   )}
+
                  </div>
               </div>
             )}

@@ -1,5 +1,3 @@
-
-
 import { WordCategory, DifficultyLevel, FlashCard, ConjugationTask, StoryTask } from '../types';
 import { NOUNS, VERBS, ADJECTIVES, NUMBERS_CARDINAL, NUMBERS_ORDINAL, ADVERBS } from '../data/vocabData';
 import { CONJUGATION_DATA } from '../data/conjugationData';
@@ -15,7 +13,7 @@ export const getStaticFlashcards = async (category: WordCategory, level: Difficu
   // Simulate network delay for effect (optional)
   await new Promise(resolve => setTimeout(resolve, 200));
 
-  let sourceData: { serbian: string; hungarian: string; hungarianAlt: string[]; display?: string }[] = [];
+  let sourceData: { serbian: string; hungarian: string; hungarianAlt: string[]; display?: string; hint?: string }[] = [];
   switch (category) {
     case WordCategory.NOUNS: sourceData = NOUNS[level] || NOUNS[1]; break;
     case WordCategory.VERBS: sourceData = VERBS[level] || VERBS[1]; break;
@@ -69,7 +67,8 @@ export const getStaticFlashcards = async (category: WordCategory, level: Difficu
     serbian: item.serbian,
     hungarian: item.hungarian,
     hungarianAlt: item.hungarianAlt,
-    display: item.display
+    display: item.display,
+    hint: item.hint
   }));
 };
 

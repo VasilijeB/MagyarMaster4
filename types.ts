@@ -1,6 +1,7 @@
 
 
 
+
 export enum WordCategory {
   NOUNS = 'Nouns',
   VERBS = 'Verbs',
@@ -33,6 +34,7 @@ export interface FlashCard {
   hungarian: string;
   hungarianAlt: string[];
   display?: string;
+  hint?: string;
 }
 
 export interface GameResult {
