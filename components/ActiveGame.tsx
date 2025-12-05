@@ -288,7 +288,8 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
         
         {/* Flashcard */}
         <div className="perspective-1000 overflow-hidden rounded-[1.5rem] md:rounded-[2rem] w-full flex-shrink-0">
-          <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[180px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-8 text-center overflow-hidden transition-all duration-300 group">
+          {/* Increased min-height to 240px on mobile to fit the bigger hint */}
+          <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[240px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-8 text-center overflow-hidden transition-all duration-300 group">
             {/* Dynamic Top Gradient */}
             <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${gradientClass}`}></div>
             
@@ -302,26 +303,26 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
 
             {/* Feedback Overlay */}
             {feedback !== 'none' && (
-              <div className={`absolute inset-0 z-20 flex flex-col items-center justify-center p-2 md:p-6 animate-[scale-in_0.15s_ease-out_forwards]
+              <div className={`absolute inset-0 z-20 flex flex-col items-center justify-center p-3 md:p-6 animate-[scale-in_0.15s_ease-out_forwards]
                 ${feedback === 'almost' ? 'bg-amber-50/98 backdrop-blur-md' : 'bg-white/98 backdrop-blur-md'}
               `}>
                  <div className="flex flex-col items-center justify-center w-full h-full max-w-lg mx-auto relative">
                    
                    {feedback === 'correct' ? (
                      <>
-                       {/* Green Check Mark - Reduced Size */}
+                       {/* Green Check Mark */}
                        <div className="w-10 h-10 md:w-16 md:h-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2 animate-scale-in flex-shrink-0">
                           <svg className="w-5 h-5 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>
                        </div>
                        
-                       {/* Answer - Reduced Size */}
+                       {/* Answer */}
                        <div className="text-emerald-600 font-extrabold text-2xl md:text-5xl flex items-center justify-center text-center leading-tight mb-2 break-words w-full">
                           {currentCard.hungarian}
                        </div>
                      </>
                    ) : feedback === 'almost' ? (
                      <>
-                       {/* Yellow Warning Icon - Reduced Size */}
+                       {/* Yellow Warning Icon */}
                        <div className="w-8 h-8 md:w-14 md:h-14 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mb-2 animate-shake shadow-sm border-2 border-amber-200 flex-shrink-0">
                           <svg className="w-4 h-4 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                        </div>
@@ -334,7 +335,7 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
                      </>
                    ) : (
                      <>
-                       {/* Red Cross - Reduced Size */}
+                       {/* Red Cross */}
                        <div className="w-8 h-8 md:w-14 md:h-14 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 mb-2 animate-shake flex-shrink-0">
                          <svg className="w-4 h-4 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" /></svg>
                        </div>
@@ -353,20 +354,20 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
                      </>
                    )}
 
-                   {/* HINT SECTION - Compact & Closer to Answer */}
+                   {/* HINT SECTION - BIGGER & MORE OBVIOUS */}
                    {currentCard.hint && (
-                     <div className={`mt-2 w-full p-2 rounded-xl border flex items-start gap-2 text-left animate-fade-in-up
-                       ${feedback === 'correct' ? 'bg-emerald-50 border-emerald-100' : 
-                         feedback === 'almost' ? 'bg-amber-50 border-amber-100' : 'bg-rose-50 border-rose-100'
+                     <div className={`mt-3 w-full p-3 rounded-2xl border-2 flex items-center gap-3 text-left animate-fade-in-up shadow-sm
+                       ${feedback === 'correct' ? 'bg-emerald-100 border-emerald-200' : 
+                         feedback === 'almost' ? 'bg-amber-100 border-amber-200' : 'bg-rose-100 border-rose-200'
                        }
                      `}>
-                        <div className="text-sm md:text-lg flex-shrink-0 mt-0.5">💡</div>
+                        <div className="text-2xl md:text-3xl flex-shrink-0 drop-shadow-sm">💡</div>
                         <div className="min-w-0 flex-1">
-                          <p className={`text-[8px] md:text-[10px] font-bold uppercase opacity-60 mb-0.5 ${
+                          <p className={`text-[10px] md:text-xs font-bold uppercase tracking-wider mb-0.5 opacity-80 ${
                              feedback === 'correct' ? 'text-emerald-800' : 
                              feedback === 'almost' ? 'text-amber-800' : 'text-rose-800'
-                          }`}>Savet</p>
-                          <p className={`text-[10px] md:text-xs font-medium italic leading-snug ${
+                          }`}>Korisan savet</p>
+                          <p className={`text-sm md:text-lg font-bold leading-tight ${
                              feedback === 'correct' ? 'text-emerald-900' : 
                              feedback === 'almost' ? 'text-amber-900' : 'text-rose-900'
                           }`}>
