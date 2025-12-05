@@ -11,12 +11,17 @@ interface ActiveGameProps {
   direction?: FlashCardDirection;
 }
 
-type CardStatus = 'pending' | 'correct' | 'incorrect';
+type CardStatus = 'pending' | 'correct' | 'incorrect' | 'almost';
+
+// Helper to remove diacritics for "almost correct" checking
+const normalizeText = (text: string) => {
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+};
 
 // Singleton AudioContext to prevent resource exhaustion and distortion
 let audioContext: AudioContext | null = null;
 
-const playFeedbackSound = (type: 'correct' | 'incorrect') => {
+const playFeedbackSound = (type: 'correct' | 'incorrect' | 'almost') => {
   try {
     if (!audioContext) {
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
@@ -37,17 +42,14 @@ const playFeedbackSound = (type: 'correct' | 'incorrect') => {
     
     if (type === 'correct') {
       // Pleasant "Success Chime" (Sine waves)
-      // Oscillator 1: Root note (High C)
       const osc1 = ctx.createOscillator();
       const gain1 = ctx.createGain();
       
       osc1.type = 'sine';
       osc1.frequency.setValueAtTime(523.25, now); // C5
       
-      // Smooth attack (fade in) to prevent click/pop distortion
       gain1.gain.setValueAtTime(0, now);
       gain1.gain.linearRampToValueAtTime(0.1, now + 0.02); 
-      // Smooth release (fade out)
       gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
       
       osc1.connect(gain1);
@@ -55,7 +57,6 @@ const playFeedbackSound = (type: 'correct' | 'incorrect') => {
       osc1.start(now);
       osc1.stop(now + 0.55);
 
-      // Oscillator 2: Harmony (E5) - Slightly delayed
       const osc2 = ctx.createOscillator();
       const gain2 = ctx.createGain();
       
@@ -73,15 +74,17 @@ const playFeedbackSound = (type: 'correct' | 'incorrect') => {
 
     } else {
       // Softer "Error" sound (Low Sine with pitch drop)
-      // Using 'sine' instead of triangle/sawtooth to avoid harsh distortion
+      // We use the same sound for 'incorrect' and 'almost' but could tweak pitch if desired
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       
       osc.type = 'sine'; 
-      osc.frequency.setValueAtTime(200, now); // Lower start
+      // Slightly higher pitch for "almost" to indicate it's not a total fail
+      const startFreq = type === 'almost' ? 300 : 200;
+      
+      osc.frequency.setValueAtTime(startFreq, now); 
       osc.frequency.exponentialRampToValueAtTime(50, now + 0.3); // Pitch drop
       
-      // Smooth attack to avoid clicking
       gain.gain.setValueAtTime(0, now);
       gain.gain.linearRampToValueAtTime(0.2, now + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
@@ -98,25 +101,22 @@ const playFeedbackSound = (type: 'correct' | 'incorrect') => {
 };
 
 export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCancel, direction = FlashCardDirection.SER_HUN }) => {
-  // The actual playing deck (can grow if user makes mistakes)
   const [deck, setDeck] = useState<FlashCard[]>([]);
-  // The fixed original deck for the progress bar
   const [originalDeck, setOriginalDeck] = useState<FlashCard[]>([]);
-  // Track status of unique card IDs
   const [cardStatus, setCardStatus] = useState<Record<string, CardStatus>>({});
   
   const [currentIndex, setCurrentIndex] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [results, setResults] = useState<GameResult[]>([]);
-  const [feedback, setFeedback] = useState<'none' | 'correct' | 'incorrect'>('none');
-  const [lastResultCorrect, setLastResultCorrect] = useState(false);
+  
+  // Added 'almost' state
+  const [feedback, setFeedback] = useState<'none' | 'correct' | 'incorrect' | 'almost'>('none');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setDeck(cards);
     setOriginalDeck(cards);
     
-    // Initialize statuses
     const initialStatus: Record<string, CardStatus> = {};
     cards.forEach(c => initialStatus[c.id] = 'pending');
     setCardStatus(initialStatus);
@@ -126,7 +126,6 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   }, [cards]);
 
   useEffect(() => {
-    // Keep focus on input even when feedback changes, unless game is over
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -134,11 +133,13 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
 
   const currentCard = deck[currentIndex];
 
-  const proceedToNext = (isCorrect: boolean) => {
+  const proceedToNext = (status: 'correct' | 'incorrect' | 'almost') => {
+    const isCorrect = status === 'correct';
+
     const newResult: GameResult = {
       card: currentCard,
       userAnswer: inputValue.trim(),
-      isCorrect
+      isCorrect: isCorrect // 'almost' counts as incorrect for scoring purposes usually
     };
 
     const newResults = [...results, newResult];
@@ -147,11 +148,11 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     // Update status for the progress bar
     setCardStatus(prev => ({
       ...prev,
-      [currentCard.id]: isCorrect ? 'correct' : 'incorrect'
+      [currentCard.id]: status
     }));
 
     if (!isCorrect) {
-      // Add to end of deck to retry later
+      // Add to end of deck to retry later (both incorrect and almost)
       setDeck(prev => [...prev, currentCard]);
       setCurrentIndex(prev => prev + 1);
       setInputValue('');
@@ -169,25 +170,21 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Prevent default Enter behavior if it conflicts with form submit, 
-      // but usually form submit handles it.
-      // We keep this to handle Enter when focus might not be on input directly (unlikely)
       if (e.key === 'Enter' && feedback !== 'none') {
         e.preventDefault();
         e.stopPropagation();
-        proceedToNext(lastResultCorrect);
+        proceedToNext(feedback as 'correct' | 'incorrect' | 'almost');
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [feedback, lastResultCorrect, deck, currentIndex, inputValue, results]);
+  }, [feedback, deck, currentIndex, inputValue, results]);
 
   if (deck.length === 0) return null;
 
   const isHungToSerb = direction === FlashCardDirection.HUN_SER;
   
-  // Use 'display' property if available (for Numbers to show Arabic numerals)
   const questionText = isHungToSerb 
     ? currentCard.hungarian 
     : (currentCard.display || currentCard.serbian);
@@ -206,7 +203,6 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   const keyboardChars = isHungToSerb ? SERBIAN_CHARS : HUNGARIAN_CHARS;
 
   const handleVirtualKey = (char: string) => {
-    // Prevent default touch behavior to keep keyboard open
     if (feedback === 'none') {
         setInputValue(prev => prev + char);
         inputRef.current?.focus();
@@ -216,26 +212,47 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
 
-    // If feedback is showing, Enter/Submit acts as "Next"
     if (feedback !== 'none') {
-        proceedToNext(lastResultCorrect);
+        proceedToNext(feedback as 'correct' | 'incorrect' | 'almost');
         return;
     }
 
     if (!inputValue.trim()) return;
 
     const cleanInput = inputValue.trim().toLowerCase();
-    const isCorrect = validAnswers.includes(cleanInput);
-
-    setFeedback(isCorrect ? 'correct' : 'incorrect');
-    setLastResultCorrect(isCorrect);
     
-    playFeedbackSound(isCorrect ? 'correct' : 'incorrect');
+    // 1. Check Exact Match
+    const isExact = validAnswers.includes(cleanInput);
+
+    if (isExact) {
+        setFeedback('correct');
+        playFeedbackSound('correct');
+        return;
+    }
+
+    // 2. Check Diacritic Mistake (Normalized Match)
+    const normalizedInput = normalizeText(cleanInput);
+    const isAlmost = validAnswers.some(ans => normalizeText(ans) === normalizedInput);
+
+    if (isAlmost) {
+        setFeedback('almost');
+        playFeedbackSound('almost');
+        return;
+    }
+
+    // 3. Incorrect
+    setFeedback('incorrect');
+    playFeedbackSound('incorrect');
   };
+
+  // Determine top gradient color based on feedback
+  let gradientClass = 'from-emerald-400 to-teal-500'; // Default/Correct
+  if (feedback === 'incorrect') gradientClass = 'from-rose-500 to-red-600';
+  if (feedback === 'almost') gradientClass = 'from-amber-400 to-yellow-500';
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-1 md:py-6 min-h-[100dvh] h-[100dvh] flex flex-col overflow-hidden">
-      {/* Header & Progress - Reduced margins for mobile */}
+      {/* Header & Progress */}
       <div className="flex flex-col gap-2 md:gap-6 mb-2 md:mb-8 flex-shrink-0">
         <div className="flex items-center justify-between">
           <button 
@@ -253,6 +270,7 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
               let bgClass = 'bg-slate-200';
               if (status === 'correct') bgClass = 'bg-emerald-500';
               if (status === 'incorrect') bgClass = 'bg-rose-500';
+              if (status === 'almost') bgClass = 'bg-amber-400';
 
               return (
                 <div 
@@ -266,14 +284,14 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
         </div>
       </div>
 
-      {/* Main Game Area - Compacted gaps */}
+      {/* Main Game Area */}
       <div className="flex-1 flex flex-col justify-start md:justify-center gap-2 md:gap-8 overflow-hidden">
         
-        {/* Flashcard - Reduced min-height for mobile to fit above keyboard */}
+        {/* Flashcard */}
         <div className="perspective-1000 overflow-hidden rounded-[1.5rem] md:rounded-[2rem] w-full flex-shrink-0">
           <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[150px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-12 text-center overflow-hidden transition-all duration-300 group">
-            {/* Dynamic Top Gradient: Red for incorrect, Green for correct/neutral */}
-            <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${feedback === 'incorrect' ? 'from-rose-500 to-red-600' : 'from-emerald-400 to-teal-500'}`}></div>
+            {/* Dynamic Top Gradient */}
+            <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${gradientClass}`}></div>
             
             <h2 className="text-slate-400 uppercase tracking-[0.2em] text-[10px] md:text-xs font-extrabold mb-2 md:mb-6 flex items-center gap-2">
               {isHungToSerb ? "MAĐARSKI" : "SRPSKI"}
@@ -283,10 +301,11 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
               {questionText}
             </p>
 
-            {/* Feedback Overlay - Compacted for mobile */}
+            {/* Feedback Overlay */}
             {feedback !== 'none' && (
-              // Speed up animation here: animate-[scale-in_0.15s_ease-out_forwards]
-              <div className="absolute inset-0 z-20 bg-white/98 backdrop-blur-md flex flex-col items-center justify-center p-2 md:p-8 animate-[scale-in_0.15s_ease-out_forwards]">
+              <div className={`absolute inset-0 z-20 flex flex-col items-center justify-center p-2 md:p-8 animate-[scale-in_0.15s_ease-out_forwards]
+                ${feedback === 'almost' ? 'bg-amber-50/90 backdrop-blur-md' : 'bg-white/98 backdrop-blur-md'}
+              `}>
                  <div className="flex flex-col items-center justify-center w-full">
                    {feedback === 'correct' ? (
                      <>
@@ -295,17 +314,32 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
                           <svg className="w-6 h-6 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>
                        </div>
                        <h3 className="text-xl md:text-4xl font-bold text-emerald-600 mb-2">Tačno!</h3>
-                       {/* Big Text */}
                        <div className="text-emerald-600 font-extrabold text-4xl md:text-8xl flex items-center justify-center text-center leading-tight">
                           {currentCard.hungarian}
                        </div>
                      </>
+                   ) : feedback === 'almost' ? (
+                     <>
+                       {/* Yellow Warning Icon for Almost */}
+                       <div className="w-8 h-8 md:w-24 md:h-24 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mb-1 md:mb-6 animate-shake shadow-sm border-2 border-amber-200">
+                          <svg className="w-5 h-5 md:w-12 md:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                       </div>
+                       <h3 className="text-lg md:text-4xl font-extrabold text-amber-500 mb-1 md:mb-2">Skoro tačno!</h3>
+                       <p className="text-amber-700 font-bold mb-2 md:mb-4 text-xs md:text-xl bg-amber-100 px-3 py-0.5 md:px-4 md:py-1 rounded-full">Pazi na akcente!</p>
+                       
+                       <div className="text-amber-600 text-xs md:text-lg font-bold">
+                          Tačan odgovor: <br/>
+                          <div className="font-extrabold text-amber-600 text-3xl md:text-7xl mt-1 md:mt-2 flex items-center justify-center gap-3">
+                            {targetAnswerPrimary}
+                          </div>
+                       </div>
+                     </>
                    ) : (
                      <>
+                       {/* Red Cross for Incorrect */}
                        <div className="w-10 h-10 md:w-20 md:h-20 bg-rose-100 rounded-full flex items-center justify-center text-xl md:text-4xl mb-2 md:mb-6 animate-shake text-rose-600">
                          <svg className="w-5 h-5 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" /></svg>
                        </div>
-                       {/* Red text for incorrect feedback */}
                        <div className="text-rose-500 text-sm md:text-lg font-bold">
                           Tačan odgovor: <br/>
                           <div className="font-extrabold text-rose-700 text-3xl md:text-6xl mt-1 md:mt-2 flex items-center justify-center gap-3">
@@ -333,8 +367,6 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
               type="text"
               value={inputValue}
               onChange={(e) => {
-                // IMPORTANT: Only update state if feedback is hidden.
-                // We do NOT use readOnly because it closes the keyboard on Android.
                 if (feedback === 'none') {
                     setInputValue(e.target.value);
                 }
@@ -357,7 +389,6 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
             {feedback === 'none' && inputValue.trim() && (
               <button
                 type="submit"
-                // Prevent mouse down from stealing focus
                 onMouseDown={(e) => e.preventDefault()}
                 className="absolute right-2 md:right-3 top-2 bottom-2 md:top-3 md:bottom-3 aspect-square bg-slate-900 hover:bg-slate-800 text-white rounded-xl flex items-center justify-center transition-all hover:scale-105 shadow-md"
               >
@@ -369,15 +400,16 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
             {feedback !== 'none' && (
               <button
                 type="button"
-                onClick={() => proceedToNext(feedback === 'correct')}
-                // CRITICAL: Prevents button click from closing the keyboard
+                onClick={() => proceedToNext(feedback as 'correct' | 'incorrect' | 'almost')}
                 onMouseDown={(e) => e.preventDefault()}
                 className={`absolute right-2 md:right-3 top-2 bottom-2 md:top-3 md:bottom-3 px-3 md:px-6 rounded-xl font-bold text-white shadow-lg transition-all hover:scale-105 flex items-center justify-center gap-2
-                  ${feedback === 'correct' ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-rose-500 hover:bg-rose-600'}
+                  ${feedback === 'correct' ? 'bg-emerald-500 hover:bg-emerald-600' 
+                    : feedback === 'almost' ? 'bg-amber-500 hover:bg-amber-600' 
+                    : 'bg-rose-500 hover:bg-rose-600'
+                  }
                 `}
               >
                 <span className="hidden md:inline">Nastavi</span> 
-                {/* SVG Arrow for better centering */}
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" />
                 </svg>

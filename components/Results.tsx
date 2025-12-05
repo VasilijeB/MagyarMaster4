@@ -4,9 +4,10 @@ import { GameResult } from '../types';
 interface ResultsProps {
   results: GameResult[];
   onRestart: () => void;
+  onPlayAgain: () => void;
 }
 
-export const Results: React.FC<ResultsProps> = ({ results, onRestart }) => {
+export const Results: React.FC<ResultsProps> = ({ results, onRestart, onPlayAgain }) => {
   // Calculate score based on total attempts vs correct answers
   // (Assuming results contains all attempts. If we want score based on unique cards, logic would differ, 
   // but usually "Game Score" implies accuracy of inputs)
@@ -93,10 +94,16 @@ export const Results: React.FC<ResultsProps> = ({ results, onRestart }) => {
         ))}
       </div>
 
-      <div className="text-center sticky bottom-8">
+      <div className="text-center sticky bottom-8 flex flex-col md:flex-row gap-4 justify-center items-center pb-8 bg-slate-50/90 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none p-4 rounded-t-2xl md:p-0 md:rounded-none">
+        <button
+          onClick={onPlayAgain}
+          className="bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-700 hover:scale-105 transition-all shadow-xl shadow-emerald-900/20 w-full md:w-auto"
+        >
+          Igraj ponovo isti nivo ↻
+        </button>
         <button
           onClick={onRestart}
-          className="bg-slate-900 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-slate-800 hover:scale-105 transition-all shadow-xl shadow-slate-900/20"
+          className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-800 hover:scale-105 transition-all shadow-xl shadow-slate-900/20 w-full md:w-auto"
         >
           Nova igra
         </button>

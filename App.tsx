@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AppState, FlashCard, GameResult, WordCategory, DifficultyLevel, GameMode, FlashCardDirection, User } from './types';
-import { getStaticFlashcards } from './services/contentService'; // Changed import
+import { getStaticFlashcards } from './services/contentService'; 
 import { saveUser, getUser, addMistakes, addMastered } from './services/storageService';
 import { CategorySelection } from './components/CategorySelection';
 import { ActiveGame } from './components/ActiveGame';
@@ -19,14 +19,21 @@ import { LOADING_MESSAGES } from './constants';
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [uiState, setUiState] = useState<'landing' | 'login' | 'app'>('landing');
+  
+  // Navigation State
   const [currentMode, setCurrentMode] = useState<GameMode>(GameMode.DASHBOARD);
   const [appState, setAppState] = useState<AppState>(AppState.MENU);
+  
+  // Vocab State (Lifted for History Support)
+  const [vocabCategory, setVocabCategory] = useState<WordCategory | null>(null);
+  const [vocabLevel, setVocabLevel] = useState<DifficultyLevel | null>(null);
+  const [vocabDirection, setVocabDirection] = useState<FlashCardDirection>(FlashCardDirection.SER_HUN);
+
+  // Game Data
   const [flashcards, setFlashcards] = useState<FlashCard[]>([]);
   const [results, setResults] = useState<GameResult[]>([]);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loadingMsg, setLoadingMsg] = useState<string>(LOADING_MESSAGES[0]);
-  const [vocabDirection, setVocabDirection] = useState<FlashCardDirection>(FlashCardDirection.SER_HUN);
-  const [vocabCategory, setVocabCategory] = useState<WordCategory | null>(null);
 
   useEffect(() => {
     const loadedUser = getUser();
@@ -38,20 +45,107 @@ const App: React.FC = () => {
     }
   }, []);
 
+  // --- HISTORY MANAGEMENT ---
+  useEffect(() => {
+    // Initialize history state when entering app
+    if (uiState === 'app') {
+      window.history.replaceState({
+        mode: GameMode.DASHBOARD,
+        appState: AppState.MENU,
+        category: null,
+        level: null
+      }, '');
+    }
+  }, [uiState]);
+
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state) {
+        const s = event.state;
+        setCurrentMode(s.mode);
+        setAppState(s.appState);
+        setVocabCategory(s.category || null);
+        setVocabLevel(s.level || null);
+
+        // Edge case: If popping back to PLAYING but we have no flashcards (e.g. refresh or invalid state)
+        if (s.appState === AppState.PLAYING && flashcards.length === 0) {
+           // Fallback to menu to avoid broken UI
+           setAppState(AppState.MENU);
+           window.history.replaceState({ ...s, appState: AppState.MENU }, '');
+        }
+      } else {
+        // Fallback if history state is empty (shouldn't happen with correct initialization)
+        if (uiState === 'app') {
+          setCurrentMode(GameMode.DASHBOARD);
+          setAppState(AppState.MENU);
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [uiState, flashcards.length]);
+
+  const pushState = (mode: GameMode, state: AppState, category: WordCategory | null = null, level: DifficultyLevel | null = null) => {
+    const newState = { mode, appState: state, category, level };
+    window.history.pushState(newState, '');
+    setCurrentMode(mode);
+    setAppState(state);
+    setVocabCategory(category);
+    setVocabLevel(level);
+  };
+
+  const replaceState = (mode: GameMode, state: AppState, category: WordCategory | null = null, level: DifficultyLevel | null = null) => {
+    const newState = { mode, appState: state, category, level };
+    window.history.replaceState(newState, '');
+    setCurrentMode(mode);
+    setAppState(state);
+    setVocabCategory(category);
+    setVocabLevel(level);
+  };
+
+  const handleBack = () => {
+    window.history.back();
+  };
+
+  // --- HANDLERS ---
+
   const handleLogin = (name: string) => {
     const newUser = saveUser(name);
     setUser(newUser);
     setUiState('app');
   };
 
-  const handleVocabStart = async (category: WordCategory, level: DifficultyLevel, direction: FlashCardDirection) => {
-    setVocabCategory(category);
-    setAppState(AppState.LOADING);
+  // Main Navigation (from Navbar/Dashboard)
+  const handleNavigation = (mode: GameMode) => {
+    // If we are already in the mode and at menu, don't push duplicate
+    if (mode === currentMode && appState === AppState.MENU && !vocabCategory) return;
+    pushState(mode, AppState.MENU);
+    setFlashcards([]);
+    setResults([]);
+  };
+
+  // Vocab Flow Handlers
+  const handleVocabCategorySelect = (category: WordCategory) => {
+    pushState(GameMode.VOCAB, AppState.MENU, category, null);
+  };
+
+  const handleVocabLevelSelect = (level: DifficultyLevel) => {
+    pushState(GameMode.VOCAB, AppState.MENU, vocabCategory, level);
+  };
+
+  const handleVocabGameStart = async (direction: FlashCardDirection) => {
+    if (!vocabCategory || !vocabLevel) return;
+    
+    // Push PLAYING state
+    pushState(GameMode.VOCAB, AppState.PLAYING, vocabCategory, vocabLevel);
+    
     setVocabDirection(direction);
     setLoadingMsg(LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)]);
+    setAppState(AppState.LOADING); // Immediate UI update while keeping history correct
+
     try {
-      // Use static service
-      const cards = await getStaticFlashcards(category, level);
+      const cards = await getStaticFlashcards(vocabCategory, vocabLevel);
       setFlashcards(cards);
       setAppState(AppState.PLAYING);
     } catch (err) {
@@ -64,42 +158,27 @@ const App: React.FC = () => {
   const handleCustomStart = (cards: FlashCard[]) => {
     setFlashcards(cards);
     setVocabDirection(FlashCardDirection.SER_HUN); 
-    setAppState(AppState.PLAYING);
+    pushState(GameMode.CUSTOM_VOCAB, AppState.PLAYING);
   };
 
   const handleGameComplete = (gameResults: GameResult[]) => {
     setResults(gameResults);
-    setAppState(AppState.RESULTS);
+    
+    // Replace the PLAYING history entry with RESULTS so "Back" goes to Menu, not Game
+    replaceState(currentMode, AppState.RESULTS, vocabCategory, vocabLevel);
 
-    // --- MISTAKE TRACKING LOGIC ---
-    // Analyze results to see which words were difficult
+    // Mistake tracking logic...
     const struggles: string[] = [];
     const mastered: string[] = [];
-    
-    // Map to track if a word ID had ANY incorrect attempt
     const incorrectMap = new Set<string>();
-    
-    // First pass: Find all incorrect attempts
-    gameResults.forEach(res => {
-      if (!res.isCorrect) {
-        incorrectMap.add(res.card.serbian);
-      }
-    });
-
-    // Second pass: Categorize
-    // We iterate through unique cards played
+    gameResults.forEach(res => { if (!res.isCorrect) incorrectMap.add(res.card.serbian); });
     const uniqueCards = new Set<string>();
     gameResults.forEach(res => {
       const key = res.card.serbian;
       if (!uniqueCards.has(key)) {
         uniqueCards.add(key);
-        if (incorrectMap.has(key)) {
-          // If the user made a mistake on this word at any point (even if corrected later), it's a struggle
-          struggles.push(key);
-        } else {
-          // If the user never made a mistake on this word, it's mastered
-          mastered.push(key);
-        }
+        if (incorrectMap.has(key)) struggles.push(key);
+        else mastered.push(key);
       }
     });
 
@@ -108,17 +187,23 @@ const App: React.FC = () => {
   };
 
   const handleRestart = () => {
-    setAppState(AppState.MENU);
-    setFlashcards([]);
-    setResults([]);
+    // Go back to menu
+    handleBack();
   };
 
-  const handleNavigation = (mode: GameMode) => {
-    setCurrentMode(mode);
-    setAppState(AppState.MENU);
-    setFlashcards([]);
-    setResults([]);
-    setVocabCategory(null); // Clear selected category when navigating via menu/dashboard
+  const handlePlayAgain = () => {
+    if (vocabCategory && vocabLevel) {
+       // Replace RESULTS with PLAYING again
+       replaceState(GameMode.VOCAB, AppState.PLAYING, vocabCategory, vocabLevel);
+       // Re-fetch logic or reuse? Better to re-fetch for shuffle
+       setAppState(AppState.LOADING);
+       getStaticFlashcards(vocabCategory, vocabLevel).then(cards => {
+          setFlashcards(cards);
+          setAppState(AppState.PLAYING);
+       });
+    } else {
+      handleRestart();
+    }
   };
 
   if (uiState === 'landing') return <LandingPage onStart={() => setUiState('login')} />;
@@ -127,20 +212,23 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (currentMode) {
       case GameMode.DASHBOARD: return <Dashboard onSelectMode={handleNavigation} user={user} />;
-      case GameMode.CONJUGATION: return <ConjugationGame onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
-      case GameMode.GRAMMAR: return <GrammarChat onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
-      case GameMode.STORIES: return <StoryGame onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
-      case GameMode.DICTIONARY: return <Dictionary onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
+      case GameMode.CONJUGATION: return <ConjugationGame onGoBack={handleBack} />;
+      case GameMode.GRAMMAR: return <GrammarChat onGoBack={handleBack} />;
+      case GameMode.STORIES: return <StoryGame onGoBack={handleBack} />;
+      case GameMode.DICTIONARY: return <Dictionary onGoBack={handleBack} />;
       case GameMode.VOCAB:
       case GameMode.CUSTOM_VOCAB:
         if (appState === AppState.MENU) {
             return currentMode === GameMode.VOCAB 
               ? <CategorySelection 
-                  onSelect={handleVocabStart} 
-                  onGoBack={() => handleNavigation(GameMode.DASHBOARD)} 
-                  initialCategory={vocabCategory}
+                  selectedCategory={vocabCategory}
+                  selectedLevel={vocabLevel}
+                  onSelectCategory={handleVocabCategorySelect}
+                  onSelectLevel={handleVocabLevelSelect}
+                  onStartGame={handleVocabGameStart}
+                  onGoBack={handleBack}
                 />
-              : <CustomVocabSetup onStart={handleCustomStart} onGoBack={() => handleNavigation(GameMode.DASHBOARD)} />;
+              : <CustomVocabSetup onStart={handleCustomStart} onGoBack={handleBack} />;
         }
         if (appState === AppState.LOADING) {
           return (
@@ -155,7 +243,7 @@ const App: React.FC = () => {
             <div className="flex flex-col items-center justify-center min-h-[50vh] px-4 text-center">
               <h2 className="text-2xl font-bold text-slate-800 mb-2">Greška.</h2>
               <p className="text-slate-600 mb-4">{errorMsg}</p>
-              <button onClick={() => setAppState(AppState.MENU)} className="px-6 py-3 bg-slate-900 text-white rounded-lg">Nazad</button>
+              <button onClick={handleBack} className="px-6 py-3 bg-slate-900 text-white rounded-lg">Nazad</button>
             </div>
           );
         }
@@ -164,13 +252,13 @@ const App: React.FC = () => {
             <ActiveGame 
               cards={flashcards}
               onComplete={handleGameComplete}
-              onCancel={() => handleNavigation(GameMode.DASHBOARD)}
+              onCancel={handleBack}
               direction={vocabDirection}
             />
           );
         }
         if (appState === AppState.RESULTS) {
-          return <Results results={results} onRestart={handleRestart} />;
+          return <Results results={results} onRestart={handleRestart} onPlayAgain={handlePlayAgain} />;
         }
         return null;
       default: return <Dashboard onSelectMode={handleNavigation} user={user} />;

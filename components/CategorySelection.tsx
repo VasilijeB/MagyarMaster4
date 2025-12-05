@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { WordCategory, DifficultyLevel, FlashCardDirection } from '../types';
 
 interface CategorySelectionProps {
-  onSelect: (category: WordCategory, level: DifficultyLevel, direction: FlashCardDirection) => void;
+  selectedCategory: WordCategory | null;
+  selectedLevel: DifficultyLevel | null;
+  onSelectCategory: (category: WordCategory) => void;
+  onSelectLevel: (level: DifficultyLevel) => void;
+  onStartGame: (direction: FlashCardDirection) => void;
   onGoBack: () => void;
-  initialCategory?: WordCategory | null;
 }
 
-export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, onGoBack, initialCategory }) => {
-  const [selectedCategory, setSelectedCategory] = useState<WordCategory | null>(initialCategory || null);
-  const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel | null>(null);
-
+export const CategorySelection: React.FC<CategorySelectionProps> = ({ 
+  selectedCategory, 
+  selectedLevel, 
+  onSelectCategory, 
+  onSelectLevel, 
+  onStartGame, 
+  onGoBack 
+}) => {
   const categories = [
     { 
       id: WordCategory.NOUNS, 
@@ -68,7 +75,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, 
     return (
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 md:py-12 animate-fade-in">
              <button 
-                onClick={() => setSelectedLevel(null)}
+                onClick={onGoBack}
                 className="mb-6 md:mb-8 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium"
              >
                 ← Nazad na nivoe
@@ -83,7 +90,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, 
     
              <div className="space-y-4">
                  <button
-                   onClick={() => onSelect(selectedCategory, selectedLevel, FlashCardDirection.SER_HUN)}
+                   onClick={() => onStartGame(FlashCardDirection.SER_HUN)}
                    className="w-full p-6 rounded-xl border-2 border-emerald-200 bg-emerald-50 text-left transition duration-200 ease-out hover:shadow-md hover:bg-emerald-100 text-emerald-900 transform-gpu"
                  >
                    <div className="flex items-center justify-between">
@@ -96,7 +103,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, 
                  </button>
 
                  <button
-                   onClick={() => onSelect(selectedCategory, selectedLevel, FlashCardDirection.HUN_SER)}
+                   onClick={() => onStartGame(FlashCardDirection.HUN_SER)}
                    className="w-full p-6 rounded-xl border-2 border-indigo-200 bg-indigo-50 text-left transition duration-200 ease-out hover:shadow-md hover:bg-indigo-100 text-indigo-900 transform-gpu"
                  >
                    <div className="flex items-center justify-between">
@@ -118,7 +125,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, 
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 md:py-12 animate-fade-in">
          <button 
-            onClick={() => setSelectedCategory(null)}
+            onClick={onGoBack}
             className="mb-6 md:mb-8 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-medium"
          >
             ← Nazad na kategorije
@@ -137,7 +144,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, 
            {levels.map((lvl) => (
              <button
                key={lvl.level}
-               onClick={() => setSelectedLevel(lvl.level)}
+               onClick={() => onSelectLevel(lvl.level)}
                className={`w-full p-5 md:p-6 rounded-xl border-2 text-left transition duration-200 ease-out hover:shadow-md transform-gpu ${lvl.color}`}
              >
                <div className="flex items-center justify-between">
@@ -178,7 +185,7 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({ onSelect, 
         {categories.map((cat) => (
           <button
             key={cat.id}
-            onClick={() => setSelectedCategory(cat.id)}
+            onClick={() => onSelectCategory(cat.id)}
             className={`group relative p-4 md:p-8 rounded-2xl border-2 text-left transition duration-200 ease-out hover:shadow-xl transform-gpu ${cat.color} flex md:flex-col items-center md:items-start md:justify-center gap-4 md:gap-0`}
           >
             <div className="text-2xl md:text-4xl md:mb-4">
