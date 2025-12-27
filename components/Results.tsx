@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { GameResult } from '../types';
 
@@ -85,7 +86,7 @@ export const Results: React.FC<ResultsProps> = ({ results, onRestart, onPlayAgai
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-12 animate-fade-in-up relative">
+    <div className="max-w-3xl mx-auto px-6 py-8 md:py-12 animate-fade-in-up relative">
       {/* Celebration Particles */}
       {percentage >= 80 && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -107,6 +108,22 @@ export const Results: React.FC<ResultsProps> = ({ results, onRestart, onPlayAgai
           ))}
         </div>
       )}
+
+      {/* Action Buttons moved to the TOP for better Mobile UX */}
+      <div className="text-center flex flex-col md:flex-row gap-4 justify-center items-center mb-8 relative z-20">
+        <button
+          onClick={onPlayAgain}
+          className="bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-700 hover:scale-105 transition-all shadow-xl shadow-emerald-900/20 w-full md:w-auto"
+        >
+          Igraj ponovo isti nivo ↻
+        </button>
+        <button
+          onClick={onRestart}
+          className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-800 hover:scale-105 transition-all shadow-xl shadow-slate-900/20 w-full md:w-auto"
+        >
+          Nova igra
+        </button>
+      </div>
 
       <div className="relative z-10 bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-8 md:p-12 text-center mb-12 transform animate-[victory-entrance_0.6s_ease-out]">
         
@@ -147,21 +164,6 @@ export const Results: React.FC<ResultsProps> = ({ results, onRestart, onPlayAgai
              )}
           </div>
         ))}
-      </div>
-
-      <div className="text-center sticky bottom-8 flex flex-col md:flex-row gap-4 justify-center items-center pb-8 bg-slate-50/90 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none p-4 rounded-t-2xl md:p-0 md:rounded-none">
-        <button
-          onClick={onPlayAgain}
-          className="bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-700 hover:scale-105 transition-all shadow-xl shadow-emerald-900/20 w-full md:w-auto"
-        >
-          Igraj ponovo isti nivo ↻
-        </button>
-        <button
-          onClick={onRestart}
-          className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-800 hover:scale-105 transition-all shadow-xl shadow-slate-900/20 w-full md:w-auto"
-        >
-          Nova igra
-        </button>
       </div>
 
       <style>{`
