@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { NOUNS, VERBS, ADJECTIVES, ADVERBS, NUMBERS_CARDINAL, NUMBERS_ORDINAL } from '../data/vocabData';
+import { NOUNS, VERBS, ADJECTIVES, ADVERBS, NUMBERS_CARDINAL, NUMBERS_ORDINAL, PHRASES } from '../data/vocabData';
 import { DifficultyLevel } from '../types';
 
 interface VocabEntry {
@@ -14,43 +14,43 @@ interface DictionaryProps {
   onGoBack: () => void;
 }
 
-type Tab = 'nouns' | 'verbs' | 'adjectives' | 'numbers' | 'adverbs';
+type Tab = 'nouns' | 'verbs' | 'adjectives' | 'numbers' | 'adverbs' | 'phrases';
 
 // Comprehensive Semantic Categories based on user request
 const SEMANTIC_CATEGORIES: Record<string, string[]> = {
   "Životinje (Állatok)": ["pas", "mačka", "ptica", "riba", "konj", "krava", "svinja", "kokoška", "lav", "tigar", "slon", "medved", "vuk", "lisica", "zmija", "pauk", "muva", "komarac", "životinja", "insekt"],
-  "Biljke i Priroda (Növények)": ["drvo", "cvet", "trava", "šuma", "bašta", "ruža", "lala", "biljka", "list", "koren"],
+  "Biljke i Priroda (Növények)": ["drvo", "cvet", "trava", "šuma", "bašta", "ruža", "lala", "biljka", "list", "koren", "priroda", "okolina"],
   "Ljudsko Telo (Emberi Test)": ["glava", "lice", "ruka", "noga", "prst", "stomak", "leđa", "srce", "krv", "oči", "uho", "nos", "usta", "zub", "jezik", "vrat", "rame", "koleno", "kosa", "koža", "kost"],
   "Zdravlje i Medicina (Egészség)": ["zdravlje", "bolest", "bol", "lekar", "bolnica", "lek", "apoteka", "hitna", "pregled", "operacija", "grip", "temperatura"],
   "Ljudi i Porodica (Emberek és Család)": ["čovek", "žena", "muškarac", "dete", "beba", "otac", "majka", "brat", "sestra", "sin", "ćerka", "deda", "baka", "muž", "roditelji", "unuk", "prijatelj", "komšija", "gost", "osoba", "narod"],
-  "Hrana i Piće (Étel és Ital)": ["hrana", "piće", "hleb", "mleko", "kafa", "čaj", "meso", "sir", "jaje", "voda", "pivo", "vino", "sok", "doručak", "ručak", "večera", "restoran", "torta", "kolač", "šećer", "so", "biber", "ulje", "voće", "povrće", "jabuka", "kruška", "banana", "krompir", "paradajz", "paprika", "luk", "supa", "sendvič"],
-  "Odeća i Moda (Ruházat)": ["odeća", "majica", "pantalone", "haljina", "suknja", "košulja", "jakna", "kaput", "cipele", "čarape", "kapa", "šal", "rukavice", "naočare", "sat", "torba", "nakit", "dugme", "moda", "stil"],
-  "Kuća i Dom (Ház és Otthon)": ["kuća", "stan", "soba", "kuhinja", "kupatilo", "dnevna", "spavaća", "vrata", "prozor", "sto", "stolica", "krevet", "pod", "zid", "krov", "ormar", "lampa", "ogledalo", "ključ", "tepih", "nameštaj"],
-  "Zgrade i Arhitektura (Épületek)": ["zgrada", "škola", "bolnica", "banka", "pošta", "bioskop", "pozorište", "muzej", "hotel", "restoran", "kafić", "crkva", "toranj", "zamak", "stadion", "biblioteka"],
+  "Hrana i Piće (Étel és Ital)": ["hrana", "piće", "hleb", "mleko", "kafa", "čaj", "meso", "sir", "jaje", "voda", "pivo", "vino", "sok", "doručak", "ručak", "večera", "restoran", "torta", "kolač", "šećer", "so", "biber", "ulje", "voće", "povrće", "jabuka", "kruška", "banana", "krompir", "paradajz", "paprika", "luk", "supa", "sendvič", "lonac", "tiganj", "poklopac"],
+  "Odeća i Moda (Ruházat)": ["odeća", "majica", "pantalone", "haljina", "suknja", "košulja", "jakna", "kaput", "cipele", "čarape", "kapa", "šal", "rukavice", "naočare", "sat", "torba", "nakit", "dugme", "moda", "stil", "čizma"],
+  "Kuća i Dom (Ház és Otthon)": ["kuća", "stan", "soba", "kuhinja", "kupatilo", "dnevna", "spavaća", "vrata", "prozor", "sto", "stolica", "krevet", "pod", "zid", "krov", "ormar", "lampa", "ogledalo", "ključ", "tepih", "nameštaj", "metla", "kanta", "četka", "sunđer", "dvorište", "ograda", "stepenice", "lift"],
+  "Zgrade i Arhitektura (Épületek)": ["zgrada", "škola", "bolnica", "banka", "pošta", "bioskop", "pozorište", "muzej", "hotel", "restoran", "kafić", "crkva", "toranj", "zamak", "stadion", "biblioteka", "zoološki", "stan"],
   "Prevoz i Putovanja (Közlekedés)": ["auto", "autobus", "voz", "brod", "avion", "bicikl", "tramvaj", "metro", "taksi", "stanica", "aerodrom", "karta", "put", "ulica", "most", "semafor", "putovanje", "izlet", "pasoš", "prtljag"],
-  "Tehnologija (Technológia)": ["telefon", "kompjuter", "računar", "laptop", "internet", "ekran", "tastatura", "miš", "baterija", "punjač", "kabl", "kamera", "robot", "mašina", "aplikacija"],
+  "Tehnologija (Technológia)": ["telefon", "kompjuter", "računar", "laptop", "internet", "ekran", "tastatura", "miš", "baterija", "punjač", "kabl", "kamera", "robot", "mašina", "aplikacija", "energija"],
   "Vreme i Klima (Időjárás)": ["vreme", "sunce", "kiša", "sneg", "vetar", "oblak", "magla", "oluja", "grom", "temperatura", "toplo", "hladno", "leto", "zima", "proleće", "jesen", "klima"],
   "Geografija (Földrajz)": ["zemlja", "svet", "kontinent", "država", "grad", "selo", "planina", "brdo", "reka", "jezero", "more", "ocean", "ostrvo", "plaža", "dolina", "pustinja", "mapa"],
-  "Svemir (Világűr)": ["svemir", "planeta", "zvezda", "mesec", "sunce", "nebo", "galaksija", "kosmos", "astronaut"],
+  "Svemir (Világűr)": ["svemir", "planeta", "zvezda", "mesec", "sunce", "nebo", "galaksija", "kosmos", "astronaut", "praznina"],
   "Materijali (Anyagok)": ["drvo", "metal", "zlato", "srebro", "gvožđe", "plastika", "staklo", "papir", "kamen", "pesak", "voda", "vazduh", "vatra"],
   "Boje (Színek)": ["boja", "crna", "bela", "crvena", "plava", "zelena", "žuta", "narandžasta", "ljubičasta", "roze", "siva", "braon", "svetla", "tamna"],
-  "Posao i Zanimanja (Munka)": ["posao", "rad", "kancelarija", "firma", "šef", "radnik", "lekar", "učitelj", "policajac", "vatrogasac", "kuvar", "konobar", "prodavac", "advokat", "inženjer", "glumac", "pevač", "sportista", "alat"],
-  "Obrazovanje (Oktatás)": ["škola", "fakultet", "univerzitet", "čas", "lekcija", "ispit", "ocena", "knjiga", "sveska", "olovka", "tabla", "učenik", "student", "učitelj", "profesor", "znanje", "učenje"],
-  "Novac i Ekonomija (Pénz)": ["novac", "cena", "račun", "banka", "kartica", "keš", "plata", "porez", "dug", "kredit", "ekonomija", "tržište", "firma", "prodaja", "kupovina"],
-  "Zakon i Kriminal (Jog)": ["zakon", "pravilo", "policija", "sud", "sudija", "advokat", "zločin", "kazna", "zatvor", "svedok", "dokaz", "krađa", "ubistvo"],
+  "Posao i Zanimanja (Munka)": ["posao", "rad", "kancelarija", "firma", "šef", "radnik", "lekar", "učitelj", "policajac", "vatrogasac", "kuvar", "konobar", "prodavac", "advokat", "inženjer", "glumac", "pevač", "sportista", "alat", "usluga"],
+  "Obrazovanje (Oktatás)": ["škola", "fakultet", "univerzitet", "čas", "lekcija", "ispit", "ocena", "knjiga", "sveska", "olovka", "tabla", "učenik", "student", "učitelj", "profesor", "znanje", "učenje", "obrazovanje"],
+  "Novac i Ekonomija (Pénz)": ["novac", "cena", "račun", "banka", "kartica", "keš", "plata", "porez", "dug", "kredit", "ekonomija", "tržište", "firma", "prodaja", "kupovina", "investicija", "budžet", "resurs"],
+  "Zakon i Kriminal (Jog)": ["zakon", "pravilo", "policija", "sud", "sudija", "advokat", "zločin", "kazna", "zatvor", "svedok", "dokaz", "krađa", "ubistvo", "dužnost"],
   "Politika i Vlada (Politika)": ["politika", "vlada", "predsednik", "ministar", "stranka", "izbori", "glas", "demokratija", "država", "nacija", "zastava", "himna"],
   "Religija (Vallás)": ["religija", "bog", "crkva", "molitva", "vera", "sveštenik", "anđeo", "đavo", "duša", "raj", "pakao"],
   "Rat i Vojska (Háború)": ["rat", "mir", "vojska", "vojnik", "oružje", "puška", "pištolj", "bomba", "bitka", "pobeda", "poraz"],
   "Muzika (Zene)": ["muzika", "pesma", "bend", "koncert", "instrument", "gitara", "klavir", "bubanj", "violina", "zvuk", "ritam", "melodija"],
   "Književnost i Mediji (Irodalom)": ["knjiga", "roman", "priča", "pesma", "pisac", "novine", "časopis", "vesti", "televizija", "radio", "film", "bioskop", "članak", "tekst"],
-  "Umetnost (Művészet)": ["umetnost", "slika", "skulptura", "fotografija", "crtanje", "muzej", "izložba", "umetnik", "boja", "dizajn"],
-  "Sport (Sport)": ["sport", "fudbal", "košarka", "tenis", "plivanje", "trčanje", "lopta", "tim", "utakmica", "gol", "pobeda", "medalja", "trening"],
+  "Umetnost (Művészet)": ["umetnost", "slika", "skulptura", "fotografija", "crtanje", "muzej", "izložba", "umetnik", "boja", "dizajn", "mašta"],
+  "Sport (Sport)": ["sport", "fudbal", "košarka", "tenis", "plivanje", "trčanje", "lopta", "tim", "utakmica", "gol", "pobeda", "medalja", "trening", "konkurencija"],
   "Hobi (Hobbi)": ["hobi", "igra", "zabava", "ples", "putovanje", "čitanje", "ribolov", "lov", "kampovanje", "šetnja"],
   "Vreme (Idő - Koncept)": ["vreme", "trenutak", "prošlost", "sadašnjost", "budućnost", "istorija", "vek", "era", "kalendar", "datum", "rok"],
   "Brojevi i Količina (Számok)": ["broj", "nula", "jedan", "dva", "deset", "sto", "hiljada", "milion", "mnogo", "malo", "pola", "par", "komad", "metar", "kilogram", "litra"],
-  "Osećanja (Érzelmek)": ["sreća", "tuga", "ljubav", "mržnja", "strah", "bes", "iznenađenje", "nada", "ponos", "sramota", "raspoloženje", "osmeh", "suza"],
-  "Um i Čula (Elme)": ["um", "misao", "ideja", "sećanje", "san", "vid", "sluh", "miris", "ukus", "dodir", "pamet", "glupost"],
-  "Komunikacija (Kommunikáció)": ["reč", "rečenica", "jezik", "govor", "razgovor", "pitanje", "odgovor", "glas", "poruka", "pismo", "telefon", "internet"]
+  "Osećanja (Érzelmek)": ["sreća", "tuga", "ljubav", "mržnja", "strah", "bes", "iznenađenje", "nada", "ponos", "sramota", "raspoloženje", "osmeh", "suza", "ljubomora", "strpljenje"],
+  "Um i Čula (Elme)": ["um", "misao", "ideja", "sećanje", "san", "vid", "sluh", "miris", "ukus", "dodir", "pamet", "glupost", "razum", "svest", "podsvest"],
+  "Komunikacija (Kommunikáció)": ["reč", "rečenica", "jezik", "govor", "razgovor", "pitanje", "odgovor", "glas", "poruka", "pismo", "telefon", "internet", "priznanje"]
 };
 
 export const Dictionary: React.FC<DictionaryProps> = ({ onGoBack }) => {
@@ -69,6 +69,7 @@ export const Dictionary: React.FC<DictionaryProps> = ({ onGoBack }) => {
       case 'verbs': data = flattenData(VERBS); break;
       case 'adjectives': data = flattenData(ADJECTIVES); break;
       case 'adverbs': data = flattenData(ADVERBS); break;
+      case 'phrases': data = flattenData(PHRASES); break;
       // Note: Numbers are handled separately in renderNumbers to maintain sorting/categorization
       case 'numbers': 
         data = [...flattenData(NUMBERS_CARDINAL), ...flattenData(NUMBERS_ORDINAL)];
@@ -245,6 +246,7 @@ export const Dictionary: React.FC<DictionaryProps> = ({ onGoBack }) => {
          {[
            { id: 'nouns', label: 'Imenice', icon: '📦' },
            { id: 'verbs', label: 'Glagoli', icon: '🏃' },
+           { id: 'phrases', label: 'Fraze', icon: '💬' },
            { id: 'adjectives', label: 'Pridevi', icon: '✨' },
            { id: 'numbers', label: 'Brojevi', icon: '🔢' },
            { id: 'adverbs', label: 'Ostalo', icon: '🔗' },

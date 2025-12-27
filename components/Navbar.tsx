@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import { GameMode, User } from '../types';
 
@@ -44,28 +42,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
                 icon="📇"
               />
               <NavButton 
-                active={currentMode === GameMode.CONJUGATION} 
-                onClick={() => handleNavClick(GameMode.CONJUGATION)}
-                label="Konjugacija"
-                icon="✍️"
-              />
-              <NavButton 
                 active={currentMode === GameMode.STORIES} 
                 onClick={() => handleNavClick(GameMode.STORIES)}
                 label="Priče"
                 icon="📖"
               />
               <NavButton 
-                active={currentMode === GameMode.GRAMMAR} 
-                onClick={() => handleNavClick(GameMode.GRAMMAR)}
-                label="Gramatika"
-                icon="💡"
-              />
-               <NavButton 
-                active={currentMode === GameMode.DICTIONARY} 
-                onClick={() => handleNavClick(GameMode.DICTIONARY)}
-                label="Rečnik"
-                icon="📚"
+                active={currentMode === GameMode.CONJUGATION} 
+                onClick={() => handleNavClick(GameMode.CONJUGATION)}
+                label="Konjugacija"
+                icon="✍️"
               />
               <NavButton 
                 active={currentMode === GameMode.CUSTOM_VOCAB} 
@@ -75,8 +61,19 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
               />
             </div>
 
-            {/* User Profile */}
-            <div className="flex items-center gap-4">
+            {/* User Profile & Donation */}
+            <div className="flex items-center gap-2 md:gap-4">
+                {/* Donation Heart (Navbar) */}
+                <a 
+                  href="https://ko-fi.com/magyarmaster" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="p-2 md:p-2.5 bg-rose-50 hover:bg-rose-100 border border-rose-100 rounded-xl transition-all hover:scale-110 active:scale-95 group shadow-sm flex items-center justify-center"
+                  title="Podrži projekat"
+                >
+                  <span className="text-lg md:text-xl">❤️</span>
+                </a>
+
                 {user && (
                     <div className="hidden md:flex items-center gap-3 pl-4 border-l border-slate-200">
                         <div className="text-right hidden xl:block">
@@ -108,11 +105,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
       {/* Spacer for fixed navbar */}
       <div className="h-20"></div>
 
-      {/* Mobile Sidebar Overlay (Always rendered, controlled via CSS classes for smooth transition) */}
+      {/* Mobile Sidebar Overlay */}
       <div 
         className={`fixed inset-0 z-50 lg:hidden ${isMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
       >
-        {/* Backdrop - Fades in/out */}
+        {/* Backdrop */}
         <div 
           className={`absolute inset-0 bg-slate-900/20 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
             isMenuOpen ? 'opacity-100' : 'opacity-0'
@@ -120,7 +117,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
           onClick={() => setIsMenuOpen(false)}
         ></div>
         
-        {/* Drawer - Slides in/out */}
+        {/* Drawer */}
         <div className={`absolute right-0 top-0 bottom-0 w-3/4 max-w-sm bg-white shadow-2xl transform transition-transform duration-300 ease-out h-full flex flex-col p-6 ${
            isMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}>
@@ -148,28 +145,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
                 icon="📇"
               />
               <MobileNavButton 
-                active={currentMode === GameMode.CONJUGATION} 
-                onClick={() => handleNavClick(GameMode.CONJUGATION)}
-                label="Konjugacija"
-                icon="✍️"
-              />
-              <MobileNavButton 
                 active={currentMode === GameMode.STORIES} 
                 onClick={() => handleNavClick(GameMode.STORIES)}
                 label="Kratke Priče"
                 icon="📖"
               />
               <MobileNavButton 
-                active={currentMode === GameMode.GRAMMAR} 
-                onClick={() => handleNavClick(GameMode.GRAMMAR)}
-                label="Gramatika"
-                icon="💡"
-              />
-              <MobileNavButton 
-                active={currentMode === GameMode.DICTIONARY} 
-                onClick={() => handleNavClick(GameMode.DICTIONARY)}
-                label="Rečnik"
-                icon="📚"
+                active={currentMode === GameMode.CONJUGATION} 
+                onClick={() => handleNavClick(GameMode.CONJUGATION)}
+                label="Konjugacija"
+                icon="✍️"
               />
                 <MobileNavButton 
                 active={currentMode === GameMode.CUSTOM_VOCAB} 
@@ -177,6 +162,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
                 label="Moji Izrazi"
                 icon="⭐"
               />
+              
+              <div className="pt-4 border-t border-slate-100">
+                <a 
+                  href="https://ko-fi.com/magyarmaster" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full px-4 py-4 rounded-2xl text-left font-bold transition-all flex items-center gap-4 text-rose-600 hover:bg-rose-50"
+                >
+                  <span className="text-2xl">❤️</span>
+                  Podrži projekat
+                </a>
+              </div>
             </div>
 
             <div className="mt-auto pt-6 border-t border-slate-100">

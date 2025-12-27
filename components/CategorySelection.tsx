@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { WordCategory, DifficultyLevel, FlashCardDirection } from '../types';
 
@@ -34,6 +35,13 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
       color: "bg-slate-50 border-slate-200 hover:border-slate-400 text-slate-800"
     },
     { 
+      id: WordCategory.PHRASES, 
+      label: "Fraze (Kifejezések)", 
+      desc: "Pozdravi i korisni izrazi.", 
+      icon: "💬",
+      color: "bg-violet-50 border-violet-200 hover:border-violet-400 text-violet-900"
+    },
+    { 
       id: WordCategory.ADJECTIVES, 
       label: "Pridevi (Melléknevek)", 
       desc: "Opisi i osobine.", 
@@ -46,13 +54,6 @@ export const CategorySelection: React.FC<CategorySelectionProps> = ({
       desc: "Jedan, dva, tri...", 
       icon: "🔢",
       color: "bg-blue-50 border-blue-200 hover:border-blue-400 text-blue-900"
-    },
-    { 
-      id: WordCategory.NUMBERS_ORDINAL, 
-      label: "Redni Brojevi", 
-      desc: "Prvi, drugi, treći...", 
-      icon: "🥇",
-      color: "bg-cyan-50 border-cyan-200 hover:border-cyan-400 text-cyan-900"
     },
     { 
       id: WordCategory.ADVERBS, 

@@ -4,6 +4,7 @@ import { User } from '../types';
 const USER_KEY = 'magyar_master_user';
 const MISTAKES_KEY = 'magyar_master_mistakes';
 const MASTERED_KEY = 'magyar_master_mastered';
+const ADVENTURE_IMAGES_KEY = 'magyar_master_adventure_images';
 
 export const saveUser = (name: string): User => {
   const newUser: User = {
@@ -79,4 +80,32 @@ export const addMastered = (words: string[]) => {
 
   localStorage.setItem(MASTERED_KEY, JSON.stringify(updatedMastered));
   localStorage.setItem(MISTAKES_KEY, JSON.stringify(updatedMistakes));
+};
+
+// --- ADVENTURE CUSTOM IMAGES TRACKING ---
+
+/**
+ * Retrieves custom uploaded images for the adventure mode from local storage.
+ */
+export const getCustomAdventureImages = (): { intro: Record<number, string>, story: Record<number, string> } => {
+  const data = localStorage.getItem(ADVENTURE_IMAGES_KEY);
+  if (!data) return { intro: {}, story: {} };
+  try {
+    return JSON.parse(data);
+  } catch {
+    return { intro: {}, story: {} };
+  }
+};
+
+/**
+ * Saves custom uploaded images for a specific adventure step.
+ */
+export const saveCustomAdventureImage = (step: number, type: 'intro' | 'story', base64: string) => {
+  const current = getCustomAdventureImages();
+  if (type === 'intro') {
+    current.intro[step] = base64;
+  } else {
+    current.story[step] = base64;
+  }
+  localStorage.setItem(ADVENTURE_IMAGES_KEY, JSON.stringify(current));
 };

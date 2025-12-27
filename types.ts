@@ -1,14 +1,12 @@
 
-
-
-
 export enum WordCategory {
   NOUNS = 'Nouns',
   VERBS = 'Verbs',
   ADJECTIVES = 'Adjectives',
   NUMBERS_CARDINAL = 'NumbersCardinal',
   NUMBERS_ORDINAL = 'NumbersOrdinal',
-  ADVERBS = 'Adverbs'
+  ADVERBS = 'Adverbs',
+  PHRASES = 'Phrases'
 }
 
 export type DifficultyLevel = 1 | 2 | 3 | 4 | 5;
@@ -18,9 +16,16 @@ export enum GameMode {
   VOCAB = 'VOCAB',
   CONJUGATION = 'CONJUGATION',
   CUSTOM_VOCAB = 'CUSTOM_VOCAB',
-  GRAMMAR = 'GRAMMAR',
   STORIES = 'STORIES',
-  DICTIONARY = 'DICTIONARY'
+  GOULASH = 'GOULASH'
+}
+
+/**
+ * Fix: Added ChatMessage interface for GrammarChat component
+ */
+export interface ChatMessage {
+  role: 'user' | 'model';
+  text: string;
 }
 
 export enum FlashCardDirection {
@@ -60,11 +65,6 @@ export interface StoryTask {
   title: string;
   hungarianText: string;
   serbianTranslation: string;
-}
-
-export interface ChatMessage {
-  role: 'user' | 'model';
-  text: string;
 }
 
 export enum AppState {

@@ -20,7 +20,7 @@ const normalizeText = (text: string) => {
 // Singleton AudioContext to prevent resource exhaustion and distortion
 let audioContext: AudioContext | null = null;
 
-const playFeedbackSound = (type: 'correct' | 'incorrect' | 'almost') => {
+const playFeedbackSound = (type: 'correct' | 'incorrect' | 'almost' | 'streak') => {
   try {
     if (!audioContext) {
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
@@ -31,7 +31,6 @@ const playFeedbackSound = (type: 'correct' | 'incorrect' | 'almost') => {
     
     if (!audioContext) return;
     
-    // Browser policy requires resuming context after user interaction
     if (audioContext.state === 'suspended') {
       audioContext.resume();
     }
@@ -39,58 +38,49 @@ const playFeedbackSound = (type: 'correct' | 'incorrect' | 'almost') => {
     const ctx = audioContext;
     const now = ctx.currentTime;
     
+    if (type === 'streak') {
+      // Triumphant Arpeggio (C4 - E4 - G4 - C5)
+      const freqs = [261.63, 329.63, 392.00, 523.25, 659.25];
+      freqs.forEach((f, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(f, now + i * 0.08);
+        gain.gain.setValueAtTime(0, now + i * 0.08);
+        gain.gain.linearRampToValueAtTime(0.2, now + i * 0.08 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.4);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.08);
+        osc.stop(now + i * 0.08 + 0.5);
+      });
+      return;
+    }
+
     if (type === 'correct') {
-      // Pleasant "Success Chime" (Sine waves)
       const osc1 = ctx.createOscillator();
       const gain1 = ctx.createGain();
-      
       osc1.type = 'sine';
-      osc1.frequency.setValueAtTime(523.25, now); // C5
-      
+      osc1.frequency.setValueAtTime(523.25, now);
       gain1.gain.setValueAtTime(0, now);
       gain1.gain.linearRampToValueAtTime(0.1, now + 0.02); 
       gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-      
       osc1.connect(gain1);
       gain1.connect(ctx.destination);
       osc1.start(now);
       osc1.stop(now + 0.55);
-
-      const osc2 = ctx.createOscillator();
-      const gain2 = ctx.createGain();
-      
-      osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(659.25, now + 0.05); // E5
-      
-      gain2.gain.setValueAtTime(0, now + 0.05);
-      gain2.gain.linearRampToValueAtTime(0.1, now + 0.07);
-      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
-      
-      osc2.connect(gain2);
-      gain2.connect(ctx.destination);
-      osc2.start(now + 0.05);
-      osc2.stop(now + 0.6);
-
     } else {
-      // Softer "Error" sound (Low Sine with pitch drop)
-      // We use the same sound for 'incorrect' and 'almost' but could tweak pitch if desired
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      
       osc.type = 'sine'; 
-      // Slightly higher pitch for "almost" to indicate it's not a total fail
       const startFreq = type === 'almost' ? 300 : 200;
-      
       osc.frequency.setValueAtTime(startFreq, now); 
-      osc.frequency.exponentialRampToValueAtTime(50, now + 0.3); // Pitch drop
-      
+      osc.frequency.exponentialRampToValueAtTime(50, now + 0.3);
       gain.gain.setValueAtTime(0, now);
       gain.gain.linearRampToValueAtTime(0.2, now + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-      
       osc.connect(gain);
       gain.connect(ctx.destination);
-      
       osc.start(now);
       osc.stop(now + 0.35);
     }
@@ -107,8 +97,10 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
   const [currentIndex, setCurrentIndex] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [results, setResults] = useState<GameResult[]>([]);
+  const [streak, setStreak] = useState(0);
+  const [showStreakEffect, setShowStreakEffect] = useState(false);
+  const [flashActive, setFlashActive] = useState(false);
   
-  // Added 'almost' state
   const [feedback, setFeedback] = useState<'none' | 'correct' | 'incorrect' | 'almost'>('none');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -122,6 +114,7 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
 
     setCurrentIndex(0);
     setResults([]);
+    setStreak(0);
   }, [cards]);
 
   useEffect(() => {
@@ -138,20 +131,19 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     const newResult: GameResult = {
       card: currentCard,
       userAnswer: inputValue.trim(),
-      isCorrect: isCorrect // 'almost' counts as incorrect for scoring purposes usually
+      isCorrect: isCorrect
     };
 
     const newResults = [...results, newResult];
     setResults(newResults);
 
-    // Update status for the progress bar
     setCardStatus(prev => ({
       ...prev,
       [currentCard.id]: status
     }));
 
     if (!isCorrect) {
-      // Add to end of deck to retry later (both incorrect and almost)
+      setStreak(0);
       setDeck(prev => [...prev, currentCard]);
       setCurrentIndex(prev => prev + 1);
       setInputValue('');
@@ -219,38 +211,66 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
     if (!inputValue.trim()) return;
 
     const cleanInput = inputValue.trim().toLowerCase();
-    
-    // 1. Check Exact Match
     const isExact = validAnswers.includes(cleanInput);
 
     if (isExact) {
+        const newStreak = streak + 1;
+        setStreak(newStreak);
         setFeedback('correct');
-        playFeedbackSound('correct');
+        
+        if (newStreak > 0 && newStreak % 5 === 0) {
+          playFeedbackSound('streak');
+          setFlashActive(true);
+          setShowStreakEffect(true);
+          setTimeout(() => setFlashActive(false), 300);
+          setTimeout(() => setShowStreakEffect(false), 1200);
+        } else {
+          playFeedbackSound('correct');
+        }
         return;
     }
 
-    // 2. Check Diacritic Mistake (Normalized Match)
     const normalizedInput = normalizeText(cleanInput);
     const isAlmost = validAnswers.some(ans => normalizeText(ans) === normalizedInput);
 
     if (isAlmost) {
+        setStreak(0);
         setFeedback('almost');
         playFeedbackSound('almost');
         return;
     }
 
-    // 3. Incorrect
+    setStreak(0);
     setFeedback('incorrect');
     playFeedbackSound('incorrect');
   };
 
-  // Determine top gradient color based on feedback
-  let gradientClass = 'from-emerald-400 to-teal-500'; // Default/Correct
+  let gradientClass = 'from-emerald-400 to-teal-500';
   if (feedback === 'incorrect') gradientClass = 'from-rose-500 to-red-600';
   if (feedback === 'almost') gradientClass = 'from-amber-400 to-yellow-500';
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-1 md:py-6 min-h-[100dvh] h-[100dvh] flex flex-col overflow-hidden">
+    <div className="max-w-2xl mx-auto px-4 py-1 md:py-6 min-h-[100dvh] h-[100dvh] flex flex-col overflow-hidden relative">
+      {/* Quick Flash Effect */}
+      {flashActive && (
+        <div className="fixed inset-0 z-[110] bg-emerald-500/40 pointer-events-none transition-opacity duration-300"></div>
+      )}
+
+      {/* Streak Notification Overlay */}
+      {showStreakEffect && (
+        <div className="fixed inset-0 pointer-events-none z-[100] flex items-center justify-center">
+           <div className="bg-emerald-600 text-white px-8 py-6 rounded-[2.5rem] shadow-[0_20px_50px_rgba(16,185,129,0.4)] flex flex-col items-center gap-2 animate-[streak-pop_0.4s_cubic-bezier(.17,.67,.83,.67)_forwards] border-4 border-emerald-400">
+              <div className="text-5xl md:text-7xl">🔥</div>
+              <div className="text-3xl md:text-5xl font-black italic tracking-tighter">
+                {streak}x NIZ!
+              </div>
+              <div className="text-emerald-100 font-bold uppercase tracking-widest text-xs md:text-sm opacity-80">
+                SJAJNO!
+              </div>
+           </div>
+        </div>
+      )}
+
       {/* Header & Progress */}
       <div className="flex flex-col gap-2 md:gap-6 mb-2 md:mb-8 flex-shrink-0">
         <div className="flex items-center justify-between">
@@ -261,24 +281,31 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
             ✕ Izađi
           </button>
           
-          <div className="flex-1 mx-4 flex gap-1 h-2 md:h-3">
-            {originalDeck.map((card) => {
-              const status = cardStatus[card.id];
-              const isCurrent = currentCard.id === card.id;
-              
-              let bgClass = 'bg-slate-200';
-              if (status === 'correct') bgClass = 'bg-emerald-500';
-              if (status === 'incorrect') bgClass = 'bg-rose-500';
-              if (status === 'almost') bgClass = 'bg-amber-400';
+          <div className="flex items-center gap-3">
+            {streak >= 3 && (
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-orange-100 text-orange-600 rounded-full font-black text-sm animate-pulse">
+                🔥 {streak}
+              </div>
+            )}
+            <div className="flex-1 min-w-[120px] md:min-w-[200px] flex gap-1 h-2 md:h-3">
+              {originalDeck.map((card) => {
+                const status = cardStatus[card.id];
+                const isCurrent = currentCard.id === card.id;
+                
+                let bgClass = 'bg-slate-200';
+                if (status === 'correct') bgClass = 'bg-emerald-500';
+                if (status === 'incorrect') bgClass = 'bg-rose-500';
+                if (status === 'almost') bgClass = 'bg-amber-400';
 
-              return (
-                <div 
-                  key={card.id}
-                  className={`flex-1 rounded-full transition-all duration-300 relative ${bgClass} ${isCurrent ? 'ring-2 ring-slate-400 ring-offset-1 transform scale-110 z-10' : ''}`}
-                >
-                </div>
-              );
-            })}
+                return (
+                  <div 
+                    key={card.id}
+                    className={`flex-1 rounded-full transition-all duration-300 relative ${bgClass} ${isCurrent ? 'ring-2 ring-slate-400 ring-offset-1 transform scale-110 z-10' : ''}`}
+                  >
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -288,9 +315,7 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
         
         {/* Flashcard */}
         <div className="perspective-1000 overflow-hidden rounded-[1.5rem] md:rounded-[2rem] w-full flex-shrink-0">
-          {/* Increased min-height to 240px on mobile to fit the bigger hint */}
           <div className="relative bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[240px] md:min-h-[450px] flex flex-col items-center justify-center p-4 md:p-8 text-center overflow-hidden transition-all duration-300 group">
-            {/* Dynamic Top Gradient */}
             <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${gradientClass}`}></div>
             
             <h2 className="text-slate-400 uppercase tracking-[0.2em] text-[10px] md:text-xs font-extrabold mb-2 md:mb-6 flex items-center gap-2">
@@ -310,40 +335,29 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
                    
                    {feedback === 'correct' ? (
                      <>
-                       {/* Green Check Mark */}
                        <div className="w-10 h-10 md:w-16 md:h-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2 animate-scale-in flex-shrink-0">
                           <svg className="w-5 h-5 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>
                        </div>
-                       
-                       {/* Answer */}
                        <div className="text-emerald-600 font-extrabold text-2xl md:text-5xl flex items-center justify-center text-center leading-tight mb-2 break-words w-full">
                           {currentCard.hungarian}
                        </div>
                      </>
                    ) : feedback === 'almost' ? (
                      <>
-                       {/* Yellow Warning Icon */}
                        <div className="w-8 h-8 md:w-14 md:h-14 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mb-2 animate-shake shadow-sm border-2 border-amber-200 flex-shrink-0">
                           <svg className="w-4 h-4 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                        </div>
-                       
                        <p className="text-amber-700 font-bold mb-1 text-[10px] md:text-sm bg-amber-100 px-3 py-0.5 rounded-full">Pazi na akcente!</p>
-                       
                        <div className="font-extrabold text-amber-600 text-xl md:text-4xl mb-2 flex items-center justify-center gap-3 text-center leading-tight break-words w-full">
                           {targetAnswerPrimary}
                        </div>
                      </>
                    ) : (
                      <>
-                       {/* Red Cross */}
                        <div className="w-8 h-8 md:w-14 md:h-14 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 mb-2 animate-shake flex-shrink-0">
                          <svg className="w-4 h-4 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" /></svg>
                        </div>
-                       
-                       <div className="text-rose-500 text-[10px] md:text-sm font-bold mb-0.5">
-                          Tačan odgovor:
-                       </div>
-                       <div className="font-extrabold text-rose-700 text-xl md:text-4xl mb-2 flex items-center justify-center gap-3 text-center leading-tight break-words w-full">
+                       <div className="font-extrabold text-rose-700 text-3xl md:text-6xl mb-2 flex items-center justify-center gap-3 text-center leading-tight break-words w-full">
                           {targetAnswerPrimary}
                        </div>
                        {synonyms.length > 0 && (
@@ -354,7 +368,6 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
                      </>
                    )}
 
-                   {/* HINT SECTION - BIGGER & MORE OBVIOUS */}
                    {currentCard.hint && (
                      <div className={`mt-3 w-full p-3 rounded-2xl border-2 flex items-center gap-3 text-left animate-fade-in-up shadow-sm
                        ${feedback === 'correct' ? 'bg-emerald-100 border-emerald-200' : 
@@ -376,7 +389,6 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
                         </div>
                      </div>
                    )}
-
                  </div>
               </div>
             )}
@@ -403,13 +415,12 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
               autoFocus
               className={`w-full text-center text-lg md:text-2xl p-3 md:p-6 rounded-2xl border-2 outline-none transition-all shadow-lg shadow-slate-100 font-bold placeholder:font-normal px-12 md:px-8
                 ${feedback === 'none' 
-                  ? 'border-slate-200 bg-white text-slate-800 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10' 
+                  ? 'border-slate-200 bg-white text-slate-800 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50/10' 
                   : 'border-slate-100 bg-slate-50 text-slate-400'
                 }
               `}
             />
             
-            {/* Submit Button */}
             {feedback === 'none' && inputValue.trim() && (
               <button
                 type="submit"
@@ -420,7 +431,6 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
               </button>
             )}
 
-            {/* Continue Button */}
             {feedback !== 'none' && (
               <button
                 type="button"
@@ -449,6 +459,14 @@ export const ActiveGame: React.FC<ActiveGameProps> = ({ cards, onComplete, onCan
           </div>
         </form>
       </div>
+
+      <style>{`
+        @keyframes streak-pop {
+          0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+          40% { transform: scale(1.15) rotate(5deg); opacity: 1; }
+          100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 };

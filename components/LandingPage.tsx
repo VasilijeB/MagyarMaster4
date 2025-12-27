@@ -43,8 +43,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
             </button>
           </div>
         </div>
-        
-        
       </header>
 
       {/* Features Grid */}
@@ -60,16 +58,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
                 </p>
             </div>
 
-            {/* Feature 2: Conjugation */}
-             <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors text-center">
-               <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm">✍️</div>
-               <h3 className="text-xl font-bold text-slate-900 mb-3">Konjugacija</h3>
-               <p className="text-slate-500 leading-relaxed">
-                 Vežbajte promene glagola kroz sva lica i vremena.
-               </p>
-            </div>
-
-            {/* Feature 3: Stories (New) */}
+            {/* Feature 2: Stories */}
             <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors text-center">
                <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm">📖</div>
                <h3 className="text-xl font-bold text-slate-900 mb-3">Kratke Priče</h3>
@@ -78,16 +67,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
                </p>
             </div>
 
-            {/* Feature 4: Grammar (New) */}
-            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors text-center">
-               <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm">💡</div>
-               <h3 className="text-xl font-bold text-slate-900 mb-3">Gramatika</h3>
+            {/* Feature 3: Conjugation */}
+             <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors text-center">
+               <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm">✍️</div>
+               <h3 className="text-xl font-bold text-slate-900 mb-3">Konjugacija</h3>
                <p className="text-slate-500 leading-relaxed">
-                 Interaktivna objašnjenja i pomoć oko gramatičkih pravila.
+                 Vežbajte promene glagola kroz sva lica i vremena.
                </p>
             </div>
 
-            {/* Feature 5: Custom */}
+            {/* Feature 4: Custom */}
             <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors text-center">
                <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm">⭐</div>
                <h3 className="text-xl font-bold text-slate-900 mb-3">Moji Izrazi</h3>

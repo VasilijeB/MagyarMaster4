@@ -101,6 +101,156 @@ export const STORIES: Record<DifficultyLevel, StoryTask[]> = {
       title: "Muzika",
       hungarianText: "Szeretem a zenét. Hallgatom a rádiót. A zene hangos. Táncolok a szobában.",
       serbianTranslation: "Volim muziku. Slušam radio. Muzika je glasna. Plešem u sobi."
+    },
+    {
+      title: "Mali pas",
+      hungarianText: "A kutya kicsi és barna. A neve Morzsi. Morzsi szeret játszani a kertben.",
+      serbianTranslation: "Pas je mali i braon. Ime mu je Morži. Morži voli da se igra u bašti."
+    },
+    {
+      title: "Crveni auto",
+      hungarianText: "Az apa autója piros. Az autó gyors. Megyünk a boltba.",
+      serbianTranslation: "Tatin auto je crven. Auto je brz. Idemo u prodavnicu."
+    },
+    {
+      title: "Moja soba",
+      hungarianText: "A szobám tiszta. Van egy asztal és egy szék. Az ablak nyitva van.",
+      serbianTranslation: "Moja soba je čista. Ima jedan sto i jedna stolica. Prozor je otvoren."
+    },
+    {
+      title: "Sladoled",
+      hungarianText: "Szeretem a fagyit. A fagyi hideg és édes. Ma eper fagyit eszem.",
+      serbianTranslation: "Volim sladoled. Sladoled je hladan i sladak. Danas jedem sladoled od jagode."
+    },
+    {
+      title: "Veliko drvo",
+      hungarianText: "A kertben van egy nagy fa. A fa zöld. A madár a fán ül.",
+      serbianTranslation: "U bašti je jedno veliko drvo. Drvo je zeleno. Ptica sedi na drvetu."
+    },
+    {
+      title: "Moja kafa",
+      hungarianText: "A kávé forró. Sok cukor van benne. Reggel kávét iszom.",
+      serbianTranslation: "Kafa je vrela. Ima mnogo šećera u njoj. Ujutru pijem kafu."
+    },
+    {
+      title: "Žuti sunce",
+      hungarianText: "A nap sárga és kerek. Süt a nap az égen. Meleg van.",
+      serbianTranslation: "Sunce je žuto i okruglo. Sunce sija na nebu. Toplo je."
+    },
+    {
+      title: "Novi cipele",
+      hungarianText: "Ez az új cipőm. Fekete és szép. Ma a parkba megyek.",
+      serbianTranslation: "Ovo su moje nove cipele. Crne su i lepe. Danas idem u park."
+    },
+    {
+      title: "Beli hleb",
+      hungarianText: "A kenyér fehér és friss. Szeretem a kenyeret vajjal. Reggelit eszem.",
+      serbianTranslation: "Hleb je beo i svež. Volim hleb sa puterom. Jedem doručak."
+    },
+    {
+      title: "Moja majka",
+      hungarianText: "Az anyukám kedves. Ő főz a konyhában. A vacsora finom.",
+      serbianTranslation: "Moja majka je ljubazna. Ona kuva u kuhinji. Večera je ukusna."
+    },
+    {
+      title: "Dva mačke",
+      hungarianText: "Van két macskám. Az egyik fehér, a másik fekete. Szeretnek aludni.",
+      serbianTranslation: "Imam dve mačke. Jedna je bela, druga je crna. Vole da spavaju."
+    },
+    {
+      title: "Plava olovka",
+      hungarianText: "A ceruza kék. Írok a papírra. A lecke kész van.",
+      serbianTranslation: "Olovka je plava. Pišem na papiru. Domaći je gotov."
+    },
+    {
+      title: "Lepa cvet",
+      hungarianText: "A virág piros és szép. Váza van az asztalon. A virág a vázában van.",
+      serbianTranslation: "Cvet je crven i lep. Na stolu je vaza. Cvet je u vazi."
+    },
+    {
+      title: "Hladna voda",
+      hungarianText: "A víz hideg. Iszom egy pohár vizet. Szomjas vagyok.",
+      serbianTranslation: "Voda je hladna. Pijem čašu vode. Žedan sam."
+    },
+    {
+      title: "Moj brat",
+      hungarianText: "Van egy bátyám. Ő magas és erős. Focizni szeret.",
+      serbianTranslation: "Imam starijeg brata. On je visok i jak. Voli da igra fudbal."
+    },
+    {
+      title: "Ulica",
+      hungarianText: "Az utca hosszú. Sok autó van az utcán. A házunk itt van.",
+      serbianTranslation: "Ulica je duga. Ima mnogo automobila na ulici. Naša kuća je ovde."
+    },
+    {
+      title: "Ručak",
+      hungarianText: "Dél van. Eszem az ebédet. A leves meleg. Szeretem a levest.",
+      serbianTranslation: "Podne je. Jedem ručak. Supa je topla. Volim supu."
+    },
+    {
+      title: "Nebo",
+      hungarianText: "Az ég kék. Sok fehér felhő van. Repül egy madár.",
+      serbianTranslation: "Nebo je plavo. Ima mnogo belih oblaka. Leti jedna ptica."
+    },
+    {
+      title: "Sat",
+      hungarianText: "Az óra az asztalon van. Az óra kerek. Már nyolc óra van.",
+      serbianTranslation: "Sat je na stolu. Sat je okrugao. Već je osam sati."
+    },
+    {
+      title: "Mali kuća",
+      hungarianText: "A ház kicsi, de szép. Van egy ablak. A kert zöld.",
+      serbianTranslation: "Kuća je mala, ali lepa. Ima jedan prozor. Bašta je zelena."
+    },
+    {
+      title: "Zelena trava",
+      hungarianText: "A fű zöld és puha. A kutya a fűben fut. Süt a nap.",
+      serbianTranslation: "Trava je zelena i meka. Pas trči u travi. Sija sunce."
+    },
+    {
+      title: "Moja olovka",
+      hungarianText: "Ez az én ceruzám. A ceruza sárga. Írok egy levelet.",
+      serbianTranslation: "Ovo je moja olovka. Olovka je žuta. Pišem jedno pismo."
+    },
+    {
+      title: "Slatka jabuka",
+      hungarianText: "Az alma piros és édes. Eszem egy almát. Finom az alma.",
+      serbianTranslation: "Jabuka je crvena i slatka. Jedem jednu jabuku. Ukusna je jabuka."
+    },
+    {
+      title: "Velika torba",
+      hungarianText: "A táska fekete és nagy. Sok könyv van a táskában. Megyek az iskolába.",
+      serbianTranslation: "Torba je crna i velika. Mnogo knjiga je u torbi. Idem u školu."
+    },
+    {
+      title: "Bela kafa",
+      hungarianText: "Kérek egy kávét tejjel. A kávé meleg. Reggel kávét iszom.",
+      serbianTranslation: "Molim jednu kafu sa mlekom. Kafa je topla. Ujutru pijem kafu."
+    },
+    {
+      title: "Crna mačka",
+      hungarianText: "A macska fekete. A macska az ágyon alszik. Puha a macska.",
+      serbianTranslation: "Mačka je crna. Mačka spava na krevetu. Meka je mačka."
+    },
+    {
+      title: "Stari knjiga",
+      hungarianText: "A könyv régi és nagy. Olvasom a könyvet este. Érdekes a könyv.",
+      serbianTranslation: "Knjiga je stara i velika. Čitam knjigu uveče. Zanimljiva je knjiga."
+    },
+    {
+      title: "Mali grad",
+      hungarianText: "Ez egy kicsi város. Van egy park és egy bolt. Szeretek itt lakni.",
+      serbianTranslation: "Ovo je jedan mali grad. Ima jedan park i jedna prodavnica. Volim ovde da živim."
+    },
+    {
+      title: "Prazna čaša",
+      hungarianText: "A pohár üres. Kérek egy kis vizet. Szomjas vagyok.",
+      serbianTranslation: "Čaša je prazna. Molim malo vode. Žedan sam."
+    },
+    {
+      title: "Dobro dan",
+      hungarianText: "Jó napot kívánok! Hogy vagy? Én jól vagyok, köszönöm.",
+      serbianTranslation: "Dobar dan želim! Kako si? Ja sam dobro, hvala."
     }
   ],
   2: [
@@ -203,6 +353,156 @@ export const STORIES: Record<DifficultyLevel, StoryTask[]> = {
       title: "Praznici",
       hungarianText: "Jön a karácsony. Feldíszítjük a fát. Ajándékot veszünk a családnak. Együtt énekelünk dalokat.",
       serbianTranslation: "Dolazi Božić. Ukrašavamo jelku. Kupujemo poklone za porodicu. Zajedno pevamo pesme."
+    },
+    {
+      title: "Novi posao",
+      hungarianText: "Anna új munkát kapott egy irodában. Az iroda a belvárosban van. Anna minden reggel busszal jár dolgozni.",
+      serbianTranslation: "Ana je dobila novi posao u jednoj kancelariji. Kancelarija je u centru grada. Ana svakog jutra ide autobusom na posao."
+    },
+    {
+      title: "Mala bašta",
+      hungarianText: "A kertemben sok virág és zöldség van. Szeretem gondozni a növényeket. A paradicsom már piros és édes.",
+      serbianTranslation: "U mojoj bašti ima mnogo cveća i povrća. Volim da negujem biljke. Paradajz je već crven i sladak."
+    },
+    {
+      title: "Rođendanska zabava",
+      hungarianText: "Holnap lesz a születésnapom. Meghívom a barátaimat egy buliba. Eszünk tortát és táncolunk egész este.",
+      serbianTranslation: "Sutra će biti moj rođendan. Pozivam prijatelje na žurku. Ješćemo tortu i plesati celo veče."
+    },
+    {
+      title: "Pas u parku",
+      hungarianText: "A parkban sokan sétáltatnak kutyát. Én is elviszem a kutyámat futni. Ő nagyon boldog, amikor kint vagyunk.",
+      serbianTranslation: "U parku mnogi šetaju pse. I ja vodim svog psa na trčanje. On je veoma srećan kada smo napolju."
+    },
+    {
+      title: "Zimski sportok",
+      hungarianText: "Szeretek síelni a hegyekben. A hó fehér és puha. Vigyázok, mert a pálya néha jeges.",
+      serbianTranslation: "Volim da skijam u planinama. Sneg je beo i mekan. Pazim, jer je staza ponekad zaleđena."
+    },
+    {
+      title: "Večera u restoranu",
+      hungarianText: "Ma este egy elegáns étteremben vacsorázunk. Halat rendelek salátával. A pincér nagyon udvarias.",
+      serbianTranslation: "Večeras večeramo u jednom elegantnom restoranu. Naručujem ribu sa salatom. Konobar je veoma učtiv."
+    },
+    {
+      title: "Stari prijatelj",
+      hungarianText: "Ma találkoztam egy régi iskolatársammal. Sokat változott az évek alatt. Megittunk egy teát és beszélgettünk.",
+      serbianTranslation: "Danas sam sreo jednog starog školskog druga. Mnogo se promenio tokom godina. Popili smo čaj i razgovarali."
+    },
+    {
+      title: "Putovanje vozom",
+      hungarianText: "A vonat Budapestről indul. Az út két óra hosszú. Szeretek az ablakon keresztül nézni a tájat.",
+      serbianTranslation: "Voz polazi iz Budimpešte. Put traje dva sata. Volim da gledam predeo kroz prozor."
+    },
+    {
+      title: "Kišobran",
+      hungarianText: "Elkezdett esni az eső. Szerencsére nálam van az esernyőm. Sietek haza, hogy ne ázzak el.",
+      serbianTranslation: "Počela je da pada kiša. Srećom, imam kod sebe kišobran. Žurim kući da ne pokisnem."
+    },
+    {
+      title: "Čitanje vesti",
+      hungarianText: "Minden reggel elolvasom a híreket az interneten. Fontos tudni, mi történik a világban. Utána megyek dolgozni.",
+      serbianTranslation: "Svakog jutra pročitam vesti na internetu. Važno je znati šta se dešava u svetu. Posle idem na posao."
+    },
+    {
+      title: "Hobi",
+      hungarianText: "A hobbim a fotózás. Sok képet készítek a természetről. A fények reggel a legszebbek.",
+      serbianTranslation: "Moj hobi je fotografisanje. Pravim mnogo slika prirode. Svetla su najlepša ujutru."
+    },
+    {
+      title: "Mali stan",
+      hungarianText: "A lakásom kicsi, de nagyon otthonos. A falak fehérek, és sok kép van rajta. Egyedül lakom itt.",
+      serbianTranslation: "Moj stan je mali, ali veoma ušuškan. Zidovi su beli i na njima ima mnogo slika. Živim ovde sam."
+    },
+    {
+      title: "Pijaca",
+      hungarianText: "Szombaton korán megyek a piacra. Veszek friss tojást, tejet és gyümölcsöt. Az eladók nagyon kedvesek.",
+      serbianTranslation: "Subotom rano idem na pijacu. Kupujem sveža jaja, mleko i voće. Prodavci su veoma ljubazni."
+    },
+    {
+      title: "Koncert",
+      hungarianText: "Este elmegyünk egy koncertre a parkba. A zene hangos és vidám. Sokan táncolnak a fűben.",
+      serbianTranslation: "Uveče idemo na jedan koncert u park. Muzika je glasna i vesela. Mnogi plešu u travi."
+    },
+    {
+      title: "Olovka és papír",
+      hungarianText: "Le kell írnom a bevásárlólistát. Keresek egy tollat és egy papírt. Kell venni kenyeret és vajat.",
+      serbianTranslation: "Moram da napišem listu za kupovinu. Tražim hemijsku i papir. Treba kupiti hleb i puter."
+    },
+    {
+      title: "Torta",
+      hungarianText: "Sütöttem egy csokoládétortát. Illata bejárja az egész házat. Várom, hogy kihűljön, és megegyük.",
+      serbianTranslation: "Ispekao sam čokoladnu tortu. Miris se širi celom kućom. Čekam da se ohladi pa da je pojedemo."
+    },
+    {
+      title: "Bicikl",
+      hungarianText: "A biciklim sárga és gyors. Minden nap ezzel megyek a boltba. Vigyázok az utakon.",
+      serbianTranslation: "Moj bicikl je žut i brz. Svaki dan njime idem u prodavnicu. Pazim na putevima."
+    },
+    {
+      title: "Srećna porodica",
+      hungarianText: "A családom nagy és boldog. Sokszor találkozunk vasárnap. Együtt ebédelünk és sokat nevetünk.",
+      serbianTranslation: "Moja porodica je velika i srećna. Često se viđamo nedeljom. Zajedno ručamo i mnogo se smejemo."
+    },
+    {
+      title: "Hladno jutro",
+      hungarianText: "Ma reggel nagyon hideg van. Felveszem a meleg kabátomat és a sálamat. Köd van az utcán.",
+      serbianTranslation: "Jutros je veoma hladno. Oblačim svoj topli kaput i šal. Magla je na ulici."
+    },
+    {
+      title: "Zeleni čaj",
+      hungarianText: "Délután iszom egy zöld teát. Segít pihenni a munka után. Nem teszek bele se cukrot, se mézet.",
+      serbianTranslation: "Popodne pijem zeleni čaj. Pomaže mi da se odmorim posle posla. Ne stavljam u njega ni šećer ni med."
+    },
+    {
+      title: "Mačke és kutyák",
+      hungarianText: "Van egy macskám és egy kutyám. Jól kijönnek egymással. Gyakran játszanak a nappaliban.",
+      serbianTranslation: "Imam mačku i psa. Dobro se slažu. Često se igraju u dnevnoj sobi."
+    },
+    {
+      title: "Učionica",
+      hungarianText: "Az iskolában a terem tiszta és világos. A diákok csendben ülnek a padokban. A tanár éppen magyaráz.",
+      serbianTranslation: "U školi je učionica čista i svetla. Učenici tiho sede u klupama. Nastavnik upravo objašnjava."
+    },
+    {
+      title: "Put do kuće",
+      hungarianText: "A házunk az utca végén van. Sétálok hazafelé a munka után. Már látom a lámpák fényét.",
+      serbianTranslation: "Naša kuća je na kraju ulice. Šetam prema kući posle posla. Već vidim svetlost lampi."
+    },
+    {
+      title: "Šolja čaja",
+      hungarianText: "Kérek egy csésze teát citrommal. A tea meleg és finom. Kint esik az eső.",
+      serbianTranslation: "Molim jednu šolju čaja sa limunom. Čaj je topao i ukusan. Napolju pada kiša."
+    },
+    {
+      title: "Bioskop",
+      hungarianText: "Este moziba megyünk. Megvesszük a jegyeket és a popcornt. A film két óra hosszú lesz.",
+      serbianTranslation: "Uveče idemo u bioskop. Kupujemo karte i kokice. Film će trajati dva sata."
+    },
+    {
+      title: "Prazan autobus",
+      hungarianText: "A busz ma reggel szinte üres. Leülök az ablak mellé. Korán van még, mindenki alszik.",
+      serbianTranslation: "Autobus je jutros skoro prazan. Sedam pored prozora. Rano je još, svi spavaju."
+    },
+    {
+      title: "Sunčan dan",
+      hungarianText: "Ma egész nap süt a nap. Kimegyünk a strandra úszni. A víz nagyon kellemes.",
+      serbianTranslation: "Danas ceo dan sija sunce. Idemo na plažu da plivamo. Voda je veoma prijatna."
+    },
+    {
+      title: "Večera",
+      hungarianText: "A vacsora már az asztalon van. Halat eszünk rrizzsel. Nagyon éhes vagyok.",
+      serbianTranslation: "Večera je već na stolu. Jedemo ribu sa pirinčem. Veoma sam gladan."
+    },
+    {
+      title: "Crna olovka",
+      hungarianText: "Keresem a fekete tollamat. Itt volt az asztalon, de most nincs sehol. Talán a táskámban van.",
+      serbianTranslation: "Tražim svoju crnu hemijsku. Bila je ovde na stolu, ali je sada nema nigde. Možda je u mojoj torbi."
+    },
+    {
+      title: "Dobro jutro",
+      hungarianText: "Jó reggelt! Hogy aludtál? Kérsz egy kis kávét vagy teát?",
+      serbianTranslation: "Dobro jutro! Kako si spavao? Želiš li malo kafe ili čaja?"
     }
   ],
   3: [
@@ -214,7 +514,7 @@ export const STORIES: Record<DifficultyLevel, StoryTask[]> = {
     {
       title: "Razgovor za posao",
       hungarianText: "Holnap állásinterjúra megyek. Felvettem a legjobb öltönyömet. Kicsit izgulok, de felkészültem a kérdésekre. Remélem, megkapom a munkát.",
-      serbianTranslation: "Sutra idem na razgovor za posao. Obukao sam svoje najbolje odelo. Malo imam tremu, ali sam spreman za pitanja. Nadam se da ću dobiti posao."
+      serbianTranslation: "Sutra idem na razgovor za posao. Obukao sam svoje najbolje odelo. Malo imam tremu, ali sam spreman za pitanja. Nadama se da ću dobiti posao."
     },
     {
       title: "Planiranje puta",
@@ -305,6 +605,156 @@ export const STORIES: Record<DifficultyLevel, StoryTask[]> = {
       title: "Pomoć prijatelju",
       hungarianText: "A barátom beteg lett, ezért bevásároltam neki. Vittem neki gyümölcsöt és gyógyszert. Megköszönte a segítséget. Jó érzés segíteni másokon.",
       serbianTranslation: "Moj prijatelj se razboleo, pa sam mu obavio kupovinu. Odneo sam mu voće i lekove. Zahvalio se na pomoći. Dobar je osećaj pomagati drugima."
+    },
+    {
+      title: "Prvi dan na fakultetu",
+      hungarianText: "Izgultam az első napon az egyetemen. Nem ismertem senkit, és eltévedtem a nagy épületben. Végül találtam egy kedves csoporttársat, aki segített.",
+      serbianTranslation: "Bio sam nervozan prvog dana na fakultetu. Nisam poznavao nikoga i izgubio sam se u velikoj zgradi. Na kraju sam našao ljubaznog kolegu koji mi je pomogao."
+    },
+    {
+      title: "Pisanje dnevnika",
+      hungarianText: "Minden este írok néhány sort a naplómba. Ez segít rendszerezni a gondolataimat és átgondolni, mi történt velem. Sok év múlva érdekes lesz visszaolvasni.",
+      serbianTranslation: "Svake večeri napišem nekoliko redova u svoj dnevnik. To mi pomaže da organizujem misli i razmislim o tome šta mi se desilo. Za mnogo godina biće zanimljivo to ponovo pročitati."
+    },
+    {
+      title: "Vrtlarenje",
+      hungarianText: "A hétvégén a kertben dolgoztam. Ültettem néhány új virágot és megnyírtam a füvet. Elfáradtam, de jó érzés volt a friss levegőn lenni.",
+      serbianTranslation: "Za vikend sam radio u bašti. Posadio sam nekoliko novih cvetova i pokosio travu. Umorio sam se, ali je bio dobar osećaj biti na svežem vazduhu."
+    },
+    {
+      title: "Popravka bicikla",
+      hungarianText: "Defektet kaptam, ezért meg kellett javítanom a biciklimet. Szerencsére volt nálam szerszám és egy pótkerék. Fél óra alatt kész lettem.",
+      serbianTranslation: "Pukla mi je guma, pa sam morao da popravim bicikl. Srećom, imao sam kod sebe alat i rezervnu gumu. Bio sam gotov za pola sata."
+    },
+    {
+      title: "Učenje gitare",
+      hungarianText: "Egy hónapja kezdtem el gitározni tanulni. Még fájnak az ujjaim, de már tudok játszani néhány egyszerű dalt. Minden nap gyakorlok egy kicsit.",
+      serbianTranslation: "Počeo sam da učim gitaru pre mesec dana. Još me bole prsti, ali već znam da odsviram nekoliko jednostavnih pesama. Svaki dan vežbam po malo."
+    },
+    {
+      title: "Kišno popodne",
+      hungarianText: "Mivel egész délután esett az eső, bent maradtam a házban. Sütöttem egy almás pitét és megnéztem egy régi filmet a televízióban.",
+      serbianTranslation: "Pošto je celo popodne padala kiša, ostao sam unutar kuće. Ispekao sam pitu od jabuka i pogledao jedan stari film na televiziji."
+    },
+    {
+      title: "Poseta muzeju umetnosti",
+      hungarianText: "A szépművészeti múzeumban jártam. Lenyűgöztek a hatalmas festmények és a szobrok. Sokat tanultam a különböző művészeti korszakokról.",
+      serbianTranslation: "Bio sam u muzeju lepih umetnosti. Očarale su me ogromne slike i skulpture. Mnogo sam naučio o različitim umetničkim periodima."
+    },
+    {
+      title: "Rođendansko iznenađenje",
+      hungarianText: "A barátaim meglepetés bulit szerveztek nekem. Nem sejtettem semmit, amíg be nem léptem a lakásba. Nagyon boldog voltam, hogy mindenki ott volt.",
+      serbianTranslation: "Moji prijatelji su mi organizovali žurku iznenađenja. Nisam ništa slutio dok nisam ušao u stan. Bio sam veoma srećan što su svi bili tamo."
+    },
+    {
+      title: "Šetnja uz more",
+      hungarianText: "Nyáron minden este sétáltunk a tengerparton. A naplemente színei gyönyörűek voltak. A sós levegő és a hullámok hangja megnyugtatott.",
+      serbianTranslation: "Letos smo svake večeri šetali obalom mora. Boje zalaska sunca su bile prelepe. Slani vazduh i zvuk talasa su me umirivali."
+    },
+    {
+      title: "Kuvanje večere za goste",
+      hungarianText: "Vendégeket vártam vacsorára, ezért egész délután a konyhában voltam. Olasz ételt készítettem, ami mindenkinek nagyon ízlett.",
+      serbianTranslation: "Čekao sam goste na večeri, pa sam celo popodne bio u kuhinji. Pripremio sam italijansko jelo koje se svima veoma dopalo."
+    },
+    {
+      title: "Selidba u drugi grad",
+      hungarianText: "Amikor Budapestre költöztem, minden új volt számomra. Meg kellett szoknom a nagy forgalmat és a tömeget, de most már nagyon szeretem a várost.",
+      serbianTranslation: "Kada sam se preselio u Budimpeštu, sve mi je bilo novo. Morao sam da se naviknem na veliki saobraćaj i gužvu, ali sada veoma volim ovaj grad."
+    },
+    {
+      title: "Zaboravljen ključ",
+      hungarianText: "Reggel otthon hagytam a kulcsomat az asztalon. Csak este vettem észre, amikor hazaértem a munkából. Szerencsére a feleségemnek volt pótkulcsa.",
+      serbianTranslation: "Ujutru sam ostavio ključ kod kuće na stolu. To sam primetio tek uveče kada sam se vratio s posla. Srećom, moja žena je imala rezervni ključ."
+    },
+    {
+      title: "Planinarenje",
+      hungarianText: "Felmásztunk a hegy tetejére. Az út meredek és fárasztó volt, de a kilátás kárpótolt mindenért. Messzire el lehetett látni.",
+      serbianTranslation: "Popeli smo se na vrh planine. Put je bio strm i zamoran, ali je pogled nadoknadio sve. Moglo se videti daleko."
+    },
+    {
+      title: "Prvi let avionom",
+      hungarianText: "Emlékszem az első repülőutamra. Kicsit féltem a felszállásnál, de aztán lenyűgözött a felhők feletti látvány. Gyorsan odaértünk a célhoz.",
+      serbianTranslation: "Sećam se svog prvog leta avionom. Malo sam se plašio pri poletanju, ali me je onda očarao prizor iznad oblaka. Brzo smo stigli na cilj."
+    },
+    {
+      title: "Zimski odmor",
+      hungarianText: "A téli szünetet a hegyekben töltöttük. Rengeteg hó esett, így minden nap tudtunk szánkózni és hógolyózni. Esténként a kandalló mellett ültünk.",
+      serbianTranslation: "Zimski raspust smo proveli u planinama. Palo je mnogo snega, pa smo svakog dana mogli da se sankamo i grudvamo. Večerima smo sedeli pored kamina."
+    },
+    {
+      title: "Nova knjiga",
+      hungarianText: "Vettem egy új könyvet, amit már régóta el akartam olvasni. Alig tudtam letenni, annyira izgalmas volt a történet. Egy hét alatt befejeztem.",
+      serbianTranslation: "Kupio sam novu knjigu koju sam odavno želeo da pročitam. Jedva sam je ispuštao iz ruku, toliko je priča bila uzbudljiva. Završio sam je za nedelju dana."
+    },
+    {
+      title: "Popravka automobila",
+      hungarianText: "A kocsim furcsa hangot adott, ezért elvittem a szerelőhöz. Kiderült, hogy ki kell cserélni egy alkatrészt. Két napig tartott a javítás.",
+      serbianTranslation: "Moj auto je ispuštao čudan zvuk, pa sam ga odvezao kod majstora. Ispostavilo se da treba zameniti jedan deo. Popravka je trajala dva dana."
+    },
+    {
+      title: "Lepa uspomena",
+      hungarianText: "Nézegettem a régi fényképeket a családi albumban. Sok szép emlék jutott eszembe a gyerekkoromról és a régi nyaralásokról.",
+      serbianTranslation: "Razgledao sam stare fotografije u porodičnom albumu. Setio sam se mnogih lepih uspomena iz detinjstva i sa starih letovanja."
+    },
+    {
+      title: "Učenje plivanja",
+      hungarianText: "Gyerekkoromban féltem a víztől, de a szüleim beírattak egy úszótanfolyamra. A végére nagyon megszerettem a vizet és megtanultam úszni.",
+      serbianTranslation: "U detinjstvu sam se plašio vode, ali su me roditelji upisali na kurs plivanja. Na kraju sam veoma zavoleo vodu i naučio da plivam."
+    },
+    {
+      title: "Večernji trčanje",
+      hungarianText: "Szeretek este futni a parkban, amikor már hűvösebb az idő. Ez segít levezetni a napközbeni feszültséget és jobban tudok aludni utána.",
+      serbianTranslation: "Volim da trčim uveče u parku kada je vreme već svežije. To mi pomaže da se oslobodim dnevne napetosti i posle toga mogu bolje da spavam."
+    },
+    {
+      title: "Poklon iz inostranstva",
+      hungarianText: "A barátom hozott nekem egy különleges ajándékot Japánból. Ez egy kézzel készített teáscsésze volt. Nagyon örültem neki, mert egyedi.",
+      serbianTranslation: "Prijatelj mi je doneo poseban poklon iz Japana. To je bila ručno rađena šolja za čaj. Veoma sam joj se obradovao jer je unikatna."
+    },
+    {
+      title: "Ispitni rok",
+      hungarianText: "A vizsgaidőszak alatt rengeteget kellett tanulnom. Alig aludtam, és sokat kávéztam, hogy ébren maradjak. Szerencsére minden vizsgám sikerült.",
+      serbianTranslation: "Tokom ispitnog roka morao sam mnogo da učim. Jedva sam spavao i pio sam mnogo kafe da bih ostao budan. Srećom, položio sam sve ispite."
+    },
+    {
+      title: "Šetnja gradom noću",
+      hungarianText: "Éjszaka a város egészen más arcát mutatja. A fények és a csend varázslatos hangulatot teremtenek. Szeretek ilyenkor céltalanul sétálni.",
+      serbianTranslation: "Noću grad pokazuje sasvim drugo lice. Svetla i tišina stvaraju čarobnu atmosferu. Volim tada da šetam bez cilja."
+    },
+    {
+      title: "Prvi kućni ljubimac",
+      hungarianText: "Tízéves voltam, amikor megkaptam az első kutyámat. Nagyon sokat kellett foglalkoznom vele, de megtanított az állatok iránti felelősségre.",
+      serbianTranslation: "Imao sam deset godina kada sam dobio svog prvog psa. Morao sam mnogo da se bavim njime, ali me je naučio odgovornosti prema životinjama."
+    },
+    {
+      title: "Praznični ručak",
+      hungarianText: "Karácsonykor az egész család összegyűlt nálunk. Rengeteg ételt készítettünk, és órákig ültünk az asztalnál. Jó volt látni mindenkit együtt.",
+      serbianTranslation: "Za Božić se cela porodica okupila kod nas. Pripremili smo mnogo hrane i satima smo sedeli za stolom. Bilo je lepo videti sve zajedno."
+    },
+    {
+      title: "Iznenadna poseta",
+      hungarianText: "Délután váratlanul beállított egy régi barátom. Nagyon meglepődtem, de örültem neki. Megittunk egy sört és felidéztük a régi kalandokat.",
+      serbianTranslation: "Popodne je neočekivano upao jedan stari prijatelj. Veoma sam se iznenadio, ali mi je bilo drago. Popili smo pivo i prisetili se starih avantura."
+    },
+    {
+      title: "Gubitak struje",
+      hungarianText: "A vihar miatt elment az áram az egész utcában. Gyertyákat gyújtottunk és társasjátékoztunk a gyerekekkel. Különleges és meghitt este volt.",
+      serbianTranslation: "Zbog oluje je nestalo struje u celoj ulici. Zapalili smo sveće i igrali društvene igre sa decom. Bila je to posebna i intimna veče."
+    },
+    {
+      title: "Učenje novog recepta",
+      hungarianText: "Kipróbáltam egy új receptet, amit az interneten találtam. Ez egy egzotikus ázsiai étel volt. Kicsit csípős lett, de az íze kiváló volt.",
+      serbianTranslation: "Isprobao sam novi recept koji sam našao na internetu. To je bilo egzotično azijsko jelo. Ispalo je malo ljuto, ali je ukus bio odličan."
+    },
+    {
+      title: "Šetnja u zoru",
+      hungarianText: "Néha szeretek nagyon korán felkelni és sétálni a városban, mielőtt mindenki felébredne. A csend és a friss levegő feltölt energiával egész napra.",
+      serbianTranslation: "Ponekad volim da ustanem veoma rano i prošetam gradom pre nego što se svi probude. Tišina i svež vazduh me napune energijom za ceo dan."
+    },
+    {
+      title: "Zaboravljena torba",
+      hungarianText: "A buszon felejtettem a táskámat. Szerencsére a sofőr megtalálta és leadta a központi irodában. Másnap érte mentem és visszakaptam mindent.",
+      serbianTranslation: "Zaboravio sam torbu u autobusu. Srećom, vozač ju je našao i predao u centralnu kancelariju. Sutradan sam otišao po nju i dobio sve nazad."
     }
   ],
   4: [
@@ -407,6 +857,156 @@ export const STORIES: Record<DifficultyLevel, StoryTask[]> = {
       title: "Pravo",
       hungarianText: "A törvény előtt mindenki egyenlő. Az ügyvédem azt mondta, hogy jó esélyünk van megnyerni a pert. A bizonyítékok egyértelműen mellettünk szólnak.",
       serbianTranslation: "Pred zakonom su svi jednaki. Moj advokat je rekao da imamo dobre šanse da dobijemo parnicu. Dokazi su jasno na našoj strani."
+    },
+    {
+      title: "Etikai dilemmák",
+      hungarianText: "A modern tudomány számos etikai dilemmát vet fel, különösen a genetika és a mesterséges intelligencia területén. Fontos, hogy a technológiai fejlődés ne haladja meg az erkölcsi felelősségünket.",
+      serbianTranslation: "Moderna nauka pokreće brojne etičke dileme, naročito u oblasti genetike i veštačke inteligencije. Važno je da tehnološki napredak ne prevaziđe našu moralnu odgovornost."
+    },
+    {
+      title: "Fenntartható gazdaság",
+      hungarianText: "A jövő gazdaságának alapja a fenntarthatóság kell, hogy legyen. Ez magában foglalja a megújuló energiaforrások használatát és a pazarlás minimalizálását a gyártási folyamatok során.",
+      serbianTranslation: "Osnova buduće ekonomije mora biti održivost. To uključuje korišćenje obnovljivih izvora energije i minimiziranje rasipanja tokom procesa proizvodnje."
+    },
+    {
+      title: "Digitális nomád életmód",
+      hungarianText: "A távmunka terjedésével egyre többen választják a digitális nomád életmódot. Ez lehetővé teszi, hogy a világ bármely pontjáról dolgozzunk, miközben új kultúrákat ismerünk meg.",
+      serbianTranslation: "Širenjem rada na daljinu sve više ljudi bira način života digitalnog nomada. To omogućava da radimo sa bilo koje tačke na svetu, dok istovremeno upoznajemo nove kulture."
+    },
+    {
+      title: "Mesterséges intelligencia a művészetben",
+      hungarianText: "Vajon a mesterséges intelligencia képes-e valódi kreativitásra, vagy csak a meglévő mintákat másolja? Ez a kérdés élénk vitákat vált ki a művészek és a technológusok körében.",
+      serbianTranslation: "Da li je veštačka inteligencija sposobna za pravu kreativnost, ili samo kopira postojeće obrasce? Ovo pitanje izaziva žive debate među umetnicima i tehnolozima."
+    },
+    {
+      title: "Városfejlesztési stratégiák",
+      hungarianText: "A modern városfejlesztés célja az élhetőbb környezet kialakítása. Ez több zöldfelületet, jobb tömegközlekedést és a gyalogosforgalom előtérbe helyezését jelenti a belvárosokban.",
+      serbianTranslation: "Cilj modernog urbanog razvoja je stvaranje okruženja ugodnijeg za život. To podrazumeva više zelenih površina, bolji javni prevoz i stavljanje pešačkog saobraćaja u prvi plan u centrima gradova."
+    },
+    {
+      title: "Generációs különbségek",
+      hungarianText: "A különböző generációk eltérő értékrenddel és munkamorállal rendelkeznek. A munkahelyi siker kulcsa az ezek közötti megértés és a hatékony együttműködés kialakítása lehet.",
+      serbianTranslation: "Različite generacije poseduju različite sisteme vrednosti i radnu etiku. Ključ uspeha na poslu može biti razumevanje između njih i uspostavljanje efikasne saradnje."
+    },
+    {
+      title: "Űrkutatás távlatai",
+      hungarianText: "Az űrkutatás új korszaka elé nézünk, ahol a Mars-utazás már nem csak sci-fi. A magáncégek megjelenése felgyorsította a technológiai innovációt ezen a területen.",
+      serbianTranslation: "Gledamo u susret novoj eri istraživanja svemira, gde putovanje na Mars više nije samo naučna fantastika. Pojava privatnih kompanija ubrzala je tehnološku inovaciju u ovoj oblasti."
+    },
+    {
+      title: "Kulturális diplomácia",
+      hungarianText: "A kulturális diplomácia fontos eszköz az országok közötti feszültség enyhítésére. A művészet és a zene nyelve univerzális, ami képes hidat építeni a különböző nemzetek közé.",
+      serbianTranslation: "Kulturna diplomatija je važno sredstvo za ublažavanje tenzija između država. Jezik umetnosti i muzike je univerzalan, što je sposobno da izgradi mostove između različitih nacija."
+    },
+    {
+      title: "Pszichológiai reziliencia",
+      hungarianText: "A reziliencia az a képesség, amellyel túltesszük magunkat a nehézségeken. Ennek fejlesztése elengedhetetlen a modern, stresszel teli világban a mentális egészség megőrzéséhez.",
+      serbianTranslation: "Reziliencija je sposobnost kojom prevazilazimo poteškoće. Razvoj ovoga je neophodan u modernom svetu punom stresa radi očuvanja mentalnog zdravlja."
+    },
+    {
+      title: "Biodiverzitás védelme",
+      hungarianText: "Az ökoszisztémák stabilitása a fajok sokszínűségétől függ. Az erdőirtás és a környezetszennyezés súlyos veszélyt jelent a biodiverzitásra, amit azonnal meg kell állítanunk.",
+      serbianTranslation: "Stabilnost ekosistema zavisi od raznolikosti vrsta. Krčenje šuma i zagađenje životne sredine predstavljaju ozbiljnu pretnju biodiverzitetu, što moramo odmah zaustaviti."
+    },
+    {
+      title: "E-learning előnyei",
+      hungarianText: "Az online oktatás rugalmasságot biztosít a tanulók számára. Bárki hozzáférhet a legmagasabb szintű tudáshoz, függetlenül a földrajzi helyzetétől, ami demokratizálja az oktatást.",
+      serbianTranslation: "Online obrazovanje pruža fleksibilnost učenicima. Bilo ko može pristupiti znanju na najvišem nivou, bez obzira na geografski položaj, što demokratizuje obrazovanje."
+    },
+    {
+      title: "Kiberbiztonsági kockázatok",
+      hungarianText: "A digitalizációval párhuzamosan a kiberbűnözés is növekszik. A cégeknek és az egyéneknek is nagy hangsúlyt kell fektetniük adataik védelmére a hálózati támadásokkal szemben.",
+      serbianTranslation: "Uporedo sa digitalizacijom raste i sajber kriminal. Kompanije i pojedinci moraju staviti veliki naglasak na zaštitu svojih podataka od mrežnih napada."
+    },
+    {
+      title: "Szociális hálók hatása",
+      hungarianText: "A közösségi média alapjaiban változtatta meg a társas kapcsolatainkat. Bár segít a kapcsolattartásban, a túlzott használata izolációhoz és torzult énképhez vezethet.",
+      serbianTranslation: "Društvene mreže su iz korena promenile naše društvene odnose. Iako pomažu u održavanju kontakata, prekomerna upotreba može voditi ka izolaciji i iskrivljenoj slici o sebi."
+    },
+    {
+      title: "Megújuló energiaforrások",
+      hungarianText: "A nap- és szélenergia használata kulcsfontosságú a szén-dioxid-kibocsátás csökkentésében. Az energetikai átállás gazdasági és környezetvédelmi szempontból is elengedhetetlen.",
+      serbianTranslation: "Korišćenje solarne energije i energije vetra je ključno za smanjenje emisije ugljen-dioksida. Energetska tranzicija je neophodna i sa ekonomskog i sa ekološkog aspekta."
+    },
+    {
+      title: "Munka és magánélet egyensúlya",
+      hungarianText: "A kiégés megelőzése érdekében kritikus fontosságú a munka és a magánélet közötti egyensúly fenntartása. A tudatos időbeosztás és a pihenés nem luxus, hanem szükséglet.",
+      serbianTranslation: "Radi prevencije sagorevanja, od kritične je važnosti održavanje ravnoteže između posla i privatnog života. Svesno planiranje vremena i odmor nisu luksuz, već potreba."
+    },
+    {
+      title: "Globális népességnövekedés",
+      hungarianText: "A Föld népességének növekedése óriási nyomást gyakorol az élelmiszer- és vízkészletekre. Az innovatív mezőgazdasági megoldások keresése a jövő egyik legnagyobb kihívása.",
+      serbianTranslation: "Porast svetske populacije vrši ogroman pritisak na zalihe hrane i vode. Potraga za inovativnim poljoprivrednim rešenjima je jedan od najvećih izazova budućnosti."
+    },
+    {
+      title: "Mesterséges intelligencia az orvoslásban",
+      hungarianText: "A MI képes nagy mennyiségű orvosi adat elemzésére, ami segíthet a korai diagnózis felállításában. Ez forradalmasíthatja az egészségügyet és életeket menthet.",
+      serbianTranslation: "VI je sposobna za analizu velike količine medicinskih podataka, što može pomoći u postavljanju rane dijagnoze. To može revolucionisati zdravstvo i spasiti živote."
+    },
+    {
+      title: "Vállalati társadalmi felelősségvállalás",
+      hungarianText: "A cégeknek nemcsak a profitra, hanem a közösségre és a környezetre is figyelniük kell. A felelős üzleti magatartás hosszú távon növeli a bizalmat és a versenyképességet.",
+      serbianTranslation: "Kompanije ne treba da paze samo na profit, već i na zajednicu i životnu sredinu. Odgovorno poslovno ponašanje dugoročno povećava poverenje i konkurentnost."
+    },
+    {
+      title: "Nyelvek eltűnése",
+      hungarianText: "A globalizáció miatt számos kisebbségi nyelv a kihalás szélére került. A nyelvi sokszínűség megőrzése kulturális kincsünk védelmét jelenti a jövő generációi számára.",
+      serbianTranslation: "Zbog globalizacije mnogi manjinski jezici su se našli na ivici izumiranja. Očuvanje jezičke raznolikosti znači zaštitu našeg kulturnog blaga za buduće generacije."
+    },
+    {
+      title: "Városi kerékpározás előnyei",
+      hungarianText: "A biciklizés nemcsak környezetbarát, hanem egészséges és gyakran gyorsabb is a városi forgalomban. A megfelelő infrastruktúra kiépítése alapvető a biztonsághoz.",
+      serbianTranslation: "Biciklizam nije samo ekološki prihvatljiv, već je i zdrav i često brži u gradskom saobraćaju. Izgradnja odgovarajuće infrastrukture je osnovna za bezbednost."
+    },
+    {
+      title: "Önvezető autók jövője",
+      hungarianText: "Az önvezető járművek ígérete a biztonságosabb és hatékonyabb közlekedés. Azonban még számos technikai és jogi kérdést kell tisztázni a széles körű elterjedés előtt.",
+      serbianTranslation: "Obećanje autonomnih vozila je bezbedniji i efikasniji saobraćaj. Međutim, još uvek treba razjasniti brojna tehnička i pravna pitanja pre široke primene."
+    },
+    {
+      title: "Élethosszig tartó tanulás",
+      hungarianText: "A gyorsan változó világban a tanulás nem ér véget az iskolapadban. Az új készségek folyamatos elsajátítása a szakmai és személyes fejlődés záloga.",
+      serbianTranslation: "U svetu koji se brzo menja, učenje se ne završava u školskoj klupi. Neprestano savladavanje novih veština je zalog profesionalnog i ličnog razvoja."
+    },
+    {
+      title: "Körforgásos gazdaság",
+      hungarianText: "A lineáris gazdasági modellt fel kell váltania a körforgásosnak, ahol az erőforrásokat újrahasznosítjuk. Ez az egyetlen út a hulladékmentes és fenntartható jövő felé.",
+      serbianTranslation: "Linearni ekonomski model mora zameniti cirkularni, gde ponovo koristimo resurse. To je jedini put ka održivoj budućnosti bez otpada."
+    },
+    {
+      title: "Emocionális intelligencia jelentősége",
+      hungarianText: "A vezetők számára az érzelmi intelligencia ugyanolyan fontos, mint a szakmai tudás. A csapat motiválása és a konfliktusok kezelése ezen a készségen alapszik.",
+      serbianTranslation: "Za vođe je emocionalna inteligencija isto toliko važna kao i stručno znanje. Motivisanje tima i rešavanje konflikata zasnivaju se na ovoj veštini."
+    },
+    {
+      title: "Okos otthonok technológiája",
+      hungarianText: "Az okos eszközök kényelmesebbé és energiahatékonyabbá teszik az életünket. A fűtés, a világítás és a biztonsági rendszerek távolról is vezérelhetőek.",
+      serbianTranslation: "Pametni uređaji čine naš život udobnijim i energetski efikasnijim. Grejanje, osvetljenje i bezbednosni sistemi mogu se kontrolisati i na daljinu."
+    },
+    {
+      title: "Műanyagszennyezés elleni küzdelem",
+      hungarianText: "Az óceánokban felhalmozódó műanyag hulladék globális katasztrófa. Az egyszer használatos műanyagok betiltása és az újrahasznosítás fokozása elkerülhetetlen.",
+      serbianTranslation: "Plastični otpad koji se nagomilava u okeanima je globalna katastrofa. Zabrana plastike za jednokratnu upotrebu i povećanje reciklaže su neizbežni."
+    },
+    {
+      title: "Személyre szabott orvoslás",
+      hungarianText: "A genetikai profil alapján történő kezelés a gyógyítás jövője. Ez lehetővé teszi, hogy minden beteg a számára leghatékonyabb terápiát kapja, minimális mellékhatással.",
+      serbianTranslation: "Lečenje na osnovu genetskog profila je budućnost lečenja. To omogućava da svaki pacijent dobije najefikasniju terapiju za sebe, uz minimalne nuspojave."
+    },
+    {
+      title: "Migráció és társadalom",
+      hungarianText: "A migráció komplex folyamat, amely gazdasági, politikai és humanitárius kérdéseket vet fel. A sikeres integrációhoz mindkét fél részéről nyitottságra és türelemre van szükség.",
+      serbianTranslation: "Migracija je kompleksan proces koji postavlja ekonomska, politička i humanitarna pitanja. Za uspešnu integraciju potrebni su otvorenost i strpljenje sa obe strane."
+    },
+    {
+      title: "Robotizáció a gyártásban",
+      hungarianText: "A robotok átveszik a monoton és veszélyes feladatokat a gyárakban. Ez növeli a termelékenységet, de megköveteli a munkaerő átképzését az új technológiákhoz.",
+      serbianTranslation: "Roboti preuzimaju monotone i opasne zadatke u fabrikama. To povećava produktivnost, ali zahteva prekvalifikaciju radne snage za nove tehnologije."
+    },
+    {
+      title: "Értékrendváltás a modern világban",
+      hungarianText: "A fogyasztói társadalom mellett egyre erősebben jelenik meg az igény a lassabb, tudatosabb életre. Az anyagi javak helyett az élmények és a kapcsolatok válnak fontossá.",
+      serbianTranslation: "Uz potrošačko društvo sve se jače javlja potreba za sporijim, svesnijim životom. Umesto materijalnih dobara, važni postaju doživljaji i odnosi."
     }
   ],
   5: [
