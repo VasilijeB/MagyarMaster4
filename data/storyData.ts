@@ -39,7 +39,7 @@ export const STORIES: Record<DifficultyLevel, StoryTask[]> = {
     { title: "Dobar učitelj", hungarianText: "A tanár kedves és jó. Sokat segít nekem. Tanulok magyarul.", serbianTranslation: "Učitelj je ljubazan i dobar. Mnogo mi pomaže. Učim mađarski." },
     { title: "Moja olovka", hungarianText: "A ceruzám az asztalon van. Sárga és hosszú. Írok egy levelet.", serbianTranslation: "Moja olovka je na stolu. Žuta je i duga. Pišem jedno pismo." },
     { title: "Crvena cipela", hungarianText: "A cipőm piros. Új a cipő. Megyek a parkba.", serbianTranslation: "Moja cipela je crvena. Cipela je nova. Idem u park." },
-    { title: "Mali prozor", hungarianText: "A házon van egy kis ablak. Látom a fát az ablakból. Szép a kilátás.", serbianTranslation: "Na kući je jedan mali prozor. Vidim drvo sa prozora. Lep je vidik." }
+    { title: "Mali prozor", hungarianText: "A házon van egy kis ablak. Látom a fát az ablakból. Szép a kilátás.", serbianTranslation: "Na kući je jedan mali prozor. Vidim drvo sa prozora. Lep je vidik." },
     { title: "A család", hungarianText: "Az apa magas. Az anya kedves. A testvérem kicsi. Boldogok vagyunk.", serbianTranslation: "Otac je visok. Majka je ljubazna. Moj brat je mali. Srećni smo." },
     { title: "A ház", hungarianText: "A ház fehér. A tető piros. Van egy szép kertünk. A kapu nyitva van.", serbianTranslation: "Kuća je bela. Krov je crven. Imamo lepu baštu. Kapija je otvorena." },
 
