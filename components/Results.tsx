@@ -6,6 +6,7 @@ interface ResultsProps {
   results: GameResult[];
   onRestart: () => void;
   onPlayAgain: () => void;
+  earnedForints?: number;
 }
 
 // Celebration sound helper
@@ -41,7 +42,7 @@ const playVictorySound = () => {
   }
 };
 
-export const Results: React.FC<ResultsProps> = ({ results, onRestart, onPlayAgain }) => {
+export const Results: React.FC<ResultsProps> = ({ results, onRestart, onPlayAgain, earnedForints = 0 }) => {
   const correctCount = results.filter(r => r.isCorrect).length;
   const percentage = results.length > 0 ? Math.round((correctCount / results.length) * 100) : 0;
 
@@ -127,6 +128,12 @@ export const Results: React.FC<ResultsProps> = ({ results, onRestart, onPlayAgai
 
       <div className="relative z-10 bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100 p-8 md:p-12 text-center mb-12 transform animate-[victory-entrance_0.6s_ease-out]">
         
+        {/* Earnings Display */}
+        <div className="inline-flex items-center gap-2 bg-amber-50 px-6 py-2 rounded-full border border-amber-200 mb-6 animate-bounce shadow-sm">
+           <span className="text-2xl">🪙</span>
+           <span className="font-black text-amber-800 text-xl">+{earnedForints} Ft</span>
+        </div>
+
         {/* Score Circle */}
         <div className="relative w-40 h-40 mx-auto mb-8 rounded-full flex items-center justify-center" style={circleStyle}>
           <div className="absolute inset-2 bg-white rounded-full flex flex-col items-center justify-center">

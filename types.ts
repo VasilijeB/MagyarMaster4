@@ -17,12 +17,10 @@ export enum GameMode {
   CONJUGATION = 'CONJUGATION',
   CUSTOM_VOCAB = 'CUSTOM_VOCAB',
   STORIES = 'STORIES',
-  GOULASH = 'GOULASH'
+  GOULASH = 'GOULASH',
+  CLASS_VOCAB = 'CLASS_VOCAB'
 }
 
-/**
- * Fix: Added ChatMessage interface for GrammarChat component
- */
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;

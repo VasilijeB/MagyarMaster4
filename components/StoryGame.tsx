@@ -1,8 +1,6 @@
-
 import React, { useState } from 'react';
 import { DifficultyLevel, StoryTask } from '../types';
 import { getStaticStoryTask } from '../services/contentService';
-import { playPronunciation } from '../services/geminiService';
 
 interface StoryGameProps {
   onGoBack: () => void;
@@ -14,7 +12,6 @@ export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
   const [userTranslation, setUserTranslation] = useState('');
   const [feedback, setFeedback] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
 
   const loadStory = async (lvl: DifficultyLevel) => {
     setLoading(true);
@@ -40,13 +37,6 @@ export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
         setFeedback(true);
         setLoading(false);
     }, 500);
-  };
-
-  const handlePlayAudio = async () => {
-    if (!task || isPlaying) return;
-    setIsPlaying(true);
-    await playPronunciation(task.hungarianText);
-    setIsPlaying(false);
   };
   
   if (!level) {
@@ -95,21 +85,6 @@ export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 mb-8">
              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                 <h2 className="text-xl font-bold text-emerald-700">{task.title}</h2>
-                <button 
-                  onClick={handlePlayAudio}
-                  disabled={isPlaying}
-                  className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-sm font-bold hover:bg-emerald-100 transition-colors disabled:opacity-50"
-                >
-                  {isPlaying ? (
-                    <>
-                      <span className="animate-spin">⏳</span> Učitavanje...
-                    </>
-                  ) : (
-                    <>
-                      <span>🔊</span> Poslušaj priču
-                    </>
-                  )}
-                </button>
              </div>
              <p className="text-lg md:text-xl text-slate-800 leading-relaxed font-medium">
                {task.hungarianText}

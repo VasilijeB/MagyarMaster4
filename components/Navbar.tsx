@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { GameMode, User } from '../types';
 
@@ -5,9 +6,10 @@ interface NavbarProps {
   currentMode: GameMode;
   onNavigate: (mode: GameMode) => void;
   user: User | null;
+  forints: number;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user }) => {
+export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user, forints }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleNavClick = (mode: GameMode) => {
@@ -61,8 +63,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
               />
             </div>
 
-            {/* User Profile & Donation */}
+            {/* User Profile, Forints & Donation */}
             <div className="flex items-center gap-2 md:gap-4">
+                {/* Forints Counter */}
+                <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-100 shadow-sm animate-fade-in">
+                  <span className="text-lg">🪙</span>
+                  <span className="font-black text-amber-700 text-sm md:text-base">{forints} <span className="text-[10px] md:text-xs">Ft</span></span>
+                </div>
+
                 {/* Donation Heart (Navbar) */}
                 <a 
                   href="https://ko-fi.com/magyarmaster" 
@@ -132,6 +140,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentMode, onNavigate, user })
             </div>
             
             <div className="flex-1 space-y-2 overflow-y-auto">
+              <div className="px-4 py-4 mb-2 bg-amber-50 rounded-2xl flex justify-between items-center">
+                 <span className="font-bold text-amber-900">Vaši Forinti</span>
+                 <span className="font-black text-amber-700">🪙 {forints} Ft</span>
+              </div>
               <MobileNavButton 
                 active={currentMode === GameMode.DASHBOARD} 
                 onClick={() => handleNavClick(GameMode.DASHBOARD)}

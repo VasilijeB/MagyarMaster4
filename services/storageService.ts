@@ -4,6 +4,7 @@ import { User } from '../types';
 const USER_KEY = 'magyar_master_user';
 const MISTAKES_KEY = 'magyar_master_mistakes';
 const MASTERED_KEY = 'magyar_master_mastered';
+const FORINTS_KEY = 'magyar_master_forints';
 const ADVENTURE_IMAGES_KEY = 'magyar_master_adventure_images';
 
 export const saveUser = (name: string): User => {
@@ -24,6 +25,20 @@ export const getUser = (): User | null => {
   }
 };
 
+// --- FORINT CURRENCY ---
+
+export const getForints = (): number => {
+  const data = localStorage.getItem(FORINTS_KEY);
+  return data ? parseInt(data, 10) : 0;
+};
+
+export const addForints = (amount: number): number => {
+  const current = getForints();
+  const updated = current + amount;
+  localStorage.setItem(FORINTS_KEY, updated.toString());
+  return updated;
+};
+
 // --- MISTAKE TRACKING ---
 
 export const getMistakes = (): string[] => {
@@ -40,10 +55,7 @@ export const addMistakes = (words: string[]) => {
   const currentMistakes = getMistakes();
   const currentMastered = getMastered();
 
-  // Add to mistakes (unique)
   const updatedMistakes = Array.from(new Set([...currentMistakes, ...words]));
-  
-  // If a word is now a mistake, remove it from mastered list (regression)
   const updatedMastered = currentMastered.filter(w => !words.includes(w));
 
   localStorage.setItem(MISTAKES_KEY, JSON.stringify(updatedMistakes));
@@ -72,10 +84,7 @@ export const addMastered = (words: string[]) => {
   const currentMastered = getMastered();
   const currentMistakes = getMistakes();
 
-  // Add to mastered (unique)
   const updatedMastered = Array.from(new Set([...currentMastered, ...words]));
-
-  // Remove from mistakes if it was there (improvement)
   const updatedMistakes = currentMistakes.filter(w => !words.includes(w));
 
   localStorage.setItem(MASTERED_KEY, JSON.stringify(updatedMastered));
@@ -84,9 +93,6 @@ export const addMastered = (words: string[]) => {
 
 // --- ADVENTURE CUSTOM IMAGES TRACKING ---
 
-/**
- * Retrieves custom uploaded images for the adventure mode from local storage.
- */
 export const getCustomAdventureImages = (): { intro: Record<number, string>, story: Record<number, string> } => {
   const data = localStorage.getItem(ADVENTURE_IMAGES_KEY);
   if (!data) return { intro: {}, story: {} };
@@ -97,9 +103,6 @@ export const getCustomAdventureImages = (): { intro: Record<number, string>, sto
   }
 };
 
-/**
- * Saves custom uploaded images for a specific adventure step.
- */
 export const saveCustomAdventureImage = (step: number, type: 'intro' | 'story', base64: string) => {
   const current = getCustomAdventureImages();
   if (type === 'intro') {

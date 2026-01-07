@@ -4,10 +4,20 @@ import { GameMode, User } from '../types';
 interface DashboardProps {
   onSelectMode: (mode: GameMode) => void;
   user: User | null;
+  forints: number;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ onSelectMode, user }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ onSelectMode, user, forints }) => {
   const games = [
+    {
+      mode: GameMode.CLASS_VOCAB,
+      title: "Reči sa časova",
+      desc: "Vežbajte reči koje smo učili na predavanjima",
+      icon: "🎓",
+      color: "text-emerald-600",
+      bg: "bg-emerald-50 group-hover:bg-emerald-100",
+      border: "hover:border-emerald-200"
+    },
     {
       mode: GameMode.VOCAB,
       title: "Vežbaj reči",
@@ -50,10 +60,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onSelectMode, user }) => {
     <div className="max-w-3xl mx-auto px-4 py-8 md:py-12 animate-fade-in flex flex-col min-h-[calc(100vh-100px)]">
       <div className="text-center mb-6 md:mb-10">
          <h1 className="text-2xl md:text-5xl font-bold text-slate-900 mb-2">
-            Zdravo! 👋
+            Zdravo{user ? `, ${user.name}` : ''}! 👋
          </h1>
          <p className="text-slate-500 text-sm md:text-lg">
-            Šta želite da učite danas?
+            Šta želite da učite danas? Trenutno stanje: <span className="font-bold text-amber-600">{forints} Ft</span>
          </p>
       </div>
 

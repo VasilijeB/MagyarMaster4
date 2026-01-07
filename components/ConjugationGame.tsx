@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { DifficultyLevel, ConjugationTask } from '../types';
 import { getStaticConjugationTask } from '../services/contentService';
@@ -5,9 +6,10 @@ import { VirtualKeyboard } from './VirtualKeyboard';
 
 interface ConjugationGameProps {
   onGoBack: () => void;
+  onReward: (amount: number) => void;
 }
 
-export const ConjugationGame: React.FC<ConjugationGameProps> = ({ onGoBack }) => {
+export const ConjugationGame: React.FC<ConjugationGameProps> = ({ onGoBack, onReward }) => {
   const [level, setLevel] = useState<DifficultyLevel | null>(null);
   const [task, setTask] = useState<ConjugationTask | null>(null);
   const [loading, setLoading] = useState(false);
@@ -15,11 +17,13 @@ export const ConjugationGame: React.FC<ConjugationGameProps> = ({ onGoBack }) =>
   const [feedback, setFeedback] = useState<Record<string, boolean>>({});
   const [showResult, setShowResult] = useState(false);
   const [activeField, setActiveField] = useState<keyof typeof inputs>('en');
+  const [earnedInRound, setEarnedInRound] = useState(0);
 
   const loadTask = async (lvl: DifficultyLevel) => {
     setLoading(true);
     setTask(null);
     setShowResult(false);
+    setEarnedInRound(0);
     setInputs({ en: '', te: '', o: '', mi: '', ti: '', ok: '' });
     setFeedback({});
     try {
@@ -36,14 +40,23 @@ export const ConjugationGame: React.FC<ConjugationGameProps> = ({ onGoBack }) =>
     if (!task) return;
     const newFeedback: Record<string, boolean> = {};
     const keys = ['en', 'te', 'o', 'mi', 'ti', 'ok'] as const;
+    let correctCount = 0;
 
     keys.forEach(key => {
       const correct = task.forms[key].toLowerCase();
       const user = inputs[key].toLowerCase().trim();
       const isCorrect = correct === user;
       newFeedback[key] = isCorrect;
+      if (isCorrect) correctCount++;
     });
 
+    // Reward: 10 Ft base per correct, 12 if perfect
+    const isPerfect = correctCount === 6;
+    const ftValue = isPerfect ? 12 : 10;
+    const totalFt = correctCount * ftValue;
+
+    setEarnedInRound(totalFt);
+    onReward(totalFt);
     setFeedback(newFeedback);
     setShowResult(true);
   };
@@ -143,6 +156,12 @@ export const ConjugationGame: React.FC<ConjugationGameProps> = ({ onGoBack }) =>
         <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Konjugujte glagol</h2>
         <div className="text-4xl font-bold text-slate-800 mb-2">{task.verbInfinite}</div>
         <p className="text-lg text-slate-500 italic mb-4">{task.translation}</p>
+        
+        {showResult && earnedInRound > 0 && (
+           <div className="inline-flex items-center gap-2 bg-amber-50 px-4 py-1.5 rounded-full border border-amber-200 text-amber-700 font-bold animate-bounce shadow-sm">
+             🪙 +{earnedInRound} Ft
+           </div>
+        )}
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 mb-8">

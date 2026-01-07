@@ -193,9 +193,7 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("metla", "seprű", [], undefined, "Sep-ru (lep-ru-ko kojom se mete)."),
     c("kanta", "vödör", [], undefined, "Vodor (voda u kanti)."),
     c("lonac", "fazék", [], undefined, "Fazek (faza kuvanja u loncu)."),
-    c("tiganj", "serpenyő", [], undefined, "Serpen-jo (šerpa u tiganju)."),
-    c("poklopac", "fedő", [], undefined, "Fedo (pokriva)."),
-    c("krpa", "rongy", [], undefined, "Ronj (roniti suze u krpu)."),
+ 
     // Final L1 Extension (+30)
     c("kruška", "körte", [], undefined, "Korte (Kao korte-ljati krušku)."),
     c("jagoda", "eper", [], undefined, "Eper (Jedna e-jagoda)."),
@@ -210,7 +208,7 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("supa", "leves", [], undefined, "Leveš (Levaš supu u tanjir)."),
     c("pivo", "sör", [], undefined, "Šer (Kao šerif koji pije pivo)."),
     c("vino", "bor", [], undefined, "Bor (Vino se pije pod borom)."),
-    c("sok", "gyümölcslé", [], undefined, "Gjumilč (Voće) + le (Tečnost)."),
+    c("sok", "lé", [], undefined, "le (Tečnost)."),
     c("med", "méz", [], undefined, "Mez (Meze slatki med)."),
     c("kolač", "sütemény", [], undefined, "Šite (Pecivo) + menj."),
     c("mesar", "hentes", [], undefined, "Henteš (Onaj ko 'Henta'/seče)."),
@@ -319,7 +317,6 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("granica", "határ", [], undefined, "Hatar (Atar/Granica)."),
     c("pasoš", "útlevél", [], undefined, "Ut (put) + level (pismo)."),
     c("aerodrom", "repülőtér", [], undefined, "Repil (avion) + ter (teren)."),
-    c("kamera", "fényképezőgép", [], undefined, "Fenj (svetlo) + kep (slika) + gep."),
     c("televizija", "televízió", [], undefined, "Ista reč."),
     c("radio", "rádió", [], undefined, "Ista reč."),
     c("novine", "újság", [], undefined, "Uj (novo) + sag."),
@@ -333,6 +330,7 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("student", "egyetemista", [], undefined, "Egyetem (Fakultet) + ista.")
   ],
   3: [
+    c("kamera", "fényképezőgép", [], undefined, "Fenj (svetlo) + kep (slika) + gep."),
     c("sreća", "boldogság", [], undefined, "Boldog (Bolje-do-gore - srećan)."),
     c("tuga", "szomorúság", [], undefined, "Somoru (Zvuči kao 'Smoran')."),
     c("ljubav", "szerelem", [], undefined, "Ser-elem (Element srca)."),

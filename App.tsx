@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AppState, FlashCard, GameResult, WordCategory, DifficultyLevel, GameMode, FlashCardDirection, User } from './types';
-import { getStaticFlashcards } from './services/contentService'; 
-import { saveUser, getUser, addMistakes, addMastered } from './services/storageService';
+import { getStaticFlashcards, getClassFlashcards } from './services/contentService'; 
+import { saveUser, getUser, addMistakes, addMastered, getForints, addForints } from './services/storageService';
 import { CategorySelection } from './components/CategorySelection';
 import { ActiveGame } from './components/ActiveGame';
 import { Results } from './components/Results';
@@ -13,24 +13,25 @@ import { StoryGame } from './components/StoryGame';
 import { Login } from './components/Login';
 import { LandingPage } from './components/LandingPage';
 import { DonationButton } from './components/DonationButton';
+import { ClassVocabSelection } from './components/ClassVocabSelection';
 import { LOADING_MESSAGES } from './constants';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [forints, setForints] = useState<number>(0);
   const [uiState, setUiState] = useState<'landing' | 'login' | 'app'>('landing');
   
-  // Navigation State
   const [currentMode, setCurrentMode] = useState<GameMode>(GameMode.DASHBOARD);
   const [appState, setAppState] = useState<AppState>(AppState.MENU);
   
-  // Vocab State
   const [vocabCategory, setVocabCategory] = useState<WordCategory | null>(null);
   const [vocabLevel, setVocabLevel] = useState<DifficultyLevel | null>(null);
+  const [selectedLessonId, setSelectedLessonId] = useState<number | null>(null);
   const [vocabDirection, setVocabDirection] = useState<FlashCardDirection>(FlashCardDirection.SER_HUN);
 
-  // Game Data
   const [flashcards, setFlashcards] = useState<FlashCard[]>([]);
   const [results, setResults] = useState<GameResult[]>([]);
+  const [lastEarned, setLastEarned] = useState<number>(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loadingMsg, setLoadingMsg] = useState<string>(LOADING_MESSAGES[0]);
 
@@ -38,6 +39,7 @@ const App: React.FC = () => {
     const loadedUser = getUser();
     if (loadedUser) {
       setUser(loadedUser);
+      setForints(getForints());
       setUiState('app');
     } else {
       setUiState('landing');
@@ -105,6 +107,7 @@ const App: React.FC = () => {
   const handleLogin = (name: string) => {
     const newUser = saveUser(name);
     setUser(newUser);
+    setForints(getForints());
     setUiState('app');
   };
 
@@ -113,6 +116,8 @@ const App: React.FC = () => {
     pushState(mode, AppState.MENU);
     setFlashcards([]);
     setResults([]);
+    setLastEarned(0);
+    setSelectedLessonId(null);
   };
 
   const handleVocabCategorySelect = (category: WordCategory) => {
@@ -141,6 +146,24 @@ const App: React.FC = () => {
     }
   };
 
+  const handleClassVocabStart = async (lessonId: number, direction: FlashCardDirection) => {
+    setSelectedLessonId(lessonId);
+    setVocabDirection(direction);
+    pushState(GameMode.CLASS_VOCAB, AppState.PLAYING);
+    setLoadingMsg("Pripremanje lekcije sa časa...");
+    setAppState(AppState.LOADING);
+
+    try {
+      const cards = await getClassFlashcards(lessonId);
+      setFlashcards(cards);
+      setAppState(AppState.PLAYING);
+    } catch (err) {
+      console.error(err);
+      setErrorMsg("Nije uspelo učitavanje lekcije.");
+      setAppState(AppState.ERROR);
+    }
+  };
+
   const handleCustomStart = (cards: FlashCard[]) => {
     setFlashcards(cards);
     setVocabDirection(FlashCardDirection.SER_HUN); 
@@ -154,19 +177,39 @@ const App: React.FC = () => {
     const struggles: string[] = [];
     const mastered: string[] = [];
     const incorrectMap = new Set<string>();
-    gameResults.forEach(res => { if (!res.isCorrect) incorrectMap.add(res.card.serbian); });
+    
+    gameResults.forEach(res => { 
+      if (!res.isCorrect) incorrectMap.add(res.card.serbian); 
+    });
+
     const uniqueCards = new Set<string>();
+    let totalFtEarned = 0;
+
     gameResults.forEach(res => {
       const key = res.card.serbian;
       if (!uniqueCards.has(key)) {
         uniqueCards.add(key);
-        if (incorrectMap.has(key)) struggles.push(key);
-        else mastered.push(key);
+        if (incorrectMap.has(key)) {
+          struggles.push(key);
+          totalFtEarned += 10;
+        } else {
+          mastered.push(key);
+          totalFtEarned += 12;
+        }
       }
     });
 
     if (struggles.length > 0) addMistakes(struggles);
     if (mastered.length > 0) addMastered(mastered);
+
+    const newTotal = addForints(totalFtEarned);
+    setForints(newTotal);
+    setLastEarned(totalFtEarned);
+  };
+
+  const handleConjugationReward = (amount: number) => {
+    const newTotal = addForints(amount);
+    setForints(newTotal);
   };
 
   const handleRestart = () => {
@@ -174,7 +217,9 @@ const App: React.FC = () => {
   };
 
   const handlePlayAgain = () => {
-    if (vocabCategory && vocabLevel) {
+    if (currentMode === GameMode.CLASS_VOCAB && selectedLessonId) {
+      handleClassVocabStart(selectedLessonId, vocabDirection);
+    } else if (vocabCategory && vocabLevel) {
        replaceState(GameMode.VOCAB, AppState.PLAYING, vocabCategory, vocabLevel);
        setAppState(AppState.LOADING);
        getStaticFlashcards(vocabCategory, vocabLevel).then(cards => {
@@ -188,9 +233,14 @@ const App: React.FC = () => {
 
   const renderContent = () => {
     switch (currentMode) {
-      case GameMode.DASHBOARD: return <Dashboard onSelectMode={handleNavigation} user={user} />;
-      case GameMode.CONJUGATION: return <ConjugationGame onGoBack={handleBack} />;
+      case GameMode.DASHBOARD: return <Dashboard onSelectMode={handleNavigation} user={user} forints={forints} />;
+      case GameMode.CONJUGATION: return <ConjugationGame onGoBack={handleBack} onReward={handleConjugationReward} />;
       case GameMode.STORIES: return <StoryGame onGoBack={handleBack} />;
+      case GameMode.CLASS_VOCAB:
+        if (appState === AppState.MENU) {
+          return <ClassVocabSelection onSelectLesson={handleClassVocabStart} onGoBack={handleBack} />;
+        }
+        // Fall through to common handling below
       case GameMode.VOCAB:
       case GameMode.CUSTOM_VOCAB:
         if (appState === AppState.MENU) {
@@ -233,10 +283,10 @@ const App: React.FC = () => {
           );
         }
         if (appState === AppState.RESULTS) {
-          return <Results results={results} onRestart={handleRestart} onPlayAgain={handlePlayAgain} />;
+          return <Results results={results} onRestart={handleRestart} onPlayAgain={handlePlayAgain} earnedForints={lastEarned} />;
         }
         return null;
-      default: return <Dashboard onSelectMode={handleNavigation} user={user} />;
+      default: return <Dashboard onSelectMode={handleNavigation} user={user} forints={forints} />;
     }
   };
 
@@ -245,7 +295,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full bg-slate-50 flex flex-col font-sans">
-      <Navbar currentMode={currentMode} onNavigate={handleNavigation} user={user} />
+      <Navbar currentMode={currentMode} onNavigate={handleNavigation} user={user} forints={forints} />
       <main className="flex-1 w-full">{renderContent()}</main>
       <DonationButton />
     </div>

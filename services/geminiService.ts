@@ -13,30 +13,34 @@ export const generateCustomFlashcards = async (userInput: string): Promise<Flash
     contents: prompt,
     config: {
       responseMimeType: "application/json",
+      // Fix: Updated responseSchema to match the requested flashcard structure
       responseSchema: {
         type: Type.ARRAY,
         items: {
           type: Type.OBJECT,
           properties: {
-            recipeName: {
+            serbian: {
               type: Type.STRING,
-              description: 'The name of the recipe.',
+              description: 'The Serbian word or phrase.',
             },
-            ingredients: {
+            hungarian: {
+              type: Type.STRING,
+              description: 'The primary Hungarian translation.',
+            },
+            alternatives: {
               type: Type.ARRAY,
               items: {
                 type: Type.STRING,
               },
-              description: 'The ingredients for the recipe.',
+              description: 'Alternative Hungarian translations or synonyms.',
             },
           },
-          propertyOrdering: ["recipeName", "ingredients"],
+          propertyOrdering: ["serbian", "hungarian", "alternatives"],
         },
       },
     },
   });
-  // Note: For simplicity in this specific domain, we use a basic array schema here instead.
-  // The above schema example is from guidelines, but we keep the logical flow.
+
   const rawData = JSON.parse(response.text || '[]') as any[];
   return rawData.map((item, index) => ({
     id: `custom-${index}-${Date.now()}`,
