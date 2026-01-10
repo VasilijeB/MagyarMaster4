@@ -27,27 +27,26 @@ export const getStaticFlashcards = async (category: WordCategory, level: Difficu
   const savedMistakes = getMistakes();
   const savedMastered = getMastered();
   
-  const priorityList = sourceData.filter(item => savedMistakes.includes(item.serbian));
-  const newList = sourceData.filter(item => !savedMistakes.includes(item.serbian) && !savedMastered.includes(item.serbian));
-  const reviewList = sourceData.filter(item => savedMastered.includes(item.serbian));
-
-  const deckSize = 10;
-  let deck: typeof sourceData = [];
-
-  const shuffledPriority = shuffle(priorityList);
-  deck = [...deck, ...shuffledPriority.slice(0, 5)];
-
-  let remainingSlots = deckSize - deck.length;
-  const shuffledNew = shuffle(newList);
-  deck = [...deck, ...shuffledNew.slice(0, remainingSlots)];
-
-  remainingSlots = deckSize - deck.length;
-  if (remainingSlots > 0) {
-    const shuffledReview = shuffle(reviewList);
-    deck = [...deck, ...shuffledReview.slice(0, remainingSlots)];
-  }
+  // 1. Get words that were previously misspelled (Mistakes)
+  const mistakesInPool = sourceData.filter(item => savedMistakes.includes(item.serbian));
   
-  const finalSelection = shuffle(deck);
+  // 2. Get brand new words (Not in mastered and not in mistakes)
+  const newInPool = sourceData.filter(item => !savedMastered.includes(item.serbian) && !savedMistakes.includes(item.serbian));
+  
+  const deckSize = 10;
+  
+  // Prioritize Mistakes first, then New words
+  // We shuffle each sub-group so the order of mistakes themselves is random
+  let combinedSelection = [...shuffle(mistakesInPool), ...shuffle(newInPool)];
+  
+  let finalSelection: typeof sourceData = [];
+
+  if (combinedSelection.length > 0) {
+    finalSelection = combinedSelection.slice(0, deckSize);
+  } else {
+    // Fallback: If EVERYTHING in this level is mastered, show everything again for review
+    finalSelection = shuffle(sourceData).slice(0, deckSize);
+  }
 
   return finalSelection.map((item, index) => ({
     id: `${category}-${level}-${index}-${Date.now()}`,

@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { GameResult } from '../types';
 
@@ -110,19 +109,13 @@ export const Results: React.FC<ResultsProps> = ({ results, onRestart, onPlayAgai
         </div>
       )}
 
-      {/* Action Buttons moved to the TOP for better Mobile UX */}
-      <div className="text-center flex flex-col md:flex-row gap-4 justify-center items-center mb-8 relative z-20">
+      {/* Action Button: Exclusive "Play Again" focus */}
+      <div className="text-center flex flex-col gap-4 justify-center items-center mb-8 relative z-20">
         <button
           onClick={onPlayAgain}
-          className="bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-700 hover:scale-105 transition-all shadow-xl shadow-emerald-900/20 w-full md:w-auto"
+          className="bg-emerald-600 text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-emerald-700 hover:scale-105 transition-all shadow-2xl shadow-emerald-900/30 w-full md:w-auto border-b-4 border-emerald-800 active:border-b-0 active:translate-y-1"
         >
-          Igraj ponovo isti nivo ↻
-        </button>
-        <button
-          onClick={onRestart}
-          className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-800 hover:scale-105 transition-all shadow-xl shadow-slate-900/20 w-full md:w-auto"
-        >
-          Nova igra
+          Igraj opet isti nivo ↻
         </button>
       </div>
 
@@ -155,7 +148,7 @@ export const Results: React.FC<ResultsProps> = ({ results, onRestart, onPlayAgai
         </div>
       </div>
 
-      <h3 className="text-xl font-bold text-slate-800 mb-4 pl-2">Reči iz ove vežbe ({uniqueCards.length})</h3>
+      <h3 className="text-xl font-bold text-slate-800 mb-4 pl-2">Pregled reči iz ove vežbe</h3>
       
       <div className="space-y-2 mb-12">
         {uniqueCards.map((card, idx) => (
