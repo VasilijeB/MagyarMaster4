@@ -109,8 +109,8 @@ export const Results: React.FC<ResultsProps> = ({ results, onRestart, onPlayAgai
         </div>
       )}
 
-      {/* Action Button: Exclusive "Play Again" focus */}
-      <div className="text-center flex flex-col gap-4 justify-center items-center mb-8 relative z-20">
+      {/* Action Button: Exclusive focus on repeating the same level */}
+      <div className="text-center mb-8 relative z-20">
         <button
           onClick={onPlayAgain}
           className="bg-emerald-600 text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-emerald-700 hover:scale-105 transition-all shadow-2xl shadow-emerald-900/30 w-full md:w-auto border-b-4 border-emerald-800 active:border-b-0 active:translate-y-1"

@@ -27,24 +27,32 @@ export const getStaticFlashcards = async (category: WordCategory, level: Difficu
   const savedMistakes = getMistakes();
   const savedMastered = getMastered();
   
-  // 1. Get words that were previously misspelled (Mistakes)
-  const mistakesInPool = sourceData.filter(item => savedMistakes.includes(item.serbian));
+  // Logic Fix:
+  // 1. Prioritize words marked as Mistakes (previously missed at any point)
+  const mistakesInPool = shuffle(sourceData.filter(item => savedMistakes.includes(item.serbian)));
   
-  // 2. Get brand new words (Not in mastered and not in mistakes)
-  const newInPool = sourceData.filter(item => !savedMastered.includes(item.serbian) && !savedMistakes.includes(item.serbian));
+  // 2. Filter New words (not Mastered and not currently in Mistakes)
+  const newInPool = shuffle(sourceData.filter(item => !savedMastered.includes(item.serbian) && !savedMistakes.includes(item.serbian)));
   
   const deckSize = 10;
   
-  // Prioritize Mistakes first, then New words
-  // We shuffle each sub-group so the order of mistakes themselves is random
-  let combinedSelection = [...shuffle(mistakesInPool), ...shuffle(newInPool)];
+  // Assemble the deck: Mistakes first, then New words
+  let finalSelection = mistakesInPool.slice(0, deckSize);
   
-  let finalSelection: typeof sourceData = [];
+  if (finalSelection.length < deckSize) {
+    const remainingCount = deckSize - finalSelection.length;
+    finalSelection = [...finalSelection, ...newInPool.slice(0, remainingCount)];
+  }
 
-  if (combinedSelection.length > 0) {
-    finalSelection = combinedSelection.slice(0, deckSize);
-  } else {
-    // Fallback: If EVERYTHING in this level is mastered, show everything again for review
+  // 3. Fallback: If total Mistakes + New < 10, fill the rest with Mastered words just to complete the deck
+  if (finalSelection.length < deckSize) {
+    const masteredInPool = shuffle(sourceData.filter(item => savedMastered.includes(item.serbian)));
+    const remainingCount = deckSize - finalSelection.length;
+    finalSelection = [...finalSelection, ...masteredInPool.slice(0, remainingCount)];
+  }
+
+  // Final fallback (should never happen with current data)
+  if (finalSelection.length === 0) {
     finalSelection = shuffle(sourceData).slice(0, deckSize);
   }
 
