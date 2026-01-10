@@ -28,7 +28,12 @@ export const PHRASES: Record<DifficultyLevel, VocabEntry[]> = {
     c("Ne", "Nem", [], undefined, "Nem-nem (kratko i jasno)."),
     c("Kako si?", "Hogy vagy?", [], undefined, "Hođ-vađ (hoćeš-vadiš odgovor kako si)."),
     c("Dobro sam", "Jól vagyok", [], undefined, "Jol-vađok (u doli sam dobro)."),
-    c("Izvinite", "Elnézést", [], undefined, "El-nezest (pogledaj me, izvini).")
+    c("Izvinite", "Elnézést", [], undefined, "El-nezest (pogledaj me, izvini)."),
+    c("Dobro jutro", "Jó reggelt", [], undefined, "Jo (dobro) + regelt (ujutru)."),
+    c("Dobro veče", "Jó estét", [], undefined, "Jo (dobro) + estet (uveče)."),
+    c("Laku noć", "Jó éjszakát", [], undefined, "Jo (dobro) + ejsakat (noć)."),
+    c("Kako se zoveš?", "Hogy hívnak?", [], undefined, "Hođ (kako) + hivnak (te zovu)."),
+    c("Zovem se...", "A nevem...", [], undefined, "Moje ime je...")
   ],
   2: [
     c("Ne razumem", "Nem értem", [], undefined, "Nem-ertem (ne razumem to)."),
@@ -40,7 +45,12 @@ export const PHRASES: Record<DifficultyLevel, VocabEntry[]> = {
     c("Srećan put", "Jó utat", [], undefined, "Jo-utat (dobar put)."),
     c("Prijatno", "Jó étvágyat", [], undefined, "Jo-etvađat (dobar apetit)."),
     c("Srećan rođendan", "Boldog születésnapot", [], undefined, "Boldog (srećan) + rođendan."),
-    c("Volim te", "Szeretlek", [], undefined, "Seretlek (srce te voli).")
+    c("Volim te", "Szeretlek", [], undefined, "Seretlek (srce te voli)."),
+    c("Koliko imaš godina?", "Hány éves vagy?", [], undefined, "Hanj (koliko) + eves (godina)."),
+    c("Gde živiš?", "Hol laksz?", [], undefined, "Hol (gde) + laks (stanuješ)."),
+    c("Šta radiš?", "Mit csinálsz?", [], undefined, "Mit (šta) + činalsz (činiš)."),
+    c("Gladan sam", "Éhes vagyok", [], undefined, "Ehe-vađok (e-ja sam gladan)."),
+    c("Žedan sam", "Szomjas vagyok", [], undefined, "Som-ja-vađok (som sam žedan).")
   ],
   3: [
     c("Možete li mi pomoći?", "Tudna segíteni?", [], undefined, "Tudna (možete li) + pomoc."),
@@ -52,7 +62,12 @@ export const PHRASES: Record<DifficultyLevel, VocabEntry[]> = {
     c("Mogu li da platim karticom?", "Fizethetek kártyával?", [], undefined, "Fizet (platiti) + kartja."),
     c("Gde je najbliža apoteka?", "Hol van a legközelebbi gyógyszertár?", [], undefined, "Leg-kozel-ebbi (najbliža)."),
     c("Zaboravio sam", "Elfelejtettem", [], undefined, "El-felejt (pobeglo iz sećanja)."),
-    c("Nema na čemu", "Nincs mit", [], undefined, "Ninč-mit (ništa mit).")
+    c("Nema na čemu", "Nincs mit", [], undefined, "Ninč-mit (ništa mit)."),
+    c("Slažem se", "Egyetértek", [], undefined, "Eđet-ertek (u jednom se razumemo)."),
+    c("Nažalost", "Sajnos", [], undefined, "Sajnos (sjaj-nos, nažalost)."),
+    c("Srećom", "Szerencsére", [], undefined, "Serenčere (srećom)."),
+    c("Potpuno si u pravu", "Teljesen igazad van", [], undefined, "Telješen (potpuno) + igaza (istina)."),
+    c("Šta misliš o tome?", "Mit gondolsz erről?", [], undefined, "Mit (šta) + gondolsz (misliš).")
   ],
   4: [
     c("U potpunosti se slažem", "Teljesen egyetértek", [], undefined, "Teljes (potpuno) + egyet-ertek."),
@@ -86,21 +101,31 @@ export const ADVERBS: Record<DifficultyLevel, VocabEntry[]> = {
     c("tamo", "ott", [], undefined, "Ott-o (tamo je on)."), 
     c("gde", "hol", [], undefined, "Hol je ko? (Gde je ko?)"),
     c("sada", "most", [], undefined, "Most (u ovom momentu prelazimo most)."), 
-    c("uvek", "mindig", [], undefined, "Min-dig (uvek se kopa).")
+    c("uvek", "mindig", [], undefined, "Min-dig (uvek se kopa)."),
+    c("danas", "ma", [], undefined, "Ma (kratko kao sad)."),
+    c("sutra", "holnap", [], undefined, "Hol-nap (gde-dan, sutra)."),
+    c("juče", "tegnap", [], undefined, "Teg-nap (težak dan juče).")
   ],
   2: [
     c("blizu", "közel", [], undefined, "K'sebi (Közel) - privuci blizu."), 
     c("daleko", "távol", [], undefined, "Tamo-daleko (Távol)."), 
     c("često", "gyakran", [], undefined, "Gjak-ran (često rani)."), 
     c("možda", "talán", [], undefined, "Talan (valjda)."), 
-    c("već", "már", [], undefined, "Mar-ko je već tu.")
+    c("već", "már", [], undefined, "Mar-ko je već tu."),
+    c("brzo", "gyorsan", [], undefined, "Đorsan (đipi-brzo)."),
+    c("polako", "lassan", [], undefined, "Lasan (kao laso koji polako leti)."),
+    c("napolju", "kint", [], undefined, "Kint (k-njima napolje)."),
+    c("unutra", "bent", [], undefined, "Bent (unutra u bendu).")
   ],
   3: [
     c("zato", "ezért", [], undefined, "Ez (ovo) + ért (za) = za ovo."), 
     c("iako", "bár", [], undefined, "Bar-em da je iako."),
     c("prema", "felé", [], undefined, "Fale (prema tamo)."),
     c("barem", "legalább", [], undefined, "Legal- (bar) + abb."),
-    c("inače", "egyébként", [], undefined, "Eg-jeb (inače je jedno).")
+    c("inače", "egyébként", [], undefined, "Eg-jeb (inače je jedno)."),
+    c("nikada", "soha", [], undefined, "Soha (kao so-ha, nikada)."),
+    c("ponekad", "néha", [], undefined, "Neha (ne-ba, ponekad)."),
+    c("iznenada", "hirtelen", [], undefined, "Hirtelen (kao hitro).")
   ],
   4: [
     c("međutim", "azonban", [], undefined, "Azon (tome) + ban (u)."), 
@@ -118,7 +143,7 @@ export const ADVERBS: Record<DifficultyLevel, VocabEntry[]> = {
   ]
 };
 
-// --- NOUNS (Final 200 Expansion) ---
+// --- NOUNS ---
 export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
   1: [
     c("kuća", "ház", [], undefined, "U kući je 'Has' (stomak) uvek pun."),
@@ -175,7 +200,6 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("ptica", "madár", [], undefined, "Madar (Madar-fader, leti kao luda)."),
     c("riba", "hal", [], undefined, "Hal (Hali-gali u vodi)."),
     c("konj", "ló", [], undefined, "Lo (Lopta konjske trke)."),
-    // Expansion 1
     c("dvorište", "udvar", [], undefined, "U-dvor (idemo u dvorište)."),
     c("ograda", "kerítés", [], undefined, "Ker-ites (kerovi su iza ograde)."),
     c("bašta", "kert", [], undefined, "Kert (zvuči kao krtica u bašti)."),
@@ -193,8 +217,6 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("metla", "seprű", [], undefined, "Sep-ru (lep-ru-ko kojom se mete)."),
     c("kanta", "vödör", [], undefined, "Vodor (voda u kanti)."),
     c("lonac", "fazék", [], undefined, "Fazek (faza kuvanja u loncu)."),
- 
-    // Final L1 Extension (+30)
     c("kruška", "körte", [], undefined, "Korte (Kao korte-ljati krušku)."),
     c("jagoda", "eper", [], undefined, "Eper (Jedna e-jagoda)."),
     c("krompir", "burgonya", [], undefined, "Burgonja (Kao burgija u zemlju)."),
@@ -224,7 +246,32 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("lav", "oroszlán", [], undefined, "Oros-lan (Ruski lan-lav)."),
     c("tigar", "tigris", [], undefined, "Tigris."),
     c("medved", "medve", [], undefined, "Medve."),
-    c("vuk", "farkas", [], undefined, "Farkaš (Onaj sa repom/fark).")
+    c("vuk", "farkas", [], undefined, "Farkaš (Onaj sa repom/fark)."),
+    c("jastuk", "párna", [], undefined, "Parna (kao parno grejanje u krevetu)."),
+    c("ćebe", "takaró", [], undefined, "Takaro (pokriva/sakriva)."),
+    c("sveska", "füzet", [], undefined, "Fizet (kao platiti, ali je sveska)."),
+    c("olovka", "ceruza", [], undefined, "Ceruza (kao crta)."),
+    c("sunce", "nap", [], undefined, "Nap (sija ceo dan)."),
+    c("mesec", "hold", [], undefined, "Hold (drži noć)."),
+    // -- EXTENDED FROM CLASS VOCAB --
+    c("plafon", "mennyezet", ["plafon"], undefined, "Mene-je-to (iznad mene je)."),
+    c("zavesa", "függöny", [], undefined, "Figonj (figura na prozoru)."),
+    c("tepih", "szőnyeg", [], undefined, "Sinjeg (kao sneg pokriva pod)."),
+    c("luster", "plafonlámpa", [], undefined, "Lampa na plafonu."),
+    c("kifla", "kifli", [], undefined, "Ista reč."),
+    c("lepinja", "zsemle", [], undefined, "Žemlja (zemlja okrugla)."),
+    c("piletina", "csirkehús", [], undefined, "Čirke (kljucanje) + meso."),
+    c("svinjetina", "sertéshús", [], undefined, "Serteš (teška svinja) + meso."),
+    c("gulaš", "gulyás", ["pörkölt"], undefined, "Čuveno jelo."),
+    c("sladoled", "fagylalt", ["fagyi"], undefined, "Fađi (fino i hladno)."),
+    c("keks", "keksz", [], undefined, "Ista reč."),
+    c("vrtić", "óvoda", [], undefined, "Ovo-da-li je vrtić?"),
+    c("šolja", "bögre", ["csésze"], undefined, "Bogra (velika šolja)."),
+    c("banana", "banán", [], undefined, "Ista reč."),
+    c("narandža", "narancs", [], undefined, "Ista reč."),
+    c("limun", "citrom", [], undefined, "Citrus."),
+    c("malina", "málna", [], undefined, "Slično."),
+    c("kivi", "kivi", [], undefined, "Ista reč.")
   ],
   2: [
     c("škola", "iskola", [], undefined, "Ista reč."),
@@ -262,7 +309,7 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("nebo", "ég", [], undefined, "Eg (E-gore je nebo)."),
     c("sunce", "nap", [], undefined, "Nap (Sunce sija po danu - Nap)."),
     c("mesec", "hold", [], undefined, "Hold (Mesec drži 'Hold' noć)."),
-    c("zvezda", "csillag", [], undefined, "Čilag (Čili - sija zvezda)."),
+    c("zvezda", "csillag", [], undefined, "Čillag (Čili - sija zvezda)."),
     c("vetar", "szél", [], undefined, "Sel (Vetrić koji 'Seli' lišće)."),
     c("kiša", "eső", [], undefined, "Ešo (E-to, pada kiša)."),
     c("sneg", "hó", [], undefined, "Ho (Ho-ho-ho, Deda Mraz i sneg)."),
@@ -277,7 +324,6 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("telefon", "telefon", [], undefined, "Ista reč."),
     c("novčanik", "pénztárca", [], undefined, "Penz (Novac) + tarca (torbica)."),
     c("torba", "táska", [], undefined, "Taška (Tašna)."),
-    // Expansion 2
     c("hotel", "szálloda", [], undefined, "Salloda (sala za odmor)."),
     c("muzej", "múzeum", [], undefined, "Ista reč."),
     c("zoološki vrt", "állatkert", [], undefined, "Allat (životinja) + kert (bašta)."),
@@ -298,7 +344,6 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("semafor", "közlekedési lámpa", [], undefined, "Lampa za kretanje."),
     c("vreme (prognoza)", "időjárás", [], undefined, "Ido (vreme) + jaraš (šetnja)."),
     c("oblak", "felhő", [], undefined, "Fel-ho (gore na nebu)."),
-    // Final L2 Extension (+30)
     c("magla", "köd", [], undefined, "Kid (Kao kidati maglu)."),
     c("oluja", "vihar", [], undefined, "Vihar (Kao vihor)."),
     c("munja", "villám", [], undefined, "Vilam (Vila-munja)."),
@@ -315,19 +360,49 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("grad", "város", [], undefined, "Varoš."),
     c("država", "ország", [], undefined, "Orsag (Orlovi na zemlji)."),
     c("granica", "határ", [], undefined, "Hatar (Atar/Granica)."),
-    c("pasoš", "útlevél", [], undefined, "Ut (put) + level (pismo)."),
     c("aerodrom", "repülőtér", [], undefined, "Repil (avion) + ter (teren)."),
     c("televizija", "televízió", [], undefined, "Ista reč."),
     c("radio", "rádió", [], undefined, "Ista reč."),
     c("novine", "újság", [], undefined, "Uj (novo) + sag."),
-    c("časopis", "magazin", [], undefined, "Ista reč."),
     c("pismo", "levél", [], undefined, "Level (List/Pismo)."),
     c("olovka", "toll", [], undefined, "Tol (Kao pero/tol)."),
     c("knjiga", "könyv", [], undefined, "Konjv (Kao konj čita)."),
-    c("sveska", "füzet", [], undefined, "Fizet (Kao fizet-plati-svesku)."),
     c("tabla", "tábla", [], undefined, "Ista reč."),
     c("učenik", "tanuló", [], undefined, "Tanulo (Onaj ko se tamani učenjem)."),
-    c("student", "egyetemista", [], undefined, "Egyetem (Fakultet) + ista.")
+    c("student", "egyetemista", [], undefined, "Egyetem (Fakultet) + ista."),
+    c("biblioteka", "könyvtár", [], undefined, "Konyv (knjiga) + tar (ostava)."),
+    c("igralište", "játszótér", [], undefined, "Jatszo (igranje) + ter (teren)."),
+    c("prodavnica odeće", "ruházati bolt", [], undefined, "Ruha (odeća) + bolt."),
+    // -- EXTENDED FROM CLASS VOCAB --
+    c("roletna", "roló", [], undefined, "Rolo."),
+    c("staklo", "üveg", [], undefined, "Ivek-staklo."),
+    c("kvaka", "kilincs", [], undefined, "Kilinč (kvaka)."),
+    c("slavina", "csap", [], undefined, "Cap-kaplje."),
+    c("veš mašina", "mosógép", [], undefined, "Mošo (pranje) + mašina."),
+    c("umivaonik", "mosdó", [], undefined, "Gde se mošeš/umivaš."),
+    c("prašak za veš", "mosópor", [], undefined, "Mošo (pranje) + prah."),
+    c("omekšivač", "puhító", [], undefined, "Puši se veš."),
+    c("wc šolja", "wc-kagyló", [], undefined, "Kagilo (školjka)."),
+    c("bojler", "vízmelegítő", [], undefined, "Voda + grejač."),
+    c("brijač", "borotva", [], undefined, "Borotva (brijač)."),
+    c("češalj", "fésű", [], undefined, "Fesi-frizura."),
+    c("pasta za zube", "fogkrém", [], undefined, "Fog (zub) + krem."),
+    c("dezadorans", "spray", [], undefined, "Sprej."),
+    c("parfem", "parfüm", [], undefined, "Ista reč."),
+    c("predgrađe", "külváros", [], undefined, "Kil (spolja) + varoš."),
+    c("kancelarija", "iroda", [], undefined, "Iroda."),
+    c("mesara", "hentesbolt", [], undefined, "Henteš (onaj ko seče)."),
+    c("teretana", "edzőterem", [], undefined, "Edze (trening) + sala."),
+    c("tržni centar", "bevásárlóközpont", [], undefined, "Kupovni centar."),
+    c("direktor", "igazgató", [], undefined, "Igaz (prava) glava."),
+    c("policajac", "rendőr", [], undefined, "Rend (red) + čuvar."),
+    c("vatrogasac", "tűzoltó", [], undefined, "Tiz (vatra) + gašenje."),
+    c("električar", "villanyszerelő", [], undefined, "Vilam (struja) + majstor."),
+    c("junetina", "marhahús", [], undefined, "Marha (govedo) + meso."),
+    c("šunka", "sonka", [], undefined, "Ista reč."),
+    c("kobasica", "kolbász", [], undefined, "Ista reč."),
+    c("đus", "narancslé", [], undefined, "Narandža + tečnost."),
+    c("komedija", "vígjáték", [], undefined, "Vig (veselo) + igra.")
   ],
   3: [
     c("kamera", "fényképezőgép", [], undefined, "Fenj (svetlo) + kep (slika) + gep."),
@@ -377,7 +452,6 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("poruka", "üzenet", [], undefined, "Uzenet (U-u-zenu, stigla poruka)."),
     c("vest", "hír", [], undefined, "Hir (Brza kao hir)."),
     c("vreme", "idő", [], undefined, "Ido (Idemo dalje kroz vreme)."),
-    // Expansion 3
     c("iznenađenje", "meglepetés", [], undefined, "Meg-lepe-tes (lepo iznenađenje)."),
     c("usamljenost", "magány", [], undefined, "Maganj (kao magla u glavi)."),
     c("bes", "düh", [], undefined, "Duh (besan duh)."),
@@ -398,7 +472,6 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("pitanje", "kérdés", [], undefined, "Kerdes (tražim odgovor)."),
     c("odgovor", "válasz", [], undefined, "Valasz (vadiš odgovor)."),
     c("jezik", "nyelv", [], undefined, "Njelv (njen jezik)."),
-    // Final L3 Extension (+30)
     c("glas", "hang", [], undefined, "Hang (Kao klatno/hang)."),
     c("pesma", "dal", [], undefined, "Dal (Kao daleki zvuci)."),
     c("bend", "zenekar", [], undefined, "Zene (muzika) + kar."),
@@ -428,7 +501,29 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("lov", "vadászat", [], undefined, "Vadas (Vadi divljač)."),
     c("kampovanje", "kempingezés", [], undefined, "Ista reč."),
     c("šetnja", "séta", [], undefined, "Seta (Setaš stazom)."),
-    c("uspomena", "emlék", [], undefined, "Emlek (Kao emblem sećanja).")
+    c("uspomena", "emlék", [], undefined, "Emlek (Kao emblem sećanja)."),
+    c("tradicija", "hagyomány", [], undefined, "Hagy (ostaviti) + omany."),
+    c("odgovornost", "felelősség", [], undefined, "Felel (odgovarati) + seg."),
+    c("priznanje", "elismerés", [], undefined, "Ismer (poznavati)."),
+    // -- EXTENDED FROM CLASS VOCAB --
+    c("tabure", "taburé", [], undefined, "Ista reč."),
+    c("radijator", "fűtőtest", [], undefined, "Grijno telo."),
+    c("peć", "kályha", [], undefined, "Kaljača/peć."),
+    c("zvučnik", "hangszóró", [], undefined, "Hang (glas) + širi."),
+    c("klima uređaj", "légkondicionáló", [], undefined, "Lek (vazduh)."),
+    c("zamrzivač", "mélyhűtő", [], undefined, "Duboko hlađenje."),
+    c("vadičep", "dugóhúzó", [], undefined, "Dugo (čep) + vući."),
+    c("vaga", "mérleg", [], undefined, "Meriti."),
+    c("renda", "reszelő", [], undefined, "Resel (renda)."),
+    c("inostranstvo", "külföld", [], undefined, "Kil (spolja) + zemlja."),
+    c("provincija", "vidék", [], undefined, "Videk (unutrašnjost)."),
+    c("rečnik", "szótár", [], undefined, "Szo (reč) + tar (ostava)."),
+    c("enciklopedija", "enciklopédia", [], undefined, "Ista reč."),
+    c("leksikon", "lexikon", [], undefined, "Ista reč."),
+    c("hirurg", "sebész", [], undefined, "Seb (rana) majstor."),
+    c("vajar", "szobrász", [], undefined, "Sobor (kip) majstor."),
+    c("poslastičar", "cukrász", [], undefined, "Cukor (šećer) majstor."),
+    c("ambasador", "nagykövet", [], undefined, "Nađ (veliki) + poslanik.")
   ],
   4: [
     c("društvo", "társadalom", [], undefined, "Társ (drug) + dalom."),
@@ -471,7 +566,6 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("dokaz", "bizonyíték", [], undefined, "Dokazati."),
     c("priznanje", "elismerés", [], undefined, "Poznati (ismer)."),
     c("nezavisnost", "függetlenség", [], undefined, "Függ (zavisiti)."),
-    // Expansion 4
     c("razvoj", "fejlődés", [], undefined, "Fejlodes (kao fej-glava koja raste)."),
     c("istraživanje", "kutatás", [], undefined, "Kutataš (kucaš na vrata nauke)."),
     c("obrazovanje", "oktatás", [], undefined, "Oktataš (onaj ko te uči)."),
@@ -491,38 +585,7 @@ export const NOUNS: Record<DifficultyLevel, VocabEntry[]> = {
     c("pravilo", "szabály", [], undefined, "Sabalj (kao sablja koja seče pravilo)."),
     c("izbor", "választás", [], undefined, "Valaszt (vadiš/biraš)."),
     c("sloboda", "szabadság", [], undefined, "Szabad (slobodan)."),
-    c("praznina", "űr", [], undefined, "Ur (prazan prostor)."),
-    // Final L4 Extension (+30)
-    c("vlast", "hatalom", [], undefined, "Moć."),
-    c("demokratija", "demokrácia", [], undefined, "Sloboda."),
-    c("republika", "köztársaság", [], undefined, "Javno društvo."),
-    c("parlament", "parlament", [], undefined, "Skupština."),
-    c("ustav", "alkotmány", [], undefined, "Stvaranje."),
-    c("sporazum", "megállapodás", [], undefined, "Stajanje."),
-    c("kompromis", "kompromisszum", [], undefined, "Dogovor."),
-    c("strategija", "stratégia", [], undefined, "Plan."),
-    c("vizija", "vízió", [], undefined, "Pogled."),
-    c("misija", "küldetés", [], undefined, "Slanje."),
-    c("kontekst", "kontextus", [], undefined, "Okvir."),
-    c("perspektiva", "perspektíva", [], undefined, "Pogled."),
-    c("princip", "elv", [], undefined, "Pravilo."),
-    c("autoritet", "tekintély", [], undefined, "Ugled."),
-    c("birokratija", "bürokrácia", [], undefined, "Administracija."),
-    c("kapital", "tőke", [], undefined, "Glavnica."),
-    c("kriza", "válság", [], undefined, "Válik (postati)."),
-    c("reforma", "reform", [], undefined, "Promena."),
-    c("sankcija", "szankció", [], undefined, "Kazna."),
-    c("suverenitet", "szuverenitás", [], undefined, "Nezavisnost."),
-    c("tolerancija", "tolerancia", [], undefined, "Trpeljivost."),
-    c("unifikacija", "egyesítés", [], undefined, "Jedan (egy)."),
-    c("integracija", "integráció", [], undefined, "Spajanje."),
-    c("globalizacija", "globalizáció", [], undefined, "Svet."),
-    c("lokalizacija", "lokalizáció", [], undefined, "Mesto."),
-    c("urbanizacija", "urbanizáció", [], undefined, "Grad."),
-    c("industrija", "ipar", [], undefined, "Rad."),
-    c("poljoprivreda", "mezőgazdaság", [], undefined, "Mezo (polje) + gazda."),
-    c("turizam", "turizmus", [], undefined, "Put."),
-    c("medicina", "orvostudomány", [], undefined, "Orvos (lek) + tud (znanje).")
+    c("praznina", "űr", [], undefined, "Ur (prazan prostor).")
   ],
   5: [
     c("svest", "tudat", [], undefined, "Tud (znati)."),
@@ -609,7 +672,11 @@ export const VERBS: Record<DifficultyLevel, VocabEntry[]> = {
     c("nositi", "vinni", [], undefined, "Vin (Vini-nošenje)."),
     c("doneti", "hozni", [], undefined, "Hoz (Hajde donesi)."),
     c("čekati", "várni", [], undefined, "Var (Varka čekanja)."),
-    c("razumeti", "érteni", [], undefined, "Ert (E-razumem).")
+    c("razumeti", "érteni", [], undefined, "Ert (E-razumem)."),
+    c("skočiti", "ugrani", [], undefined, "Ugran (u granje skače)."),
+    c("kupati se", "fürödni", [], undefined, "Firodni (fino se okupati)."),
+    c("češljati se", "fésülködni", [], undefined, "Fesilkedni (frizirati se)."),
+    c("oblačiti se", "öltözni", [], undefined, "Oltezni (odelo oblači).")
   ],
   2: [
     c("pomoći", "segíteni", [], undefined, "Segit (Sve-git-pomoć)."),
@@ -649,12 +716,19 @@ export const VERBS: Record<DifficultyLevel, VocabEntry[]> = {
     c("umoriti se", "fáradni", [], undefined, "Farad (Fali-rad-umor)."),
     c("zaustaviti se", "megállni", [], undefined, "Al (Stani)."),
     c("okrenuti se", "fordulni", [], undefined, "Ford (Ford-okreće se)."),
-    c("skočiti", "ugrani", [], undefined, "Ugran (U-gran-skok)."),
     c("baciti", "dobni", [], undefined, "Dob (Dob-baciti)."),
     c("vući", "húzni", [], undefined, "Huz (Hajde vuci)."),
     c("gurati", "tolni", [], undefined, "Tol (Toliko guraj)."),
     c("podizati", "emelni", [], undefined, "Emel (E-podigni)."),
-    c("računati", "számolni", [], undefined, "Samol (Sami brojevi).")
+    c("računati", "számolni", [], undefined, "Samol (Sami brojevi)."),
+    c("prodati", "eladni", [], undefined, "Elad (E-dati/prodati)."),
+    c("čuvati", "őrizni", [], undefined, "Orizni (onaj ko osmatra/čuva)."),
+    c("poboljšati", "javítani", [], undefined, "Javit (javi da je bolje)."),
+    // -- EXTENDED FROM CLASS VOCAB --
+    c("tuširati se", "zuhanyozni", [], undefined, "Zuhanja."),
+    c("umivati se", "mosdani", [], undefined, "Mošo (pranje)."),
+    c("iznajmiti", "bérelni", [], undefined, "Berlo plaća."),
+    c("sušiti", "szárítani", [], undefined, "Sari (suvo).")
   ],
   3: [
     c("trenirati", "edzeni", [], undefined, "Edzen (E-treniraj)."),
@@ -697,7 +771,10 @@ export const VERBS: Record<DifficultyLevel, VocabEntry[]> = {
     c("nagađati", "találgatni", [], undefined, "Talal (Naći-pogoditi)."),
     c("rasti", "nőni", [], undefined, "Noni (On raste)."),
     c("smanjiti se", "csökkenni", [], undefined, "Csok (Čok-manje)."),
-    c("prihvatiti", "elfogadni", [], undefined, "Fogad (Primiti).")
+    c("prihvatiti", "elfogadni", [], undefined, "Fogad (Primiti)."),
+    c("reklamirati", "panaszkodni", [], undefined, "Panaszkodik (žaliti se)."),
+    c("učestvovati", "részt venni", [], undefined, "Reszt (deo) + venni (uzeti)."),
+    c("uživati", "élvezni", [], undefined, "Elvezni (zivot uzivati).")
   ],
   4: [
     c("odlučiti", "dönteni", [], undefined, "Prelom."),
@@ -729,7 +806,26 @@ export const ADJECTIVES: Record<DifficultyLevel, VocabEntry[]> = {
     c("velik", "nagy", [], undefined, "Nađ-i nešto 'Veliko'."),
     c("mali", "kicsi", [], undefined, "Kiči (Kao kikiriki-mali)."),
     c("lep", "szép", [], undefined, "Sep (Zvuči kao 'Sjajan' i lep)."),
-    c("ružan", "csúnya", [], undefined, "Čunja (Zvuči kao 'Čudo' od ružnoće).")
+    c("ružan", "csúnya", [], undefined, "Čunja (Zvuči kao 'Čudo' od ružnoće)."),
+    c("crven", "piros", [], undefined, "Piros (kao pirinač ali crven)."),
+    c("plav", "kék", [], undefined, "Kek (kao keks plavi)."),
+    c("beo", "fehér", [], undefined, "Feher (kao fer/čisto)."),
+    c("crn", "fekete", [], undefined, "Fekete (kao fela/senka)."),
+    c("hladan", "hideg", [], undefined, "Hideg (hibernacija od hladnoće)."),
+    c("topao", "meleg", [], undefined, "Meleg (kao melem na ranu)."),
+    c("brz", "gyors", [], undefined, "Đors (kao đipati brzo)."),
+    c("spor", "lassú", [], undefined, "Lasu (kao laso koji polako leti)."),
+    // -- EXTENDED FROM CLASS VOCAB --
+    c("gladan", "éhes", [], undefined, "E-ja sam gladan."),
+    c("žedan", "szomjas", [], undefined, "Som sam žedan."),
+    c("pospan", "álmos", [], undefined, "A-ludi spavaju."),
+    c("umoran", "fáradt", [], undefined, "Fali rad."),
+    c("nervozan", "ideges", [], undefined, "Ide-geš."),
+    c("bolestan", "beteg", [], undefined, "Beži tegoba."),
+    c("zdrav", "egészséges", [], undefined, "Egesege."),
+    c("tužan", "szomorú", [], undefined, "Smoren."),
+    c("pametan", "okos", [], undefined, "Pametne oči."),
+    c("glup", "buta", [], undefined, "Butina-glup.")
   ],
   2: [
     c("jak", "erős", [], undefined, "Eroš (E-jak je)."),
@@ -737,7 +833,27 @@ export const ADJECTIVES: Record<DifficultyLevel, VocabEntry[]> = {
     c("pametan", "okos", [], undefined, "Oko (Pametne oči-okos)."),
     c("glup", "buta", [], undefined, "Buta (Kao butina-glup)."),
     c("skup", "drága", [], undefined, "Draga (Draga je cena)."),
-    c("jeftin", "olcsó", [], undefined, "Olčo (Ološ-jeftin).")
+    c("jeftin", "olcsó", [], undefined, "Olčo (Ološ-jeftin)."),
+    c("bogat", "gazdag", [], undefined, "Gazdag (kao gazda bogat)."),
+    c("siromašan", "szegény", [], undefined, "Segenj (kao senka siromašan)."),
+    c("težak", "nehéz", [], undefined, "Nehez (nehesi se, teško je)."),
+    c("lak", "könnyű", [], undefined, "Kenji (kao konji koji lako vuku)."),
+    c("čist", "tiszta", [], undefined, "Tista (kao teta čista)."),
+    c("prljav", "piszkos", [], undefined, "Piskos (kao pesak prljav)."),
+    c("srećan", "boldog", [], undefined, "Boldog (bolje-do-gore)."),
+    c("tužan", "szomorú", [], undefined, "Somoru (kao smoren)."),
+    // -- EXTENDED FROM CLASS VOCAB --
+    c("plašljiv", "félénk", [], undefined, "Fel (plaši se)."),
+    c("zadovoljan", "elégedett", [], undefined, "E-lepa-dela."),
+    c("zbunjen", "zavarodott", [], undefined, "Zavezan."),
+    c("debeo", "kövér", [], undefined, "Kover."),
+    c("vešt", "ügyes", [], undefined, "U-đes vešt."),
+    c("drveni", "fa-", [], undefined, "Od drveta (fa)."),
+    c("stakleni", "üveg-", [], undefined, "Od stakla (üveg)."),
+    c("plastični", "műanyag-", [], undefined, "Od plastike."),
+    c("gvozdeni", "vas-", [], undefined, "Od gvožđa (vas)."),
+    c("metalni", "fém-", [], undefined, "Od metala (fém)."),
+    c("veštački", "mű-", [], undefined, "Mu (veštački).")
   ],
   3: [
     c("važan", "fontos", [], undefined, "Fontos (Bitan kao font)."),
@@ -745,7 +861,17 @@ export const ADJECTIVES: Record<DifficultyLevel, VocabEntry[]> = {
     c("opasan", "veszélyes", [], undefined, "Veselj (Veselo-opasno)."),
     c("zanimljiv", "érdekes", [], undefined, "Inderes (Zanimljiv)."),
     c("dosadan", "unalmas", [], undefined, "U-nal (U-la-la, dosadno)."),
-    c("čudan", "furcsa", [], undefined, "Furča (Furka-čudan).")
+    c("čudan", "furcsa", [], undefined, "Furča (Furka-čudan)."),
+    c("uzbudljiv", "izgalmas", [], undefined, "Izgalmaš (kao galama uzbudljivo)."),
+    c("jednostavan", "egyszerű", [], undefined, "Eđ-seri (jedan-put/lako)."),
+    c("komplikovan", "bonyolult", [], undefined, "Bonjolult (bonjolj-bolan komplikovan)."),
+    c("iskren", "őszinte", [], undefined, "Isinte (kao istina)."),
+    c("ljubazan", "kedves", [], undefined, "Kedveš (kao kod-vas ljubazan)."),
+    c("dosledan", "következetes", [], undefined, "Kovet (pratiti)."),
+    c("strog", "szigorú", [], undefined, "Sigoru (sigurno strog)."),
+    // -- EXTENDED FROM CLASS VOCAB --
+    c("febrilan", "lázas", [], undefined, "Laze temperatura."),
+    c("ima tremu", "lámpalázas", [], undefined, "Lampa (svetlo) + temperatura.")
   ],
   4: [
     c("odgovoran", "felelős", [], undefined, "Odgovoran."),
@@ -832,7 +958,7 @@ const genRange = (start: number, end: number) => {
 
 export const NUMBERS_CARDINAL: Record<DifficultyLevel, VocabEntry[]> = {
   1: [c("nula", "nulla", [], "0", "Nulla."), c("jedan", "egy", [], "1", "Prvi."), c("dva", "kettő", ["két"], "2", "Par."), c("tri", "három", [], "3", "Trio."), c("četiri", "négy", [], "4", "Kvadrat."), c("pet", "öt", [], "5", "Šaka."), c("šest", "hat", [], "6", "Pola tuceta."), c("sedam", "hét", [], "7", "Srećan."), c("osam", "nyolc", [], "8", "Beskonačno."), c("devet", "kilenc", [], "9", "Skoro deset."), c("deset", "tíz", [], "10", "Dve šake.")],
-  2: [c("jedanaest", "tizenegy", [], "11", "10+1."), c("dvanaest", "tizenkettő", [], "12", "10+2."), c("dvadeset", "húsz", [], "20", "Dvadeset.")],
+  2: [c("jedanaest", "tizenegy", [], "11", "10+1."), c("dvanaest", "tizenkettő", [], "12", "10+2."), c("dvadeset", "húsz", [], "20", "Dvadeset."), c("trideset", "harminc", [], "30", "Tri desetice."), c("četrdeset", "negyven", [], "40", "Četiri desetice.")],
   3: [...genRange(21, 100)],
   4: [c("sto", "száz", [], "100", "Sto."), c("dvesta", "kétszáz", [], "200", "Dvesta."), c("hiljada", "ezer", [], "1000", "Hiljada.")],
   5: [c("milion", "egymillió", [], "1000000", "Milion.")]
@@ -840,8 +966,8 @@ export const NUMBERS_CARDINAL: Record<DifficultyLevel, VocabEntry[]> = {
 
 export const NUMBERS_ORDINAL: Record<DifficultyLevel, VocabEntry[]> = {
   1: [c("prvi", "első", [], "1.", "Lider."), c("drugi", "második", [], "2.", "Pratilac."), c("treći", "harmadik", [], "3.", "Bronza."), c("četvrti", "negyedik", [], "4.", "Četvrti."), c("peti", "ötödik", [], "5.", "Peti.")],
-  2: [c("šesti", "hatodik", [], "6.", "Šesti."), c("deseti", "tizedik", [], "10.", "Deseti.")],
-  3: [c("dvadeseti", "huszadik", [], "20.", "Dvadeseti.")],
+  2: [c("šesti", "hatodik", [], "6.", "Šesti."), c("deseti", "tizedik", [], "10.", "Deseti."), c("dvadeseti", "huszadik", [], "20.", "Dvadeseti.")],
+  3: [c("pedeseti", "ötvenedik", [], "50.", "Pedeseti."), c("šezdeseti", "hatvanadik", [], "60.", "Šezdeseti.")],
   4: [c("stoti", "századik", [], "100.", "Stoti.")],
   5: [c("milioniti", "milliomodik", [], "1.000.000.", "Milioniti.")]
 };
