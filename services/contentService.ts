@@ -3,7 +3,7 @@ import { NOUNS, VERBS, ADJECTIVES, NUMBERS_CARDINAL, NUMBERS_ORDINAL, ADVERBS, P
 import { CONJUGATION_DATA } from '../data/conjugationData';
 import { STORIES } from '../data/storyData';
 import { CLASS_LESSONS } from '../data/classVocabData';
-import { getMistakes, getMastered } from './storageService';
+import { getMistakes, getMastered, getReadStories } from './storageService';
 
 // Helper to shuffle array
 const shuffle = <T>(array: T[]): T[] => {
@@ -85,6 +85,16 @@ export const getStaticConjugationTask = async (level: DifficultyLevel): Promise<
 
 export const getStaticStoryTask = async (level: DifficultyLevel): Promise<StoryTask> => {
   await new Promise(resolve => setTimeout(resolve, 200));
-  const stories = STORIES[level] || STORIES[1];
-  return stories[Math.floor(Math.random() * stories.length)];
+  const allStories = STORIES[level] || STORIES[1];
+  const readStories = getReadStories();
+
+  // Filter out read stories
+  const unreadStories = allStories.filter(s => !readStories.includes(s.title));
+
+  if (unreadStories.length === 0) {
+    // If all stories are read, return a random one from the full set as a fallback
+    return allStories[Math.floor(Math.random() * allStories.length)];
+  }
+
+  return unreadStories[Math.floor(Math.random() * unreadStories.length)];
 };

@@ -1,4 +1,3 @@
-
 import { User } from '../types';
 
 const USER_KEY = 'magyar_master_user';
@@ -6,6 +5,7 @@ const MISTAKES_KEY = 'magyar_master_mistakes';
 const MASTERED_KEY = 'magyar_master_mastered';
 const FORINTS_KEY = 'magyar_master_forints';
 const ADVENTURE_IMAGES_KEY = 'magyar_master_adventure_images';
+const READ_STORIES_KEY = 'magyar_master_read_stories';
 
 export const saveUser = (name: string): User => {
   const newUser: User = {
@@ -89,6 +89,25 @@ export const addMastered = (words: string[]) => {
 
   localStorage.setItem(MASTERED_KEY, JSON.stringify(updatedMastered));
   localStorage.setItem(MISTAKES_KEY, JSON.stringify(updatedMistakes));
+};
+
+// --- STORY TRACKING ---
+
+export const getReadStories = (): string[] => {
+  const data = localStorage.getItem(READ_STORIES_KEY);
+  if (!data) return [];
+  try {
+    return JSON.parse(data) as string[];
+  } catch {
+    return [];
+  }
+};
+
+export const addReadStory = (title: string) => {
+  const read = getReadStories();
+  if (!read.includes(title)) {
+    localStorage.setItem(READ_STORIES_KEY, JSON.stringify([...read, title]));
+  }
 };
 
 // --- ADVENTURE CUSTOM IMAGES TRACKING ---

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DifficultyLevel, StoryTask } from '../types';
 import { getStaticStoryTask } from '../services/contentService';
+import { addReadStory } from '../services/storageService';
 
 interface StoryGameProps {
   onGoBack: () => void;
@@ -32,6 +33,9 @@ export const StoryGame: React.FC<StoryGameProps> = ({ onGoBack }) => {
   const handleCheck = async () => {
     if (!task || !userTranslation.trim()) return;
     setLoading(true);
+    // Mark the story as read in storage
+    addReadStory(task.title);
+    
     // Simulate a brief processing delay for better UX
     setTimeout(() => {
         setFeedback(true);

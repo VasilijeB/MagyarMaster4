@@ -659,13 +659,13 @@ export const VERBS: Record<DifficultyLevel, VocabEntry[]> = {
     c("sedeti", "ülni", [], undefined, "Ul (Uleti u stolicu)."),
     c("dati", "adni", [], undefined, "Ad (Hajde daj)."),
     c("uzeti", "venni", [], undefined, "Ven (Veni-vidi-vici, uzeo pobedu)."),
-    c("kupiti", "vásárolni", [], undefined, "Vašar-olni (Kupovina na vašaru)."),
+    c("obavljati kupovinu", "vásárolni", [], undefined, "Vašar-olni (Kupovina na vašaru)."),
     c("otvoriti", "nyitni", [], undefined, "Njiti (Njiti otvori)."),
-    c("zatvoriti", "zárni", [], undefined, "Zar (Zatvori žar)."),
+    c("zatvoriti", "zárni", [], undefined, "Zar (Zatvori)."),
     c("plakati", "sírni", [], undefined, "Sir-ni (Plače jer nema sira)."),
     c("smejati se", "nevetni", [], undefined, "Nevet (Neverovatno smešno)."),
     c("pevati", "énekelni", [], undefined, "Ene-ko peva (Enekelni)."),
-    c("plesati", "táncolni", [], undefined, "Tanc (Tan-tan tancuj)."),
+    c("plesati", "táncolni", [], undefined, "Tanc (Tanc nemacki)."),
     c("igrati se", "játszani", [], undefined, "Jac (Jac-jac igra)."),
     c("prati", "mosni", [], undefined, "Moš (Možeš da pereš)."),
     c("kuvati", "főzni", [], undefined, "Foz (Faza kuvanja)."),
@@ -675,7 +675,6 @@ export const VERBS: Record<DifficultyLevel, VocabEntry[]> = {
     c("razumeti", "érteni", [], undefined, "Ert (E-razumem)."),
     c("skočiti", "ugrani", [], undefined, "Ugran (u granje skače)."),
     c("kupati se", "fürödni", [], undefined, "Firodni (fino se okupati)."),
-    c("češljati se", "fésülködni", [], undefined, "Fesilkedni (frizirati se)."),
     c("oblačiti se", "öltözni", [], undefined, "Oltezni (odelo oblači).")
   ],
   2: [
@@ -731,6 +730,7 @@ export const VERBS: Record<DifficultyLevel, VocabEntry[]> = {
     c("sušiti", "szárítani", [], undefined, "Sari (suvo).")
   ],
   3: [
+    c("češljati se", "fésülködni", [], undefined, "Fesilkedni (frizirati se)."),
     c("trenirati", "edzeni", [], undefined, "Edzen (E-treniraj)."),
     c("voziti bicikl", "biciklizni", [], undefined, "Bicikli."),
     c("razmišljati", "gondolkodni", [], undefined, "Gond (Misao)."),
